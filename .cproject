@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="0.1301654335">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335" moduleId="org.eclipse.cdt.core.settings" name="Default">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335" name="Default" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.653599537" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.653599537.155138755" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.202696350" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1098715664" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.804763816" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.127764022" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1209644534" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.425483887" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1287258079" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1651762271" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.2131858653" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1735693551" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1816221885" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1301654335.245835241">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335.245835241" moduleId="org.eclipse.cdt.core.settings" name="netX500">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335.245835241" name="netX500" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335.245835241." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.606551585" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.606551585.297777586" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.1775175989" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1713593558" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.1558379312" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.622488666" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=1"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1294309554" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.88925537" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.803944992" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=1"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.2111094666" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.1982756640" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1215552676" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=1"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.497406126" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1301654335.1560012272">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335.1560012272" moduleId="org.eclipse.cdt.core.settings" name="netX50">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335.1560012272" name="netX50" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335.1560012272." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1352427835" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1352427835.1252975117" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.142310184" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1825438433" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.278625634" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.2145575074" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=2"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.2002371545" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.169136946" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.460146242" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=2"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1960895018" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.707154156" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1208046255" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=2"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1991442319" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1301654335.351434579">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335.351434579" moduleId="org.eclipse.cdt.core.settings" name="netX10">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335.351434579" name="netX10" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335.351434579." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.939890156" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.939890156.1204608662" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.1942012162" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.181204438" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.1987404572" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1692184985" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=3"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1062653183" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.84121085" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.2057270658" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=3"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.332525320" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.373263235" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1912029373" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=3"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1844636234" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1301654335.400724496">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335.400724496" moduleId="org.eclipse.cdt.core.settings" name="netX56">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335.400724496" name="netX56" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335.400724496." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.344685971" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.344685971.542581496" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.1919720502" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1443099298" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.809194115" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1234257964" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=4"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.261407389" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.1929282612" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.453185592" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=4"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1795131099" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.1948413293" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.433343980" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=4"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.467728858" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1301654335.1563849941">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335.1563849941" moduleId="org.eclipse.cdt.core.settings" name="netX6">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335.1563849941" name="netX6" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335.1563849941." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.902768513" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.902768513.1230509268" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.54907213" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.857402145" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.563785012" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1912542566" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=5"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1069159596" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.688139584" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.2007614521" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=5"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.819297502" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.875927092" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.175862119" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=5"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.396779599" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1301654335.1992428306">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335.1992428306" moduleId="org.eclipse.cdt.core.settings" name="netX4000 RELAXED">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335.1992428306" name="netX4000 RELAXED" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335.1992428306." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1792566907" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1792566907.624976448" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.174340817" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.1156257082" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.713872163" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.696430484" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=6"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.30490611" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.1951743219" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.936417537" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=6"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.33018659" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.1042199122" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.613966650" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=6"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.229694702" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1301654335.1047354132">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335.1047354132" moduleId="org.eclipse.cdt.core.settings" name="netX90 MPW">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335.1047354132" name="netX90 MPW" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335.1047354132." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.591236871" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.591236871.259830215" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.133260505" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.770845449" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.207603604" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.981200200" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=7"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1364427527" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.271337074" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1477613960" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=7"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1272580106" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.23863631" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1582491240" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=7"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.989838250" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+		<cconfiguration id="0.1301654335.1817698136">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1301654335.1817698136" moduleId="org.eclipse.cdt.core.settings" name="netX90 MPW APP">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration buildProperties="" description="" id="0.1301654335.1817698136" name="netX90 MPW APP" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+					<folderInfo id="0.1301654335.1817698136." name="/" resourcePath="">
+						<toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.1723520759" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+							<targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.1723520759.135013253" name=""/>
+							<builder arguments="mbs/mbs" buildPath="${ProjDirPath}" command="${ProjDirPath}/mbs/autopy/autopy_${OsType}.bat" enabledIncrementalBuild="true" id="org.eclipse.cdt.build.core.settings.default.builder.2106818386" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.libs.954225962" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.807690142" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.933379790" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=8"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1969393987" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.665508815" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.600551890" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=8"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.498977672" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+							<tool id="org.eclipse.cdt.build.core.settings.holder.820814659" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
+								<option id="org.eclipse.cdt.build.core.settings.holder.symbols.1896416775" name="Symbols" superClass="org.eclipse.cdt.build.core.settings.holder.symbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX500=1"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX50=2"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX10=3"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX56=4"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX6=5"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX4000_RELAXED=6"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW=7"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP_NETX90_MPW_APP=8"/>
+									<listOptionValue builtIn="false" value="ASIC_TYP=8"/>
+									<listOptionValue builtIn="false" value="NULL=0"/>
+								</option>
+								<inputType id="org.eclipse.cdt.build.core.settings.holder.inType.17509745" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
+							</tool>
+						</toolChain>
+					</folderInfo>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="org.muhkuh.tests-spi_flash_macro.null.729492451" name="org.muhkuh.tests-spi_flash_macro"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="Default">
+			<resource resourceType="PROJECT" workspacePath="/org.muhkuh.tests-spi_flash_macro"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		<scannerConfigBuildInfo instanceId="0.1301654335.351434579">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1301654335.245835241">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1301654335.1047354132">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1301654335.1560012272">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1301654335.1817698136">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1301654335">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1301654335.1992428306">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1301654335.400724496">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="0.1301654335.1563849941">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+		</scannerConfigBuildInfo>
+	</storageModule>
+</cproject>
