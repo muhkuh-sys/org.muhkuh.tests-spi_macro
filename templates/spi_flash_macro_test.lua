@@ -101,6 +101,8 @@ function SpiFlashMacroTest:_init(tLogger)
         ucCLK:u1
         ucMISO:u1
         ucMOSI:u1
+        ucSIO2:u1
+        ucSIO3:u1
       }
       ucDummyByte:u1
       ucMode:u1
@@ -496,7 +498,9 @@ function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, str
           ucCS = atGeneralParameters.tSpiConfiguration.aucMmio.ucCS,
           ucCLK = atGeneralParameters.tSpiConfiguration.aucMmio.ucCLK,
           ucMISO = atGeneralParameters.tSpiConfiguration.aucMmio.ucMISO,
-          ucMOSI = atGeneralParameters.tSpiConfiguration.aucMmio.ucMOSI
+          ucMOSI = atGeneralParameters.tSpiConfiguration.aucMmio.ucMOSI,
+          ucSIO2 = atGeneralParameters.tSpiConfiguration.aucMmio.ucSIO2,
+          ucSIO3 = atGeneralParameters.tSpiConfiguration.aucMmio.ucSIO3
         },
         ucDummyByte = atGeneralParameters.tSpiConfiguration.ucDummyByte,
         ucMode = atGeneralParameters.tSpiConfiguration.ucMode,
