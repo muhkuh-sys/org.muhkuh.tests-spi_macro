@@ -61,18 +61,18 @@ atEnv.DEFAULT.Version('/tmp/targets/version/version.h', 'templates/version.h')
 # This is the list of sources. The elements must be separated with whitespace
 # (i.e. spaces, tabs, newlines). The amount of whitespace does not matter.
 sources_common = """
-	src/boot_spi.c
-	src/header.c
-	src/init_muhkuh.S
-	src/main.c
-	src/parameter_placeholder.c
-	src/spi_macro_player.c
+    src/boot_spi.c
+    src/header.c
+    src/init_muhkuh.S
+    src/main.c
+    src/parameter_placeholder.c
+    src/spi_macro_player.c
 """
 
 sources_netx4000 = """
-	src/boot_drv_sqi.c
-	src/boot_drv_spi.c
-	src/portcontrol.c
+    src/boot_drv_sqi.c
+    src/boot_drv_spi.c
+    src/portcontrol.c
 """
 
 sources_netx500 = """
@@ -82,12 +82,12 @@ sources_netx90 = """
 """
 
 sources_netx56 = """
-	src/boot_drv_sqi.c
-	src/boot_drv_spi.c
+    src/boot_drv_sqi.c
+    src/boot_drv_spi.c
 """
 
 sources_netx50 = """
-	src/boot_drv_spi.c
+    src/boot_drv_spi.c
 """
 
 sources_netx10 = """
@@ -166,6 +166,43 @@ for strBuildName, atBuildAttributes in atBuildConfigurations.iteritems():
 
 #----------------------------------------------------------------------------
 #
+# Build the artifacts.
+#
+strGroup = 'org.muhkuh.tests'
+strModule = 'spi_flash_macro'
+
+# Split the group by dots.
+aGroup = strGroup.split('.')
+# Build the path for all artifacts.
+strModulePath = 'targets/jonchki/repository/%s/%s/%s' % ('/'.join(aGroup), strModule, PROJECT_VERSION)
+
+# Set the name of the artifact.
+strArtifact0 = 'spi_flash_macro'
+
+tArcList0 = atEnv.DEFAULT.ArchiveList('zip')
+tArcList0.AddFiles('netx/',
+    atBin['netX50'],
+    atBin['netX56'],
+    atBin['netX4000_RELAXED'])
+tArcList0.AddFiles('lua/',
+    atLua['netX50'])
+tArcList0.AddFiles('templates/',
+    'templates/test.lua')
+#tArcList0.AddFiles('doc/',
+#   tDoc)
+tArcList0.AddFiles('',
+    'installer/jonchki/install.lua',
+    'installer/jonchki/install_testcase.lua')
+
+tArtifact0 = atEnv.DEFAULT.Archive(os.path.join(strModulePath, '%s-%s.zip' % (strArtifact0, PROJECT_VERSION)), None, ARCHIVE_CONTENTS = tArcList0)
+tArtifact0Hash = atEnv.DEFAULT.Hash('%s.hash' % tArtifact0[0].get_path(), tArtifact0[0].get_path(), HASH_ALGORITHM='md5,sha1,sha224,sha256,sha384,sha512', HASH_TEMPLATE='${ID_UC}:${HASH}\n')
+tConfiguration0 = atEnv.DEFAULT.Version(os.path.join(strModulePath, '%s-%s.xml' % (strArtifact0, PROJECT_VERSION)), 'installer/jonchki/%s.xml' % strModule)
+tConfiguration0Hash = atEnv.DEFAULT.Hash('%s.hash' % tConfiguration0[0].get_path(), tConfiguration0[0].get_path(), HASH_ALGORITHM='md5,sha1,sha224,sha256,sha384,sha512', HASH_TEMPLATE='${ID_UC}:${HASH}\n')
+tArtifact0Pom = atEnv.DEFAULT.ArtifactVersion(os.path.join(strModulePath, '%s-%s.pom' % (strArtifact0, PROJECT_VERSION)), 'installer/jonchki/pom.xml')
+
+
+#----------------------------------------------------------------------------
+#
 # Make a local demo installation.
 #
 atCopyFiles = {
@@ -179,4 +216,4 @@ atCopyFiles = {
     'targets/testbench/lua/spi_flash_macro_test.lua':                     atLua['netX50']
 }
 for tDst, tSrc in atCopyFiles.iteritems():
-	Command(tDst, tSrc, Copy("$TARGET", "$SOURCE"))
+    Command(tDst, tSrc, Copy("$TARGET", "$SOURCE"))
