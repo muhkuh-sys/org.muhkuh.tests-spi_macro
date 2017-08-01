@@ -99,7 +99,7 @@ TEST_RESULT_T test_main(const TEST_PARAMETER_T *ptParameter)
 
 	systime_init();
 
-	uprintf("\f. *** Flash component verification test by cthelen@hilscher.com ***\n");
+	uprintf("\f. *** SPI flash macro test by cthelen@hilscher.com ***\n");
 	uprintf("V" VERSION_ALL "\n\n");
 
 	/* Switch all LEDs off. */
@@ -124,7 +124,7 @@ TEST_RESULT_T test_main(const TEST_PARAMETER_T *ptParameter)
 			iResult = spi_macro_player_run(&tSpiMacro);
 			if( iResult!=0 )
 			{
-				uprintf("Failed to run the SPI macro 'Initialize'.\n");
+				uprintf("Failed to run the SPI macro.\n");
 			}
 			else
 			{
