@@ -375,7 +375,7 @@ function SpiFlashMacroTest:compile_macro(strMacro)
           -- If the token ends with a colon, it is a label definition.
           if string.sub(strStrippedToken, -1)==':' then
             -- Get the label name without the colon.
-            local strLabelName = string.sub(strStrippedToken, -2)
+            local strLabelName = string.sub(strStrippedToken, 1, -2)
             -- Does the label already exist?
             if atLabels[strLabelName]~=nil then
               self.tLogger:error('[SPI Macro] Label "%s" redefined in line %d.', strLabelName, uiLineNumber)
@@ -422,7 +422,7 @@ function SpiFlashMacroTest:compile_macro(strMacro)
         self.tLogger:error('[SPI Macro] Referenced unknown label "%s" at addresses %s.', strLabelName, table.concat(atRefs, ', '))
         tResult = nil
       else
-        for _, uiPosition in atRefs do
+        for _, uiPosition in ipairs(atRefs) do
           self.tLogger:debug('[SPI Macro] Resolve label "%s" at position 0x%02x to address 0x%02x.', strLabelName, uiPosition, ulAddress)
           aucOpcodes[uiPosition + 1] = ulAddress
         end
