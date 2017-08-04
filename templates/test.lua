@@ -12,7 +12,7 @@ CFG_aParameterDefinitions = {
     help="This is the unit providing the SPI bus.",
     mandatory=true,
     validate=parameters.test_choice_single,
-    constrains="netX50_SPI0,netX50_SPI1,netX56_SQI,netX56_SPI,netX4000_SQI0,netX4000_SQI1,netX4000_SPI"
+    constrains="netX50_SPI0,netX50_SPI1,netX56_SQI,netX56_SPI,netX90_SQI,netX4000_SQI0,netX4000_SQI1,netX4000_SPI"
   },
   {
     name="chip_select",
@@ -191,6 +191,8 @@ function run(aParameters)
 
     ['netX56_SQI'] = f.UNIT_netX56_SQI,
     ['netX56_SPI'] = f.UNIT_netX56_SPI,
+
+    ['netX90_SQI'] = f.UNIT_netX90_SQI,
 
     ['netX4000_SQI0'] = f.UNIT_netX4000_SQI0,
     ['netX4000_SQI1'] = f.UNIT_netX4000_SQI1,
