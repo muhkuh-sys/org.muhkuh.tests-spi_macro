@@ -18,25 +18,40 @@
 /*-------------------------------------------------------------------------*/
 
 
-static int get_cs_mode(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CHIP_SELECT_MODE_T *ptMode)
+static int get_cs_mode(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CHIP_SELECT_MODE_T *ptMode, const char **ppcName)
 {
 	int iResult;
 	unsigned char ucMode;
 	SPI_MACRO_CHIP_SELECT_MODE_T tMode;
+	const char *pcName;
 
 
 	/* Expect an invalid CS mode. */
 	iResult = -1;
+	pcName = NULL;
 
 	ucMode = *((ptSpiMacro->pucMacroCnt)++);
 	tMode = (SPI_MACRO_CHIP_SELECT_MODE_T)ucMode;
 	switch(tMode)
 	{
 	case SMCS_NNN:
+		iResult = 0;
+		pcName = "NNN";
+		break;
+
 	case SMCS_SNN:
+		iResult = 0;
+		pcName = "SNN";
+		break;
+
 	case SMCS_SDN:
+		iResult = 0;
+		pcName = "SDN";
+		break;
+
 	case SMCS_SDD:
 		iResult = 0;
+		pcName = "SDD";
 		break;
 	}
 	if( iResult!=0 )
@@ -46,6 +61,7 @@ static int get_cs_mode(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CHIP_SELECT_MOD
 	else
 	{
 		*ptMode = tMode;
+		*ppcName = pcName;
 	}
 
 	return iResult;
@@ -172,6 +188,29 @@ static int is_condition_true(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CONDITION
 }
 
 
+
+static void show_flags(SPI_MACRO_HANDLE_T *ptSpiMacro)
+{
+	unsigned long ulFlags;
+	char cFlagE;
+	char cFlagZ;
+
+
+	ulFlags = ptSpiMacro->ulFlags;
+	cFlagE = ' ';
+	cFlagZ = ' ';
+	if( (ulFlags & ((unsigned long)SPI_MACRO_FLAGS_Equal))!=0 )
+	{
+		cFlagE = 'E';
+	}
+	if( (ulFlags & ((unsigned long)SPI_MACRO_FLAGS_Zero))!=0 )
+	{
+		cFlagZ = 'Z';
+	}
+	uprintf("[SpiMacro] Flags: %c%c\n", cFlagE, cFlagZ);
+}
+
+
 /*-------------------------------------------------------------------------*/
 
 
@@ -180,26 +219,27 @@ static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	int iResult;
 	unsigned int sizBytes;
 	SPI_MACRO_CHIP_SELECT_MODE_T tCsMode;
+	const char *pcCsModeName;
 
 
 	/* Get the chip select mode. */
-	iResult = get_cs_mode(ptSpiMacro, &tCsMode);
+	iResult = get_cs_mode(ptSpiMacro, &tCsMode, &pcCsModeName);
 	if( iResult==0 )
 	{
 		/* Get the number of bytes to send. */
 		sizBytes = *((ptSpiMacro->pucMacroCnt)++);
 
-		uprintf("[SpiMacro] Send %d\n", sizBytes);
+		uprintf("[SpiMacro] CMD: Send, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
 
 		if( (ptSpiMacro->pucMacroCnt + sizBytes)>(ptSpiMacro->pucMacroEnd) )
 		{
-			uprintf("[SpiMacro] InvalidSize\n");
+			uprintf("[SpiMacro] Invalid length.\n");
 			iResult = -1;
 		}
 		else
 		{
 			/* Write the data to the trace buffer. */
-			uprintf("[SpiMacro] Data:\n");
+			uprintf("[SpiMacro] Send data:\n");
 			hexdump(ptSpiMacro->pucMacroCnt, sizBytes);
 
 			if( tCsMode!=SMCS_NNN )
@@ -244,15 +284,16 @@ static int SMC_Handler_Receive(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned int sizBytes;
 	unsigned int sizBuffer;
 	SPI_MACRO_CHIP_SELECT_MODE_T tCsMode;
+	const char *pcCsModeName;
 
 
 	/* Get the chip select mode. */
-	iResult = get_cs_mode(ptSpiMacro, &tCsMode);
+	iResult = get_cs_mode(ptSpiMacro, &tCsMode, &pcCsModeName);
 	if( iResult==0 )
 	{
 		/* Get the number of bytes to send. */
 		sizBytes = *((ptSpiMacro->pucMacroCnt)++);
-		uprintf("[SpiMacro] Receive %d\n", sizBytes);
+		uprintf("[SpiMacro] CMD: Receive, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
 
 		sizBuffer = sizeof(ptSpiMacro->uRxBuffer);
 		if( sizBytes>sizBuffer )
@@ -304,16 +345,17 @@ static int SMC_Handler_Idle(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	int iResult;
 	unsigned int sizCycles;
 	SPI_MACRO_CHIP_SELECT_MODE_T tCsMode;
+	const char *pcCsModeName;
 
 
 	/* Get the chip select mode. */
-	iResult = get_cs_mode(ptSpiMacro, &tCsMode);
+	iResult = get_cs_mode(ptSpiMacro, &tCsMode, &pcCsModeName);
 	if( iResult==0 )
 	{
 		/* Get the number of bytes to send. */
 		sizCycles = *((ptSpiMacro->pucMacroCnt)++);
 
-		uprintf("[SpiMacro] Idle %d\n", sizCycles);
+		uprintf("[SpiMacro] CMD: Idle, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizCycles);
 
 		if( tCsMode!=SMCS_NNN )
 		{
@@ -353,16 +395,17 @@ static int SMC_Handler_Dummy(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	int iResult;
 	unsigned int sizBytes;
 	SPI_MACRO_CHIP_SELECT_MODE_T tCsMode;
+	const char *pcCsModeName;
 
 
 	/* Get the chip select mode. */
-	iResult = get_cs_mode(ptSpiMacro, &tCsMode);
+	iResult = get_cs_mode(ptSpiMacro, &tCsMode, &pcCsModeName);
 	if( iResult==0 )
 	{
 		/* Get the number of bytes to send. */
 		sizBytes = *((ptSpiMacro->pucMacroCnt)++);
 
-		uprintf("[SpiMacro] Dummy %d\n", sizBytes);
+		uprintf("[SpiMacro] CMD: Dummy, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
 
 		if( tCsMode!=SMCS_NNN )
 		{
@@ -438,18 +481,30 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	iResult = get_condition(ptSpiMacro, &tCondition, &pcName);
 	if( iResult==0 )
 	{
-		uprintf("[SpiMacro] Jump %s\n", pcName);
-
 		/* Get the address. */
 		ucAddress = *((ptSpiMacro->pucMacroCnt)++);
+
+		uprintf("[SpiMacro] CMD: Jump, Condition: %s, Address: 0x%02x\n", pcName, ucAddress);
+
 		pucAddress = ptSpiMacro->pucMacroStart + ucAddress;
-		if( pucAddress<=ptSpiMacro->pucMacroEnd )
+		if( pucAddress>ptSpiMacro->pucMacroEnd )
 		{
+			uprintf("[SpiMacro] The address points outside the macro!\n");
+			iResult = -1;
+		}
+		else
+		{
+			show_flags(ptSpiMacro);
+
 			iConditionIsTrue = is_condition_true(ptSpiMacro, tCondition);
-			if( iConditionIsTrue!=0 )
+			if( iConditionIsTrue==0 )
+			{
+				uprintf("[SpiMacro] The condition is not true.\n");
+			}
+			else
 			{
 				ptSpiMacro->pucMacroCnt = pucAddress;
-				uprintf("[SpiMacro] Jump 0x%08x\n", (unsigned long)pucAddress);
+				uprintf("[SpiMacro] The condition is true. Jump to 0x%02x\n", ucAddress);
 			}
 		}
 	}
@@ -603,7 +658,7 @@ static int SMC_Handler_Mask(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 	/* Extract the length. */
 	ulLength = *((ptSpiMacro->pucMacroCnt)++);
-	uprintf("[SpiMacro] Mask %d\n", ulLength);
+	uprintf("[SpiMacro] CMD: Mask Length: %d bytes\n", ulLength);
 
 	sizBuffer = sizeof(ptSpiMacro->uRxBuffer);
 	if( ulLength>sizBuffer )
@@ -618,7 +673,7 @@ static int SMC_Handler_Mask(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	else
 	{
 		/* Write the mask to the trace buffer. */
-		uprintf("[SpiMacro] Mask:\n");
+		uprintf("[SpiMacro] Mask data:\n");
 		hexdump(ptSpiMacro->pucMacroCnt, ulLength);
 
 		pucBuffer = ptSpiMacro->uRxBuffer.auc;
@@ -645,8 +700,9 @@ static int SMC_Handler_Mask(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		iResult = 0;
 
 		/* Write the result to the trace buffer. */
-		uprintf("[SpiMacro] Data:\n");
+		uprintf("[SpiMacro] Mask result:\n");
 		hexdump(ptSpiMacro->uRxBuffer.auc, ulLength);
+		show_flags(ptSpiMacro);
 	}
 
 	return iResult;
@@ -674,13 +730,18 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	iResult = get_condition(ptSpiMacro, &tCondition, &pcName);
 	if( iResult==0 )
 	{
-		uprintf("[SpiMacro] Fail %s\n", pcName);
+		uprintf("[SpiMacro] CMD: Fail, Condition: %s\n", pcName);
+		show_flags(ptSpiMacro);
 
 		iConditionIsTrue = is_condition_true(ptSpiMacro, tCondition);
-		if( iConditionIsTrue!=0 )
+		if( iConditionIsTrue==0 )
+		{
+			uprintf("[SpiMacro] The condition is not true.\n");
+		}
+		else
 		{
 			iResult = -1;
-			uprintf("[SpiMacro] Failed\n");
+			uprintf("[SpiMacro] The condition is true. Failed!\n");
 		}
 	}
 
