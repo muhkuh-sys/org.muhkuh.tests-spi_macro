@@ -2,7 +2,7 @@
 <jonchki-artifact version="1.0">
 	<info group="org.muhkuh.tests"
 	      module="spi_flash_macro"
-	      artifact="spi_flash_macro"
+	      artifact="lua5.1-spi_flash_macro"
 	      version="${PROJECT_VERSION}"
 	      vcs-id="${PROJECT_VERSION_VCS}"
 	      extension="zip">
@@ -13,6 +13,6 @@
 		</description>
 	</info>
 	<dependencies>
-<!--		<dependency group="org.muhkuh.tools" module="muhkuh_base_cli" artifact="lua5.1-muhkuh_base_cli" version="2.2"/> -->
+		<dependency group="org.muhkuh.tools" module="muhkuh_base_cli" artifact="lua5.1-muhkuh_base_cli" version="2.2"/>
 	</dependencies>
 </jonchki-artifact>
