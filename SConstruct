@@ -110,6 +110,7 @@ atBuildConfigurations = {
         'LD': 'src/netx4000/netx4000_intram.ld',
         'SRC': sources_common + sources_netx4000,
         'DEFINES': [],
+        'BIN': 'spi_flash_macro_test_netx4000.bin',
         'FILTER': {}
     },
 
@@ -118,6 +119,7 @@ atBuildConfigurations = {
         'LD': 'src/netx90/netx90_intram.ld',
         'SRC': sources_common + sources_netx90,
         'DEFINES': [],
+        'BIN': 'spi_flash_macro_test_netx90.bin',
         'FILTER': {}
     },
 
@@ -126,6 +128,7 @@ atBuildConfigurations = {
         'LD': 'src/netx56/netx56_intram.ld',
         'SRC': sources_common + sources_netx56,
         'DEFINES': [],
+        'BIN': 'spi_flash_macro_test_netx56.bin',
         'FILTER': {}
     },
 
@@ -134,6 +137,7 @@ atBuildConfigurations = {
         'LD': 'src/netx50/netx50_intram.ld',
         'SRC': sources_common + sources_netx50,
         'DEFINES': [],
+        'BIN': 'spi_flash_macro_test_netx50.bin',
         'FILTER': {}
     }
 }
@@ -160,7 +164,7 @@ for strBuildName, atBuildAttributes in atBuildConfigurations.iteritems():
     # Create a complete dump of the ELF file.
     tTxt = tEnv.ObjDump(os.path.join('targets', strBuildName, strBuildName + '.txt'), tElf, OBJDUMP_FLAGS=['--disassemble', '--source', '--all-headers', '--wide'])
     # Create a binary from the ELF file.
-    tBin = tEnv.ObjCopy(os.path.join('targets', strBuildName, strBuildName + '.bin'), tElf)
+    tBin = tEnv.ObjCopy(os.path.join('targets', strBuildName, atBuildAttributes['BIN']), tElf)
     # Store the build in the dict.
     atBin[strBuildName] = tBin
 
