@@ -445,18 +445,47 @@ static int SMC_Handler_Mode(SPI_MACRO_HANDLE_T *ptMacroCfg)
 	int iResult;
 	unsigned long ulValue;
 	SPI_BUS_WIDTH_T tMode;
+	const char *pcModeName;
 
+
+	/* Expect an invalid mode. */
+	iResult = -1;
+	pcModeName = NULL;
 
 	/* Extract the mode from the command. */
 	ulValue = (unsigned long)(*((ptMacroCfg->pucMacroCnt)++));
 	tMode = (SPI_BUS_WIDTH_T)ulValue;
+	switch( tMode )
+	{
+	case SPI_BUS_WIDTH_1BIT:
+		iResult = 0;
+		pcModeName = "1 bit";
+		break;
 
-	uprintf("[SpiMacro] Mode %d\n", tMode);
+	case SPI_BUS_WIDTH_2BIT:
+		iResult = 0;
+		pcModeName = "2 bit";
+		break;
 
-	iResult = ptMacroCfg->ptCfg->pfnSetBusWidth(ptMacroCfg->ptCfg, tMode);
+	case SPI_BUS_WIDTH_4BIT:
+		iResult = 0;
+		pcModeName = "4 bit";
+		break;
+	}
+
 	if( iResult!=0 )
 	{
-		uprintf("[SpiMacro] Transfer Error\n");
+		uprintf("[SpiMacro] Invalid mode: %d\n", ulValue);
+	}
+	else
+	{
+		uprintf("[SpiMacro] CMD: Mode, Mode: %s\n", pcModeName);
+
+		iResult = ptMacroCfg->ptCfg->pfnSetBusWidth(ptMacroCfg->ptCfg, tMode);
+		if( iResult!=0 )
+		{
+			uprintf("[SpiMacro] Failed to set new mode.\n");
+		}
 	}
 
 	return iResult;
