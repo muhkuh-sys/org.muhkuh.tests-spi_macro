@@ -53,26 +53,46 @@ static int get_cs_mode(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CHIP_SELECT_MOD
 
 
 
-static int get_condition(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CONDITION_T *ptCondition)
+static int get_condition(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CONDITION_T *ptCondition, const char **ppcName)
 {
 	int iResult;
 	unsigned int uiCondition;
 	SPI_MACRO_CONDITION_T tCondition;
+	const char *pcName;
 
 
 	/* Be pessimistic. */
 	iResult = -1;
+	pcName = NULL;
 
 	uiCondition = (unsigned int)(*((ptSpiMacro->pucMacroCnt)++));
 	tCondition = (SPI_MACRO_CONDITION_T)uiCondition;
 	switch(tCondition)
 	{
 	case SPI_MACRO_CONDITION_Always:
+		iResult = 0;
+		pcName = "always";
+		break;
+
 	case SPI_MACRO_CONDITION_Equal:
+		iResult = 0;
+		pcName = "equal";
+		break;
+
 	case SPI_MACRO_CONDITION_NotEqual:
+		iResult = 0;
+		pcName = "not equal";
+		break;
+
 	case SPI_MACRO_CONDITION_Zero:
+		iResult = 0;
+		pcName = "zero";
+		break;
+
 	case SPI_MACRO_CONDITION_NotZero:
 		iResult = 0;
+		pcName = "not zero";
+		break;
 	}
 	if( iResult!=0 )
 	{
@@ -81,6 +101,7 @@ static int get_condition(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CONDITION_T *
 	else
 	{
 		*ptCondition = tCondition;
+		*ppcName = pcName;
 	}
 
 	return iResult;
@@ -407,16 +428,17 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned char ucAddress;
 	const unsigned char *pucAddress;
 	int iConditionIsTrue;
+	const char *pcName;
 
 
 	/* Be pessimistic. */
 	iResult = -1;
 
 	/* Get the condition. */
-	iResult = get_condition(ptSpiMacro, &tCondition);
+	iResult = get_condition(ptSpiMacro, &tCondition, &pcName);
 	if( iResult==0 )
 	{
-		uprintf("[SpiMacro] Jump %d\n", tCondition);
+		uprintf("[SpiMacro] Jump %s\n", pcName);
 
 		/* Get the address. */
 		ucAddress = *((ptSpiMacro->pucMacroCnt)++);
@@ -645,13 +667,14 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	int iResult;
 	SPI_MACRO_CONDITION_T tCondition;
 	int iConditionIsTrue;
+	const char *pcName;
 
 
 	/* Get the condition. */
-	iResult = get_condition(ptSpiMacro, &tCondition);
+	iResult = get_condition(ptSpiMacro, &tCondition, &pcName);
 	if( iResult==0 )
 	{
-		uprintf("[SpiMacro] Fail %d\n", tCondition);
+		uprintf("[SpiMacro] Fail %s\n", pcName);
 
 		iConditionIsTrue = is_condition_true(ptSpiMacro, tCondition);
 		if( iConditionIsTrue!=0 )
