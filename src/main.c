@@ -72,7 +72,21 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 	}
 
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW
-#       error "netX90 MPW is not yet supported"
+	/* netX90 has 3 hardware units. The first one can do 1, 2 and 4 bit
+	 * SPI. It is mapped to unit 0. The second one can do 1 bit SPI. It
+	 * is mapped to unit 1 and unit 2.
+	 */
+	if( uiUnit==0 )
+	{
+		iResult = boot_drv_sqi_init(ptSpiCfg, ptSpiConfiguration, 0, uiChipSelect);
+	}
+#if 0
+	/* Not yet... */
+	else if( (uiUnit==1) || (uiUnit==2) )
+	{
+		iResult = boot_drv_spi_init(ptSpiCfg, ptSpiConfiguration, uiUnit-1, uiChipSelect);
+	}
+#endif
 
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW_APP
 #       error "netX90 MPW APP is not yet supported"

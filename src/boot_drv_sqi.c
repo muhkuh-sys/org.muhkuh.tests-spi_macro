@@ -855,6 +855,13 @@ static int qsi_set_bus_width(SPI_CFG_T *ptCfg, SPI_BUS_WIDTH_T tBusWidth)
 #       define SQIROMCFG_ADDRESS_BITS_MINIMUM 20
 #       define SQIROMCFG_ADDRESS_BITS_MAXIMUM 26
 #       define SQIROMCFG_FREQUENCY_MAXIMUM_KHZ 142000U
+#elif ASIC_TYP==ASIC_TYP_NETX90_MPW
+#       define SQIROMCFG_DUMMY_CYCLES_MAXIMUM 15
+#       define SQIROMCFG_ADDRESS_NIBBLES_MINIMUM 5
+#       define SQIROMCFG_ADDRESS_NIBBLES_MAXIMUM 8
+#       define SQIROMCFG_ADDRESS_BITS_MINIMUM 20
+#       define SQIROMCFG_ADDRESS_BITS_MAXIMUM 26
+#       define SQIROMCFG_FREQUENCY_MAXIMUM_KHZ 133000U
 #elif ASIC_TYP==ASIC_TYP_NETX56
 #       define SQIROMCFG_DUMMY_CYCLES_MAXIMUM 7
 #       define SQIROMCFG_ADDRESS_NIBBLES_MINIMUM 5
@@ -928,7 +935,7 @@ static unsigned long qsi_get_device_specific_sqirom_cfg(SPI_CFG_T *ptCfg, unsign
 		{
 			ulClockDivider = 6U;
 		}
-#elif ASIC_TYP==ASIC_TYP_NETX56
+#elif ASIC_TYP==ASIC_TYP_NETX56 || ASIC_TYP==ASIC_TYP_NETX90_MPW
 		/* In the regdef the following formula is specified:
 		 *
 		 *   t_sck = (clk_div_val+3)*2.5ns
@@ -1096,7 +1103,8 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 	const unsigned short *pusPortControlIndex;
 
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW
-#       error "netX90 MPW is not yet supported"
+	HOSTDEF(ptSqiArea);
+	HOSTADEF(SQI) * ptSqi;
 
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW_APP
 #       error "netX90 MPW APP is not yet supported"
@@ -1147,7 +1155,11 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 	}
 
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW
-#       error "netX90 MPW is not yet supported"
+	if( uiSqiUnit==0 )
+	{
+		ptSqi = ptSqiArea;
+		pvSqiRom = (unsigned long*)Addr_NX90_sqirom;
+	}
 
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW_APP
 #       error "netX90 MPW APP is not yet supported"

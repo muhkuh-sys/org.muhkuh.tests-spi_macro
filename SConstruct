@@ -79,6 +79,7 @@ sources_netx500 = """
 """
 
 sources_netx90 = """
+    src/boot_drv_sqi.c
 """
 
 sources_netx56 = """
@@ -108,6 +109,14 @@ atBuildConfigurations = {
         'ENV': atEnv.NETX4000_RELAXED,
         'LD': 'src/netx4000/netx4000_intram.ld',
         'SRC': sources_common + sources_netx4000,
+        'DEFINES': [],
+        'FILTER': {}
+    },
+
+    'netX90_MPW': {
+        'ENV': atEnv.NETX90_MPW,
+        'LD': 'src/netx90/netx90_intram.ld',
+        'SRC': sources_common + sources_netx90,
         'DEFINES': [],
         'FILTER': {}
     },
@@ -209,6 +218,7 @@ atCopyFiles = {
     # Copy all binaries.
     'targets/testbench/netx/spi_flash_macro_test_netx50.bin':             atBin['netX50'],
     'targets/testbench/netx/spi_flash_macro_test_netx56.bin':             atBin['netX56'],
+    'targets/testbench/netx/spi_flash_macro_test_netx90.bin':             atBin['netX90_MPW'],
     'targets/testbench/netx/spi_flash_macro_test_netx4000.bin':           atBin['netX4000_RELAXED'],
 
     # Copy the LUA module.
