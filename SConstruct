@@ -110,7 +110,7 @@ atBuildConfigurations = {
         'LD': 'src/netx4000/netx4000_intram.ld',
         'SRC': sources_common + sources_netx4000,
         'DEFINES': [],
-        'BIN': 'spi_flash_macro_test_netx4000.bin',
+        'BIN': 'spi_macro_test_netx4000.bin',
         'FILTER': {}
     },
 
@@ -119,7 +119,7 @@ atBuildConfigurations = {
         'LD': 'src/netx90/netx90_intram.ld',
         'SRC': sources_common + sources_netx90,
         'DEFINES': [],
-        'BIN': 'spi_flash_macro_test_netx90.bin',
+        'BIN': 'spi_macro_test_netx90.bin',
         'FILTER': {}
     },
 
@@ -128,7 +128,7 @@ atBuildConfigurations = {
         'LD': 'src/netx56/netx56_intram.ld',
         'SRC': sources_common + sources_netx56,
         'DEFINES': [],
-        'BIN': 'spi_flash_macro_test_netx56.bin',
+        'BIN': 'spi_macro_test_netx56.bin',
         'FILTER': {}
     },
 
@@ -137,7 +137,7 @@ atBuildConfigurations = {
         'LD': 'src/netx50/netx50_intram.ld',
         'SRC': sources_common + sources_netx50,
         'DEFINES': [],
-        'BIN': 'spi_flash_macro_test_netx50.bin',
+        'BIN': 'spi_macro_test_netx50.bin',
         'FILTER': {}
     }
 }
@@ -169,7 +169,7 @@ for strBuildName, atBuildAttributes in atBuildConfigurations.iteritems():
     atBin[strBuildName] = tBin
 
     # Filter the LUA file.
-    tLua = tEnv.GccSymbolTemplate(os.path.join('targets', strBuildName, 'lua', 'spi_flash_macro_test.lua'), tElf, GCCSYMBOLTEMPLATE_TEMPLATE='templates/spi_flash_macro_test.lua')
+    tLua = tEnv.GccSymbolTemplate(os.path.join('targets', strBuildName, 'lua', 'spi_macro_test.lua'), tElf, GCCSYMBOLTEMPLATE_TEMPLATE='templates/spi_macro_test.lua')
     # Store the build in the dict.
     atLua[strBuildName] = tLua
 
@@ -182,7 +182,7 @@ for strBuildName, atBuildAttributes in atBuildConfigurations.iteritems():
 # Build the artifacts.
 #
 strGroup = 'org.muhkuh.tests'
-strModule = 'spi_flash_macro'
+strModule = 'spi_macro'
 
 # Split the group by dots.
 aGroup = strGroup.split('.')
@@ -190,7 +190,7 @@ aGroup = strGroup.split('.')
 strModulePath = 'targets/jonchki/repository/%s/%s/%s' % ('/'.join(aGroup), strModule, PROJECT_VERSION)
 
 # Set the name of the artifact.
-strArtifact0 = 'lua5.1-spi_flash_macro'
+strArtifact0 = 'lua5.1-spi_macro'
 
 tArcList0 = atEnv.DEFAULT.ArchiveList('zip')
 tArcList0.AddFiles('netx/',
@@ -199,7 +199,8 @@ tArcList0.AddFiles('netx/',
     atBin['netX90_MPW'],
     atBin['netX4000_RELAXED'])
 tArcList0.AddFiles('lua/',
-    atLua['netX50'])
+    atLua['netX50'],
+    'lua/test_class_spi_macro.lua')
 tArcList0.AddFiles('templates/',
     'templates/test.lua')
 #tArcList0.AddFiles('doc/',
@@ -221,14 +222,14 @@ tArtifact0Pom = atEnv.DEFAULT.ArtifactVersion(os.path.join(strModulePath, '%s-%s
 #
 atCopyFiles = {
     # Copy all binaries.
-    'targets/testbench/netx/spi_flash_macro_test_netx50.bin':             atBin['netX50'],
-    'targets/testbench/netx/spi_flash_macro_test_netx56.bin':             atBin['netX56'],
-    'targets/testbench/netx/spi_flash_macro_test_netx90.bin':             atBin['netX90_MPW'],
-    'targets/testbench/netx/spi_flash_macro_test_netx4000.bin':           atBin['netX4000_RELAXED'],
+    'targets/testbench/netx/spi_macro_test_netx50.bin':             atBin['netX50'],
+    'targets/testbench/netx/spi_macro_test_netx56.bin':             atBin['netX56'],
+    'targets/testbench/netx/spi_macro_test_netx90.bin':             atBin['netX90_MPW'],
+    'targets/testbench/netx/spi_macro_test_netx4000.bin':           atBin['netX4000_RELAXED'],
 
     # Copy the LUA module.
     # NOTE: All files should be the same, just take the netX50 build.
-    'targets/testbench/lua/spi_flash_macro_test.lua':                     atLua['netX50']
+    'targets/testbench/lua/spi_macro_test.lua':                     atLua['netX50']
 }
 for tDst, tSrc in atCopyFiles.iteritems():
     Command(tDst, tSrc, Copy("$TARGET", "$SOURCE"))
