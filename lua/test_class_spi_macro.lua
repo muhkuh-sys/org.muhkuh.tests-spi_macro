@@ -150,7 +150,7 @@ function TestClassSpiMacro:run()
       ucSIO3 = atParameter['mmio_SIO3']:get(),
     },
     ucDummyByte = atParameter['dummy_byte']:get(),
-    ucMode = atParameter['mode']:get(),
+    ucMode = tonumber(atParameter['mode']:get()),
     ucIdleConfiguration = ucIdleConfiguration
   }
   local tSpiCfg = f:compile_spi_configuration(atSpiConfiguration)
