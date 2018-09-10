@@ -58,14 +58,10 @@ clear_bss:
 @ Replace the parameter in r0 with 0 if it does not look like a valid
 @ pointer.
 @
-	@ The pointer must not be 0.
-	cmp     r0, #0
-	beq     parameter_not_valid
 	@ The pointer must be 32 bit aligned.
 	tst     r0, #3
 	beq     parameter_valid
-
-parameter_not_valid:
+	@ The parameter is not valid.
 	mov     r0, #0
 
 parameter_valid:
