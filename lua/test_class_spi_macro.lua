@@ -1,172 +1,97 @@
 local class = require 'pl.class'
-local TestClassSpiMacro = class()
+local TestClass = require 'test_class'
+local TestClassSpiMacro = class(TestClass)
 
 
-function TestClassSpiMacro:_init(strTestName)
-  self.parameters = require 'parameters'
-  self.pl = require'pl.import_into'()
+function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLevel)
+  self:super(strTestName, uiTestCase, tLogWriter, strLogLevel)
 
-  self.CFG_strTestName = strTestName
+  local P = self.P
+  self:__parameter {
+    P:SC('unit', 'This is the unit providing the SPI bus.'):
+      required(true):
+      constraint('netX50_SPI0,netX50_SPI1,netX56_SQI,netX56_SPI,netX90_SQI,netX4000_SQI0,netX4000_SQI1,netX4000_SPI'),
 
-  self.CFG_aParameterDefinitions = {
-    {
-      name="unit",
-      default=nil,
-      help="This is the unit providing the SPI bus.",
-      mandatory=true,
-      validate=parameters.test_choice_single,
-      constrains="netX50_SPI0,netX50_SPI1,netX56_SQI,netX56_SPI,netX90_SQI,netX4000_SQI0,netX4000_SQI1,netX4000_SPI"
-    },
-    {
-      name="chip_select",
-      default=nil,
-      help="The chip select number on the selected SPI bus.",
-      mandatory=false,
-      validate=parameters.test_uint8,
-      constrains=nil
-    },
-    {
-      name="speed",
-      default=nil,
-      help="The speed for the SPI communication in kHz.",
-      mandatory=false,
-      validate=parameters.test_uint32,
-      constrains=nil
-    },
-    {
-      name="port_control_CS",
-      default=0xffff,
-      help="The port control value for the CS signal.",
-      mandatory=false,
-      validate=parameters.test_uint16,
-      constrains=nil
-    },
-    {
-      name="port_control_CLK",
-      default=0xffff,
-      help="The port control value for the CLK signal.",
-      mandatory=false,
-      validate=parameters.test_uint16,
-      constrains=nil
-    },
-    {
-      name="port_control_MOSI",
-      default=0xffff,
-      help="The port control value for the MOSI signal.",
-      mandatory=false,
-      validate=parameters.test_uint16,
-      constrains=nil
-    },
-    {
-      name="port_control_MISO",
-      default=0xffff,
-      help="The port control value for the MISO signal.",
-      mandatory=false,
-      validate=parameters.test_uint16,
-      constrains=nil
-    },
-    {
-      name="port_control_SIO2",
-      default=0xffff,
-      help="The port control value for the SIO2 signal.",
-      mandatory=false,
-      validate=parameters.test_uint16,
-      constrains=nil
-    },
-    {
-      name="port_control_SIO3",
-      default=0xffff,
-      help="The port control value for the SIO3 signal.",
-      mandatory=false,
-      validate=parameters.test_uint16,
-      constrains=nil
-    },
-    {
-      name="mmio_CS",
-      default=0xff,
-      help="The MMIO index for the CS signal.",
-      mandatory=false,
-      validate=parameters.test_uint8,
-      constrains=nil
-    },
-    {
-      name="mmio_CLK",
-      default=0xff,
-      help="The MMIO index for the CLK signal.",
-      mandatory=false,
-      validate=parameters.test_uint8,
-      constrains=nil
-    },
-    {
-      name="mmio_MISO",
-      default=0xff,
-      help="The MMIO index for the MISO signal.",
-      mandatory=false,
-      validate=parameters.test_uint8,
-      constrains=nil
-    },
-    {
-      name="mmio_MOSI",
-      default=0xff,
-      help="The MMIO index for the MOSI signal.",
-      mandatory=false,
-      validate=parameters.test_uint8,
-      constrains=nil
-    },
-    {
-      name="mmio_SIO2",
-      default=0xff,
-      help="The MMIO index for the SIO2 signal.",
-      mandatory=false,
-      validate=parameters.test_uint8,
-      constrains=nil
-    },
-    {
-      name="mmio_SIO3",
-      default=0xff,
-      help="The MMIO index for the SIO3 signal.",
-      mandatory=false,
-      validate=parameters.test_uint8,
-      constrains=nil
-    },
-    {
-      name="dummy_byte",
-      default=0xff,
-      help="The 8 bit value for the dummy cycles.",
-      mandatory=false,
-      validate=parameters.test_uint8,
-      constrains=nil
-    },
-    {
-      name="mode",
-      default=nil,
-      help="The SPI mode for the communication.",
-      mandatory=true,
-      validate=parameters.test_choice_single,
-      constrains="0,1,2,3"
-    },
-    {
-      name="idle_configuration",
-      default=0,
-      help="The idle configuration of the interface.",
-      mandatory=false,
-      validate=parameters.test_choice_multiple,
-      constrains="0,IO1_OE,IO1_OUT,IO2_OE,IO2_OUT,IO3_OE,IO3_OUT"
-    },
-    {
-      name="macro",
-      default=nil,
-      help="The file name of the macro to execute.",
-      mandatory=true,
-      validate=nil,
-      constrains=nil
-    }
+    P:U8('chip_select', 'The chip select number on the selected SPI bus.'):
+      default(0):
+      required(true),
+
+    P:U32('speed', 'The speed for the SPI communication in kHz.'):
+      default(1000):
+      required(true),
+
+    P:U16('port_control_CS', 'The port control value for the CS signal.'):
+      default(0xffff):
+      required(true),
+
+    P:U16('port_control_CLK', 'The port control value for the CLK signal.'):
+      default(0xffff):
+      required(true),
+
+    P:U16('port_control_MOSI', 'The port control value for the MOSI signal.'):
+      default(0xffff):
+      required(true),
+
+    P:U16('port_control_MISO', 'The port control value for the MISO signal.'):
+      default(0xffff):
+      required(true),
+
+    P:U16('port_control_SIO2', 'The port control value for the SIO2 signal.'):
+      default(0xffff):
+      required(true),
+
+    P:U16('port_control_SIO3', 'The port control value for the SIO3 signal.'):
+      default(0xffff):
+      required(true),
+
+    P:U8('mmio_CS', 'The MMIO index for the CS signal.'):
+      default(0xff):
+      required(true),
+
+    P:U8('mmio_CLK', 'The MMIO index for the CLK signal.'):
+      default(0xff):
+      required(true),
+
+    P:U8('mmio_MISO', 'The MMIO index for the MISO signal.'):
+      default(0xff):
+      required(true),
+
+    P:U8('mmio_MOSI', 'The MMIO index for the MOSI signal.'):
+      default(0xff):
+      required(true),
+
+    P:U8('mmio_SIO2', 'The MMIO index for the SIO2 signal.'):
+      default(0xff):
+      required(true),
+
+    P:U8('mmio_SIO3', 'The MMIO index for the SIO3 signal.'):
+      default(0xff):
+      required(true),
+
+    P:U8('dummy_byte', 'The 8 bit value for the dummy cycles.'):
+      default(0xff):
+      required(true),
+
+    P:SC('mode', 'The SPI mode for the communication.'):
+      required(true):
+      constraint('0,1,2,3'),
+
+    P:MC('idle_configuration', 'The idle configuration of the interface.'):
+      default('0'):
+      required(true):
+      constraint('0,IO1_OE,IO1_OUT,IO2_OE,IO2_OUT,IO3_OE,IO3_OUT'),
+
+    P:P('macro', 'The file name of the macro to execute.'):
+      required(true)
   }
 end
 
 
 
-function TestClassSpiMacro:run(aParameters, tLog)
+function TestClassSpiMacro:run()
+  local atParameter = self.atParameter
+  local tLog = self.tLog
+
   ----------------------------------------------------------------------
   --
   -- Parse the parameters and collect all options.
@@ -175,7 +100,7 @@ function TestClassSpiMacro:run(aParameters, tLog)
   local f = cSpiMacroTest(tLog)
 
   -- Parse the idle configuration.
-  print(aParameters['idle_configuration'])
+  print(atParameter['idle_configuration']:get())
   local ucIdleConfiguration = 0
 
   -- Parse the unit.
@@ -192,40 +117,40 @@ function TestClassSpiMacro:run(aParameters, tLog)
     ['netX4000_SQI1'] = f.UNIT_netX4000_SQI1,
     ['netX4000_SPI'] = f.UNIT_netX4000_SPI
   }
-  local uiUnit = atUnits[aParameters['unit']]
+  local uiUnit = atUnits[atParameter['unit']:get()]
 
   -- Parse the chip select.
-  local uiChipSelect = tonumber(aParameters['chip_select'])
+  local uiChipSelect = atParameter['chip_select']:get()
 
   -- Read the macro file.
-  local strFileName = self.pl.path.exists(aParameters['macro'])
+  local strFileName = self.pl.path.exists(atParameter['macro']:get())
   if strFileName==nil then
-    tLog.error('The macro file "%s" does not exist.', aParameters['macro'])
+    tLog.error('The macro file "%s" does not exist.', atParameter['macro']:get())
     error('Failed to load the macro.')
   end
   local strMacro = self.pl.file.read(strFileName)
 
   local atSpiConfiguration = {
-    ulSpeedFifoKhz = tonumber(aParameters['speed']),
+    ulSpeedFifoKhz = atParameter['speed']:get(),
     ulSpeedSqiRomKhz = 0,
     ausPortControl = {
-      usCLK = tonumber(aParameters['port_control_CLK']),
-      usMOSI = tonumber(aParameters['port_control_MOSI']),
-      usMISO = tonumber(aParameters['port_control_MISO']),
-      usSIO2 = tonumber(aParameters['port_control_SIO2']),
-      usSIO3 = tonumber(aParameters['port_control_SIO3']),
-      usCS0 = tonumber(aParameters['port_control_CS'])
+      usCLK = atParameter['port_control_CLK']:get(),
+      usMOSI = atParameter['port_control_MOSI']:get(),
+      usMISO = atParameter['port_control_MISO']:get(),
+      usSIO2 = atParameter['port_control_SIO2']:get(),
+      usSIO3 = atParameter['port_control_SIO3']:get(),
+      usCS0 = atParameter['port_control_CS']:get()
     },
     aucMmio = {
-      ucCS = tonumber(aParameters['mmio_CS']),
-      ucCLK = tonumber(aParameters['mmio_CLK']),
-      ucMISO = tonumber(aParameters['mmio_MISO']),
-      ucMOSI = tonumber(aParameters['mmio_MOSI']),
-      ucSIO2 = tonumber(aParameters['mmio_SIO2']),
-      ucSIO3 = tonumber(aParameters['mmio_SIO3']),
+      ucCS = atParameter['mmio_CS']:get(),
+      ucCLK = atParameter['mmio_CLK']:get(),
+      ucMISO = atParameter['mmio_MISO']:get(),
+      ucMOSI = atParameter['mmio_MOSI']:get(),
+      ucSIO2 = atParameter['mmio_SIO2']:get(),
+      ucSIO3 = atParameter['mmio_SIO3']:get(),
     },
-    ucDummyByte = tonumber(aParameters['dummy_byte']),
-    ucMode = tonumber(aParameters['mode']),
+    ucDummyByte = atParameter['dummy_byte']:get(),
+    ucMode = atParameter['mode']:get(),
     ucIdleConfiguration = ucIdleConfiguration
   }
   local tSpiCfg = f:compile_spi_configuration(atSpiConfiguration)
