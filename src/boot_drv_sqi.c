@@ -1022,6 +1022,9 @@ static int qsi_deactivate_sqi_rom(SPI_CFG_T *ptCfg)
 static void qsi_deactivate(const SPI_CFG_T *ptCfg)
 {
 	HOSTADEF(SQI) * ptSqi;
+#if ASIC_TYP==ASIC_TYP_NETX56
+	HOSTDEF(ptAsicCtrlArea);
+#endif
 	unsigned long ulValue;
 #if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
 	unsigned int uiSqiUnit;
@@ -1075,6 +1078,15 @@ static void qsi_deactivate(const SPI_CFG_T *ptCfg)
 		portcontrol_restore(pusPortControlIndex, sizeof(ausPortcontrol_Index_SQI0_CS0)/sizeof(ausPortcontrol_Index_SQI0_CS0[0]));
 	}
 #endif
+
+#if ASIC_TYP==ASIC_TYP_NETX56
+	/* This is netX56 specific: Enable the SQI ROM pins. */
+	ulValue  = ptAsicCtrlArea->ulIo_config2;
+	ulValue &= ~HOSTMSK(io_config2_sel_sqi);
+	ptAsicCtrlArea->ulAsic_ctrl_access_key = ptAsicCtrlArea->ulAsic_ctrl_access_key;
+	ptAsicCtrlArea->ulIo_config2 = ulValue;
+#endif
+
 }
 
 
@@ -1091,6 +1103,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 
 #elif ASIC_TYP==ASIC_TYP_NETX56
 	HOSTDEF(ptSqiArea);
+	HOSTDEF(ptAsicCtrlArea);
 	HOSTADEF(SQI) * ptSqi;
 
 #elif ASIC_TYP==ASIC_TYP_NETX6
@@ -1293,6 +1306,14 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 			ulValue |= HOSTMSK(sqi_pio_oe_sio3);
 		}
 		ptSqi->ulSqi_pio_oe = ulValue;
+
+#if ASIC_TYP==ASIC_TYP_NETX56
+		/* This is netX56 specific: Enable the SQI ROM pins. */
+		ulValue  = ptAsicCtrlArea->ulIo_config2;
+		ulValue |= HOSTMSK(io_config2_sel_sqi);
+		ptAsicCtrlArea->ulAsic_ctrl_access_key = ptAsicCtrlArea->ulAsic_ctrl_access_key;
+		ptAsicCtrlArea->ulIo_config2 = ulValue;
+#endif
 
 		iResult = 0;
 	}
