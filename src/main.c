@@ -71,7 +71,7 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 		iResult = boot_drv_spi_init(ptSpiCfg, ptSpiConfiguration, 0, uiChipSelect);
 	}
 
-#elif ASIC_TYP==ASIC_TYP_NETX90_MPW
+#elif ASIC_TYP==ASIC_TYP_NETX90_MPW || ASIC_TYP==ASIC_TYP_NETX90
 	/* netX90 has 3 hardware units. The first one can do 1, 2 and 4 bit
 	 * SPI. It is mapped to unit 0. The second one can do 1 bit SPI. It
 	 * is mapped to unit 1 and unit 2.
@@ -87,9 +87,6 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 		iResult = boot_drv_spi_init(ptSpiCfg, ptSpiConfiguration, uiUnit-1, uiChipSelect);
 	}
 #endif
-
-#elif ASIC_TYP==ASIC_TYP_NETX90_MPW_APP
-#       error "netX90 MPW APP is not yet supported"
 
 #else
 #       error "Invalid ASIC_TYP!"

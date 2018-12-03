@@ -855,7 +855,7 @@ static int qsi_set_bus_width(SPI_CFG_T *ptCfg, SPI_BUS_WIDTH_T tBusWidth)
 #       define SQIROMCFG_ADDRESS_BITS_MINIMUM 20
 #       define SQIROMCFG_ADDRESS_BITS_MAXIMUM 26
 #       define SQIROMCFG_FREQUENCY_MAXIMUM_KHZ 142000U
-#elif ASIC_TYP==ASIC_TYP_NETX90_MPW
+#elif ASIC_TYP==ASIC_TYP_NETX90_MPW || ASIC_TYP==ASIC_TYP_NETX90
 #       define SQIROMCFG_DUMMY_CYCLES_MAXIMUM 15
 #       define SQIROMCFG_ADDRESS_NIBBLES_MINIMUM 5
 #       define SQIROMCFG_ADDRESS_NIBBLES_MAXIMUM 8
@@ -935,7 +935,7 @@ static unsigned long qsi_get_device_specific_sqirom_cfg(SPI_CFG_T *ptCfg, unsign
 		{
 			ulClockDivider = 6U;
 		}
-#elif ASIC_TYP==ASIC_TYP_NETX56 || ASIC_TYP==ASIC_TYP_NETX90_MPW
+#elif ASIC_TYP==ASIC_TYP_NETX56 || ASIC_TYP==ASIC_TYP_NETX90_MPW || ASIC_TYP==ASIC_TYP_NETX90
 		/* In the regdef the following formula is specified:
 		 *
 		 *   t_sck = (clk_div_val+3)*2.5ns
@@ -1115,7 +1115,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 	HOSTADEF(SQI) * ptSqi;
 	const unsigned short *pusPortControlIndex;
 
-#elif ASIC_TYP==ASIC_TYP_NETX90_MPW
+#elif ASIC_TYP==ASIC_TYP_NETX90_MPW || ASIC_TYP==ASIC_TYP_NETX90
 	HOSTDEF(ptSqiArea);
 	HOSTADEF(SQI) * ptSqi;
 
@@ -1167,7 +1167,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 		pusPortControlIndex = ausPortcontrol_Index_SQI1_CS0;
 	}
 
-#elif ASIC_TYP==ASIC_TYP_NETX90_MPW
+#elif ASIC_TYP==ASIC_TYP_NETX90_MPW || ASIC_TYP==ASIC_TYP_NETX90
 	if( uiSqiUnit==0 )
 	{
 		ptSqi = ptSqiArea;

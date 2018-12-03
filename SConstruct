@@ -44,7 +44,7 @@ env_cortexR7.CreateCompilerEnv('NETX4000_RELAXED', ['arch=armv7', 'thumb'], ['ar
 # Create a build environment for the Cortex-M4 based netX chips.
 env_cortexM4 = atEnv.DEFAULT.CreateEnvironment(['gcc-arm-none-eabi-4.9', 'asciidoc'])
 env_cortexM4.CreateCompilerEnv('NETX90_MPW', ['arch=armv7', 'thumb'], ['arch=armv7e-m', 'thumb'])
-env_cortexM4.CreateCompilerEnv('NETX90_MPW_APP', ['arch=armv7', 'thumb'], ['arch=armv7e-m', 'thumb'])
+env_cortexM4.CreateCompilerEnv('NETX90', ['arch=armv7', 'thumb'], ['arch=armv7e-m', 'thumb'])
 
 # Build the platform libraries.
 SConscript('platform/SConscript')
@@ -116,6 +116,15 @@ atBuildConfigurations = {
 
     'netX90_MPW': {
         'ENV': atEnv.NETX90_MPW,
+        'LD': 'src/netx90/netx90_intram.ld',
+        'SRC': sources_common + sources_netx90,
+        'DEFINES': [],
+        'BIN': 'spi_macro_test_netx90_mpw.bin',
+        'FILTER': {}
+    },
+
+    'netX90': {
+        'ENV': atEnv.NETX90,
         'LD': 'src/netx90/netx90_intram.ld',
         'SRC': sources_common + sources_netx90,
         'DEFINES': [],
