@@ -206,6 +206,7 @@ tArcList0.AddFiles('netx/',
     atBin['netX50'],
     atBin['netX56'],
     atBin['netX90_MPW'],
+    atBin['netX90'],
     atBin['netX4000_RELAXED'])
 tArcList0.AddFiles('lua/',
     atLua['netX50'],
