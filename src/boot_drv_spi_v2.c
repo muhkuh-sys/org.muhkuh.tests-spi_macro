@@ -10,7 +10,7 @@
 
 #include <string.h>
 
-#include "boot_drv_spi.h"
+#include "boot_drv_spi_v2.h"
 
 #include "netx_io_areas.h"
 #include "tools.h"

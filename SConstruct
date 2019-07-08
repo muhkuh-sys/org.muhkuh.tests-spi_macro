@@ -71,7 +71,7 @@ sources_common = """
 
 sources_netx4000 = """
     src/boot_drv_sqi.c
-    src/boot_drv_spi.c
+    src/boot_drv_spi_v2.c
     src/portcontrol.c
 """
 
@@ -84,11 +84,11 @@ sources_netx90 = """
 
 sources_netx56 = """
     src/boot_drv_sqi.c
-    src/boot_drv_spi.c
+    src/boot_drv_spi_v2.c
 """
 
 sources_netx50 = """
-    src/boot_drv_spi.c
+    src/boot_drv_spi_v2.c
 """
 
 sources_netx10 = """
