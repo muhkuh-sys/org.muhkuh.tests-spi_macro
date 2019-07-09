@@ -67,6 +67,8 @@ SpiFlashMacroTest.UNIT_netX56_SPI = 1
 
 SpiFlashMacroTest.UNIT_netX90_SQI = 0
 
+SpiFlashMacroTest.UNIT_netX500_SPI = 0
+
 SpiFlashMacroTest.UNIT_netX4000_SQI0 = 0
 SpiFlashMacroTest.UNIT_netX4000_SQI1 = 1
 SpiFlashMacroTest.UNIT_netX4000_SPI = 2

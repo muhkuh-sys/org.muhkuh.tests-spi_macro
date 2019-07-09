@@ -10,7 +10,7 @@ function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLeve
   self:__parameter {
     P:SC('unit', 'This is the unit providing the SPI bus.'):
       required(true):
-      constraint('netX50_SPI0,netX50_SPI1,netX56_SQI,netX56_SPI,netX90_SQI,netX4000_SQI0,netX4000_SQI1,netX4000_SPI'),
+      constraint('netX50_SPI0,netX50_SPI1,netX56_SQI,netX56_SPI,netX90_SQI,netX500_SPI,netX4000_SQI0,netX4000_SQI1,netX4000_SPI'),
 
     P:U8('chip_select', 'The chip select number on the selected SPI bus.'):
       default(0):
@@ -112,6 +112,8 @@ function TestClassSpiMacro:run()
     ['netX56_SPI'] = f.UNIT_netX56_SPI,
 
     ['netX90_SQI'] = f.UNIT_netX90_SQI,
+
+    ['netX500_SPI'] = f.UNIT_netX500_SPI,
 
     ['netX4000_SQI0'] = f.UNIT_netX4000_SQI0,
     ['netX4000_SQI1'] = f.UNIT_netX4000_SQI1,
