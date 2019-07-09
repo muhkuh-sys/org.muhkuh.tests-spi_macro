@@ -9,8 +9,6 @@
 
 
 #include "boot_spi.h"
-#include "boot_drv_spi_v2.h"
-//#include "boot_drv_sqi.h"
 
 
 

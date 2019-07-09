@@ -10,6 +10,7 @@
 #include "uprintf.h"
 #include "version.h"
 
+#include "boot_drv_spi_v1.h"
 #include "boot_drv_spi_v2.h"
 #include "boot_drv_sqi.h"
 
@@ -26,7 +27,12 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 	iResult = -1;
 
 #if ASIC_TYP==ASIC_TYP_NETX500
-#       error "netX500 is not yet supported"
+	/* netX500 has 1 hardware unit.
+	 */
+	if( uiUnit==0 )
+	{
+		iResult = boot_drv_spi_init_v1(ptSpiCfg, ptSpiConfiguration, uiUnit, uiChipSelect);
+	}
 
 #elif ASIC_TYP==ASIC_TYP_NETX50
 	/* netX50 has 2 hardware units, which can do 1 bit SPI. This is mapped
@@ -34,7 +40,7 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 	 */
 	if( (uiUnit==0) || (uiUnit==1) )
 	{
-		iResult = boot_drv_spi_init(ptSpiCfg, ptSpiConfiguration, uiUnit, uiChipSelect);
+		iResult = boot_drv_spi_init_v2(ptSpiCfg, ptSpiConfiguration, uiUnit, uiChipSelect);
 	}
 
 #elif ASIC_TYP==ASIC_TYP_NETX10
@@ -51,7 +57,7 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 	}
 	else if( uiUnit==1 )
 	{
-		iResult = boot_drv_spi_init(ptSpiCfg, ptSpiConfiguration, 0, uiChipSelect);
+		iResult = boot_drv_spi_init_v2(ptSpiCfg, ptSpiConfiguration, 0, uiChipSelect);
 	}
 
 #elif ASIC_TYP==ASIC_TYP_NETX6
@@ -68,7 +74,7 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 	}
 	else if( uiUnit==2 )
 	{
-		iResult = boot_drv_spi_init(ptSpiCfg, ptSpiConfiguration, 0, uiChipSelect);
+		iResult = boot_drv_spi_init_v2(ptSpiCfg, ptSpiConfiguration, 0, uiChipSelect);
 	}
 
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW || ASIC_TYP==ASIC_TYP_NETX90
@@ -84,7 +90,7 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 	/* Not yet... */
 	else if( (uiUnit==1) || (uiUnit==2) )
 	{
-		iResult = boot_drv_spi_init(ptSpiCfg, ptSpiConfiguration, uiUnit-1, uiChipSelect);
+		iResult = boot_drv_spi_init_v2(ptSpiCfg, ptSpiConfiguration, uiUnit-1, uiChipSelect);
 	}
 #endif
 

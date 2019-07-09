@@ -799,7 +799,7 @@ static void spi_deactivate(const SPI_CFG_T *ptCfg)
 
 
 
-int boot_drv_spi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg, unsigned int uiSpiUnit, unsigned int uiChipSelect)
+int boot_drv_spi_init_v2(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg, unsigned int uiSpiUnit, unsigned int uiChipSelect)
 {
 	HOSTADEF(SPI) * ptSpi;
 #if ASIC_TYP==ASIC_TYP_NETX50

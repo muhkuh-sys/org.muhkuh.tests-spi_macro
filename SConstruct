@@ -61,7 +61,6 @@ atEnv.DEFAULT.Version('/tmp/targets/version/version.h', 'templates/version.h')
 # This is the list of sources. The elements must be separated with whitespace
 # (i.e. spaces, tabs, newlines). The amount of whitespace does not matter.
 sources_common = """
-    src/boot_spi.c
     src/header.c
     src/init_muhkuh.S
     src/main.c
@@ -70,24 +69,29 @@ sources_common = """
 """
 
 sources_netx4000 = """
+    src/boot_spi.c
     src/boot_drv_sqi.c
     src/boot_drv_spi_v2.c
     src/portcontrol.c
 """
 
 sources_netx500 = """
+    src/boot_drv_spi_v1.c
 """
 
 sources_netx90 = """
+    src/boot_spi.c
     src/boot_drv_sqi.c
 """
 
 sources_netx56 = """
+    src/boot_spi.c
     src/boot_drv_sqi.c
     src/boot_drv_spi_v2.c
 """
 
 sources_netx50 = """
+    src/boot_spi.c
     src/boot_drv_spi_v2.c
 """
 
@@ -111,6 +115,15 @@ atBuildConfigurations = {
         'SRC': sources_common + sources_netx4000,
         'DEFINES': [],
         'BIN': 'spi_macro_test_netx4000.bin',
+        'FILTER': {}
+    },
+
+    'netX500': {
+        'ENV': atEnv.NETX500,
+        'LD': 'src/netx500/netx500.ld',
+        'SRC': sources_common + sources_netx500,
+        'DEFINES': [],
+        'BIN': 'spi_macro_test_netx500.bin',
         'FILTER': {}
     },
 

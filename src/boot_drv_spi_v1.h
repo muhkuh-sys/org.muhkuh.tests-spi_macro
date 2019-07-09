@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2005, 2006, 2007, 2008, 2009 by Hilscher GmbH           *
+ *   Copyright (C) 2019 by Hilscher GmbH                                   *
  *                                                                         *
  *   Author: Christoph Thelen (cthelen@hilscher.com)                       *
  *                                                                         *
@@ -8,19 +8,19 @@
  ***************************************************************************/
 
 
-#ifndef __BOOT_DRV_SPI_V2_H__
-#define __BOOT_DRV_SPI_V2_H__
+#ifndef __BOOT_DRV_SPI_V1_H__
+#define __BOOT_DRV_SPI_V1_H__
 
 #include "boot_spi.h"
 
 /*-------------------------------------*/
 
 
-int boot_drv_spi_init_v2(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg, unsigned int uiSpiUnit, unsigned int uiChipSelect);
+int boot_drv_spi_init_v1(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg, unsigned int uiSpiUnit, unsigned int uiChipSelect);
 
 
 /*-------------------------------------*/
 
 
-#endif  /* __BOOT_DRV_SPI_V2_H__ */
+#endif  /* __BOOT_DRV_SPI_V1_H__ */
 
