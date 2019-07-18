@@ -145,6 +145,15 @@ atBuildConfigurations = {
         'FILTER': {}
     },
 
+    'netX90B': {
+        'ENV': atEnv.NETX90,
+        'LD': 'src/netx90/netx90_intram.ld',
+        'SRC': sources_common + sources_netx90,
+        'DEFINES': [],
+        'BIN': 'spi_macro_test_netx90b.bin',
+        'FILTER': {}
+    },
+
     'netX56': {
         'ENV': atEnv.NETX56,
         'LD': 'src/netx56/netx56_intram.ld',
@@ -220,6 +229,7 @@ tArcList0.AddFiles('netx/',
     atBin['netX56'],
     atBin['netX90_MPW'],
     atBin['netX90'],
+    atBin['netX90B'],
     atBin['netX500'],
     atBin['netX4000_RELAXED'])
 tArcList0.AddFiles('lua/',
@@ -248,7 +258,9 @@ atCopyFiles = {
     # Copy all binaries.
     'targets/testbench/netx/spi_macro_test_netx50.bin':             atBin['netX50'],
     'targets/testbench/netx/spi_macro_test_netx56.bin':             atBin['netX56'],
-    'targets/testbench/netx/spi_macro_test_netx90.bin':             atBin['netX90_MPW'],
+    'targets/testbench/netx/spi_macro_test_netx90_mpw.bin':         atBin['netX90_MPW'],
+    'targets/testbench/netx/spi_macro_test_netx90.bin':             atBin['netX90'],
+    'targets/testbench/netx/spi_macro_test_netx90b.bin':            atBin['netX90B'],
     'targets/testbench/netx/spi_macro_test_netx4000.bin':           atBin['netX4000_RELAXED'],
 
     # Copy the LUA module.
