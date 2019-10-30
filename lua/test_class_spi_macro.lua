@@ -8,6 +8,9 @@ function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLeve
 
   local P = self.P
   self:__parameter {
+    P:P('plugin', 'A pattern for the plugin to use.'):
+      required(false),
+
     P:SC('unit', 'This is the unit providing the SPI bus.'):
       required(true):
       constraint('netX50_SPI0,netX50_SPI1,netX56_SQI,netX56_SPI,netX90_SQI,netX500_SPI,netX4000_SQI0,netX4000_SQI1,netX4000_SPI'),
@@ -96,6 +99,8 @@ function TestClassSpiMacro:run()
   --
   -- Parse the parameters and collect all options.
   --
+  local strPluginPattern = atParameter['plugin']:get()
+
   local cSpiMacroTest = require 'spi_macro_test'
   local f = cSpiMacroTest(tLog)
 
@@ -125,9 +130,10 @@ function TestClassSpiMacro:run()
   local uiChipSelect = atParameter['chip_select']:get()
 
   -- Read the macro file.
-  local strFileName = self.pl.path.exists(atParameter['macro']:get())
-  if strFileName==nil then
-    tLog.error('The macro file "%s" does not exist.', atParameter['macro']:get())
+  local strMacroFile = atParameter['macro']:get()
+  local strFileName = self.pl.path.exists(strMacroFile)
+  if strFileName~=strMacroFile then
+    tLog.error('The macro file "%s" does not exist.', strMacroFile)
     error('Failed to load the macro.')
   end
   local strMacro = self.pl.file.read(strFileName)
@@ -164,12 +170,12 @@ function TestClassSpiMacro:run()
 
   local tTest = f:compile(tSpiCfg, uiUnit, uiChipSelect, aucMacro)
 
-  tPlugin = tester.getCommonPlugin()
+  tPlugin = tester:getCommonPlugin(strPluginPattern)
   if not tPlugin then
     error('No plugin selected, nothing to do!')
   end
 
-  local ulResult = tester.mbin_simple_run(nil, tPlugin, 'netx/spi_macro_test_netx${ASIC_TYPE}.bin', tTest)
+  local ulResult = tester:mbin_simple_run(tPlugin, 'netx/spi_macro_test_netx${ASIC_TYPE}.bin', tTest)
   if ulResult~=0 then
     error('The SPI macro failed.')
   end
