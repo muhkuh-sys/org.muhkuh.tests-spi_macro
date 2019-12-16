@@ -2,7 +2,7 @@
 <jonchki-artifact version="1.0">
 	<info group="org.muhkuh.tests"
 	      module="spi_macro"
-	      artifact="lua5.1-spi_macro"
+	      artifact="spi_macro"
 	      version="${PROJECT_VERSION}"
 	      vcs-id="${PROJECT_VERSION_VCS}"
 	      extension="zip">
@@ -12,6 +12,9 @@
 			The SPI macro test runs a SPI sequence.
 		</description>
 	</info>
+	<dependencies>
+		<dependency group="org.muhkuh.tools" module="muhkuh_base_cli" artifact="lua5.4-muhkuh_base_cli" version="2.4"/>
+	</dependencies>
 	<dependencies>
 		<dependency group="org.muhkuh.tools" module="muhkuh_base_cli" artifact="lua5.1-muhkuh_base_cli" version="2.4"/>
 		<dependency group="com.github.toxicfrog" module="vstruct" artifact="vstruct" version="2.0.1"/>

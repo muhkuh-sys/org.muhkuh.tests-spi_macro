@@ -221,7 +221,7 @@ aGroup = strGroup.split('.')
 strModulePath = 'targets/jonchki/repository/%s/%s/%s' % ('/'.join(aGroup), strModule, PROJECT_VERSION)
 
 # Set the name of the artifact.
-strArtifact0 = 'lua5.1-spi_macro'
+strArtifact0 = 'spi_macro'
 
 tArcList0 = atEnv.DEFAULT.ArchiveList('zip')
 tArcList0.AddFiles('netx/',
