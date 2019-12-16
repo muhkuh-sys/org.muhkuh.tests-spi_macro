@@ -2,78 +2,6 @@
 local class = require 'pl.class'
 local SpiFlashMacroTest = class()
 
------------------------------------------------------------------------------
---                           Definitions
------------------------------------------------------------------------------
-
-
-SpiFlashMacroTest.atMacroTokens = {
-  SMC_RECEIVE  = ${SMC_RECEIVE}, 
-  SMC_SEND     = ${SMC_SEND},
-  SMC_IDLE     = ${SMC_IDLE},
-  SMC_DUMMY    = ${SMC_DUMMY},
-  SMC_JUMP     = ${SMC_JUMP},
-  SMC_CHTR     = ${SMC_CHTR},
-  SMC_CMP      = ${SMC_CMP},
-  SMC_MASK     = ${SMC_MASK},
-  SMC_MODE     = ${SMC_MODE},
-  SMC_ADR      = ${SMC_ADR},
-  SMC_FAIL     = ${SMC_FAIL},
-
-  SMCS_NNN     = ${SMCS_NNN},
-  SMCS_SNN     = ${SMCS_SNN},
-  SMCS_SDN     = ${SMCS_SDN},
-  SMCS_SDD     = ${SMCS_SDD},
-
-  SPI_MODE0    = ${SPI_MODE0},
-  SPI_MODE1    = ${SPI_MODE1},
-  SPI_MODE2    = ${SPI_MODE2},
-  SPI_MODE3    = ${SPI_MODE3},
-
-  SPI_BUS_WIDTH_1BIT = ${SPI_BUS_WIDTH_1BIT},
-  SPI_BUS_WIDTH_2BIT = ${SPI_BUS_WIDTH_2BIT},
-  SPI_BUS_WIDTH_4BIT = ${SPI_BUS_WIDTH_4BIT},
-
-  SPI_MACRO_CHANGE_TRANSPORT_FIFO       = ${SPI_MACRO_CHANGE_TRANSPORT_FIFO},
-  SPI_MACRO_CHANGE_TRANSPORT_ROM        = ${SPI_MACRO_CHANGE_TRANSPORT_ROM},
-
-  SPI_MACRO_CONDITION_Always    = ${SPI_MACRO_CONDITION_Always},
-  SPI_MACRO_CONDITION_Equal     = ${SPI_MACRO_CONDITION_Equal},
-  SPI_MACRO_CONDITION_NotEqual  = ${SPI_MACRO_CONDITION_NotEqual},
-  SPI_MACRO_CONDITION_Zero      = ${SPI_MACRO_CONDITION_Zero},
-  SPI_MACRO_CONDITION_NotZero   = ${SPI_MACRO_CONDITION_NotZero},
-
-  MSK_SQI_CFG_IDLE_IO1_OE         = ${MSK_SQI_CFG_IDLE_IO1_OE},
-  SRT_SQI_CFG_IDLE_IO1_OE         = ${SRT_SQI_CFG_IDLE_IO1_OE},
-  MSK_SQI_CFG_IDLE_IO1_OUT        = ${MSK_SQI_CFG_IDLE_IO1_OUT},
-  SRT_SQI_CFG_IDLE_IO1_OUT        = ${SRT_SQI_CFG_IDLE_IO1_OUT},
-  MSK_SQI_CFG_IDLE_IO2_OE         = ${MSK_SQI_CFG_IDLE_IO2_OE},
-  SRT_SQI_CFG_IDLE_IO2_OE         = ${SRT_SQI_CFG_IDLE_IO2_OE},
-  MSK_SQI_CFG_IDLE_IO2_OUT        = ${MSK_SQI_CFG_IDLE_IO2_OUT},
-  SRT_SQI_CFG_IDLE_IO2_OUT        = ${SRT_SQI_CFG_IDLE_IO2_OUT},
-  MSK_SQI_CFG_IDLE_IO3_OE         = ${MSK_SQI_CFG_IDLE_IO3_OE},
-  SRT_SQI_CFG_IDLE_IO3_OE         = ${SRT_SQI_CFG_IDLE_IO3_OE},
-  MSK_SQI_CFG_IDLE_IO3_OUT        = ${MSK_SQI_CFG_IDLE_IO3_OUT},
-  SRT_SQI_CFG_IDLE_IO3_OUT        = ${SRT_SQI_CFG_IDLE_IO3_OUT}
-}
-
-SpiFlashMacroTest.SPI_MACRO_MAX_SIZE              = ${SPI_MACRO_MAX_SIZE}
-
-SpiFlashMacroTest.UNIT_netX50_SPI0 = 0
-SpiFlashMacroTest.UNIT_netX50_SPI1 = 1
-
-SpiFlashMacroTest.UNIT_netX56_SQI = 0
-SpiFlashMacroTest.UNIT_netX56_SPI = 1
-
-SpiFlashMacroTest.UNIT_netX90_SQI = 0
-
-SpiFlashMacroTest.UNIT_netX500_SPI = 0
-
-SpiFlashMacroTest.UNIT_netX4000_SQI0 = 0
-SpiFlashMacroTest.UNIT_netX4000_SQI1 = 1
-SpiFlashMacroTest.UNIT_netX4000_SPI = 2
-
-
 
 --- Initialize a new SpiFlashMacroTest instance.
 -- @param tLogger The logger object used for all kinds of messages.
@@ -83,43 +11,120 @@ function SpiFlashMacroTest:_init(tLog)
   -- The "penlight" module is always useful.
   self.pl = require'pl.import_into'()
 
-  -- The vstruct module packs and depacks data.
-  self.vstruct = require 'vstruct'
-  self.tLog.debug('Using vstruct V%s', self.vstruct._VERSION)
+  self.atMacroTokens = {
+    SMC_RECEIVE  = ${SMC_RECEIVE},
+    SMC_SEND     = ${SMC_SEND},
+    SMC_IDLE     = ${SMC_IDLE},
+    SMC_DUMMY    = ${SMC_DUMMY},
+    SMC_JUMP     = ${SMC_JUMP},
+    SMC_CHTR     = ${SMC_CHTR},
+    SMC_CMP      = ${SMC_CMP},
+    SMC_MASK     = ${SMC_MASK},
+    SMC_MODE     = ${SMC_MODE},
+    SMC_ADR      = ${SMC_ADR},
+    SMC_FAIL     = ${SMC_FAIL},
 
-  -- The format for the parameters.
-  self.strFormat = string.format([[
-    tSpiConfiguration: {
-      ulSpeedFifoKhz:u4
-      ulSpeedSqiRomKhz:u4
-      ausPortControl: {
-        usCS0:u2
-        usCLK:u2
-        usMISO:u2
-        usMOSI:u2
-        usSIO2:u2
-        usSIO3:u2
+    SMCS_NNN     = ${SMCS_NNN},
+    SMCS_SNN     = ${SMCS_SNN},
+    SMCS_SDN     = ${SMCS_SDN},
+    SMCS_SDD     = ${SMCS_SDD},
+
+    SPI_MODE0    = ${SPI_MODE0},
+    SPI_MODE1    = ${SPI_MODE1},
+    SPI_MODE2    = ${SPI_MODE2},
+    SPI_MODE3    = ${SPI_MODE3},
+
+    SPI_BUS_WIDTH_1BIT = ${SPI_BUS_WIDTH_1BIT},
+    SPI_BUS_WIDTH_2BIT = ${SPI_BUS_WIDTH_2BIT},
+    SPI_BUS_WIDTH_4BIT = ${SPI_BUS_WIDTH_4BIT},
+
+    SPI_MACRO_CHANGE_TRANSPORT_FIFO       = ${SPI_MACRO_CHANGE_TRANSPORT_FIFO},
+    SPI_MACRO_CHANGE_TRANSPORT_ROM        = ${SPI_MACRO_CHANGE_TRANSPORT_ROM},
+
+    SPI_MACRO_CONDITION_Always    = ${SPI_MACRO_CONDITION_Always},
+    SPI_MACRO_CONDITION_Equal     = ${SPI_MACRO_CONDITION_Equal},
+    SPI_MACRO_CONDITION_NotEqual  = ${SPI_MACRO_CONDITION_NotEqual},
+    SPI_MACRO_CONDITION_Zero      = ${SPI_MACRO_CONDITION_Zero},
+    SPI_MACRO_CONDITION_NotZero   = ${SPI_MACRO_CONDITION_NotZero},
+
+    MSK_SQI_CFG_IDLE_IO1_OE         = ${MSK_SQI_CFG_IDLE_IO1_OE},
+    SRT_SQI_CFG_IDLE_IO1_OE         = ${SRT_SQI_CFG_IDLE_IO1_OE},
+    MSK_SQI_CFG_IDLE_IO1_OUT        = ${MSK_SQI_CFG_IDLE_IO1_OUT},
+    SRT_SQI_CFG_IDLE_IO1_OUT        = ${SRT_SQI_CFG_IDLE_IO1_OUT},
+    MSK_SQI_CFG_IDLE_IO2_OE         = ${MSK_SQI_CFG_IDLE_IO2_OE},
+    SRT_SQI_CFG_IDLE_IO2_OE         = ${SRT_SQI_CFG_IDLE_IO2_OE},
+    MSK_SQI_CFG_IDLE_IO2_OUT        = ${MSK_SQI_CFG_IDLE_IO2_OUT},
+    SRT_SQI_CFG_IDLE_IO2_OUT        = ${SRT_SQI_CFG_IDLE_IO2_OUT},
+    MSK_SQI_CFG_IDLE_IO3_OE         = ${MSK_SQI_CFG_IDLE_IO3_OE},
+    SRT_SQI_CFG_IDLE_IO3_OE         = ${SRT_SQI_CFG_IDLE_IO3_OE},
+    MSK_SQI_CFG_IDLE_IO3_OUT        = ${MSK_SQI_CFG_IDLE_IO3_OUT},
+    SRT_SQI_CFG_IDLE_IO3_OUT        = ${SRT_SQI_CFG_IDLE_IO3_OUT}
+  }
+
+
+  self.SPI_MACRO_MAX_SIZE              = ${SPI_MACRO_MAX_SIZE}
+
+  self.UNIT_netX50_SPI0 = 0
+  self.UNIT_netX50_SPI1 = 1
+
+  self.UNIT_netX56_SQI = 0
+  self.UNIT_netX56_SPI = 1
+
+  self.UNIT_netX90_SQI = 0
+
+  self.UNIT_netX500_SPI = 0
+
+  self.UNIT_netX4000_SQI0 = 0
+  self.UNIT_netX4000_SQI1 = 1
+  self.UNIT_netX4000_SPI = 2
+
+  -- Get the LUA version number in the form major * 100 + minor .
+  local strMaj, strMin = string.match(_VERSION, '^Lua (%d+)%.(%d+)$')
+  if strMaj~=nil then
+    self.LUA_VER_NUM = tonumber(strMaj) * 100 + tonumber(strMin)
+  end
+
+  if self.LUA_VER_NUM==501 then
+    -- The vstruct module packs and depacks data.
+    self.vstruct = require 'vstruct'
+    self.tLog.debug('Using vstruct V%s', self.vstruct._VERSION)
+
+    -- The format for the parameters.
+    self.strFormat = string.format([[
+      tSpiConfiguration: {
+        ulSpeedFifoKhz:u4
+        ulSpeedSqiRomKhz:u4
+        ausPortControl: {
+          usCS0:u2
+          usCLK:u2
+          usMISO:u2
+          usMOSI:u2
+          usSIO2:u2
+          usSIO3:u2
+        }
+        aucMmio: {
+          ucCS:u1
+          ucCLK:u1
+          ucMISO:u1
+          ucMOSI:u1
+          ucSIO2:u1
+          ucSIO3:u1
+        }
+        ucDummyByte:u1
+        ucMode:u1
+        ucIdleConfiguration:u1
       }
-      aucMmio: {
-        ucCS:u1
-        ucCLK:u1
-        ucMISO:u1
-        ucMOSI:u1
-        ucSIO2:u1
-        ucSIO3:u1
-      }
-      ucDummyByte:u1
-      ucMode:u1
-      ucIdleConfiguration:u1
-    }
-    a4
+      a4
 
-    uiUnit:u4
-    uiChipSelect:u4
+      uiUnit:u4
+      uiChipSelect:u4
 
-    sizSpiMacro:u4
-    aucSpiMacro:z%d,1
-  ]], self.SPI_MACRO_MAX_SIZE)
+      sizSpiMacro:u4
+      aucSpiMacro:z%d,1
+    ]], self.SPI_MACRO_MAX_SIZE)
+  else
+    self.strFormat = string.format('<!4 I4I4 I2I2I2I2I2I2 I1I1I1I1I1I1 I1I1I1 XI4 I4I4 I4 c%d', self.SPI_MACRO_MAX_SIZE)
+  end
 end
 
 
@@ -513,10 +518,38 @@ function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, str
       uiUnit = atGeneralParameters.uiUnit,
       uiChipSelect = atGeneralParameters.uiChipSelect,
       sizSpiMacro = string.len(atGeneralParameters.strSpiMacro),
-      aucSpiMacro = atGeneralParameters.strSpiMacro   
+      aucSpiMacro = atGeneralParameters.strSpiMacro
     }
     -- Convert the parameters to a byte string.
-    tResult = self.vstruct.write(self.strFormat, tParameter)
+    if self.LUA_VER_NUM==501 then
+      tResult = self.vstruct.write(self.strFormat, tParameter)
+    else
+      tResult = string.pack(
+        self.strFormat,
+
+        tParameter.tSpiConfiguration.ulSpeedFifoKhz,
+        tParameter.tSpiConfiguration.ulSpeedSqiRomKhz,
+        tParameter.tSpiConfiguration.ausPortControl.usCLK,
+        tParameter.tSpiConfiguration.ausPortControl.usMOSI,
+        tParameter.tSpiConfiguration.ausPortControl.usMISO,
+        tParameter.tSpiConfiguration.ausPortControl.usSIO2,
+        tParameter.tSpiConfiguration.ausPortControl.usSIO3,
+        tParameter.tSpiConfiguration.ausPortControl.usCS0,
+        tParameter.tSpiConfiguration.aucMmio.ucCS,
+        tParameter.tSpiConfiguration.aucMmio.ucCLK,
+        tParameter.tSpiConfiguration.aucMmio.ucMISO,
+        tParameter.tSpiConfiguration.aucMmio.ucMOSI,
+        tParameter.tSpiConfiguration.aucMmio.ucSIO2,
+        tParameter.tSpiConfiguration.aucMmio.ucSIO3,
+        tParameter.tSpiConfiguration.ucDummyByte,
+        tParameter.tSpiConfiguration.ucMode,
+        tParameter.tSpiConfiguration.ucIdleConfiguration,
+        tParameter.uiUnit,
+        tParameter.uiChipSelect,
+        tParameter.sizSpiMacro,
+        tParameter.aucSpiMacro
+      )
+    end
   else
     error("Failed to set the unit.")
   end
