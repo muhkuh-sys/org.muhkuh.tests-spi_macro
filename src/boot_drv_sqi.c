@@ -1157,13 +1157,13 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 	if( uiSqiUnit==0 )
 	{
 		ptSqi = ptSQI0Area;
-		pvSqiRom = (unsigned long*)Addr_NX4000_NX2RAP_SQIROM0;
+		pvSqiRom = (unsigned long*)HOSTADDR(NX2RAP_SQIROM0);
 		pusPortControlIndex = ausPortcontrol_Index_SQI0_CS0;
 	}
 	else if( uiSqiUnit==1 )
 	{
 		ptSqi = ptSQI1Area;
-		pvSqiRom = (unsigned long*)Addr_NX4000_NX2RAP_SQIROM1;
+		pvSqiRom = (unsigned long*)HOSTADDR(NX2RAP_SQIROM1);
 		pusPortControlIndex = ausPortcontrol_Index_SQI1_CS0;
 	}
 
@@ -1171,7 +1171,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 	if( uiSqiUnit==0 )
 	{
 		ptSqi = ptSqiArea;
-		pvSqiRom = (unsigned long*)Addr_NX90_sqirom;
+		pvSqiRom = (unsigned long*)HOSTADDR(sqirom);
 	}
 
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW_APP

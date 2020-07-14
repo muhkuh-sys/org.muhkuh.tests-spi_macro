@@ -12,14 +12,14 @@
 
 
 
-void boot_spi_activate_mmio(const SPI_CFG_T *ptCfg, const MMIO_CFG_T *ptMmioValues)
+void boot_spi_activate_mmio(const SPI_CFG_T *ptCfg, const HOSTMMIODEF *ptMmioValues)
 {
 	HOSTDEF(ptAsicCtrlArea);
 	HOSTDEF(ptMmioCtrlArea);
 	const unsigned char *pucCnt;
 	const unsigned char *pucEnd;
 	unsigned int uiMmioPin;
-	MMIO_CFG_T tMmioCfg;
+	HOSTMMIODEF tMmioCfg;
 
 
 	/* Loop over all pins. */
@@ -43,14 +43,14 @@ void boot_spi_activate_mmio(const SPI_CFG_T *ptCfg, const MMIO_CFG_T *ptMmioValu
 
 
 
-void boot_spi_deactivate_mmio(const SPI_CFG_T *ptCfg, const MMIO_CFG_T *ptMmioValues)
+void boot_spi_deactivate_mmio(const SPI_CFG_T *ptCfg, const HOSTMMIODEF *ptMmioValues)
 {
 	HOSTDEF(ptAsicCtrlArea);
 	HOSTDEF(ptMmioCtrlArea);
 	const unsigned char *pucCnt;
 	const unsigned char *pucEnd;
 	unsigned int uiMmioPin;
-	MMIO_CFG_T tMmioCfg;
+	HOSTMMIODEF tMmioCfg;
 
 
 	/* Loop over all pins. */
@@ -67,7 +67,7 @@ void boot_spi_deactivate_mmio(const SPI_CFG_T *ptCfg, const MMIO_CFG_T *ptMmioVa
 		{
 			/* Deactivate the pin. */
 			ptAsicCtrlArea->ulAsic_ctrl_access_key = ptAsicCtrlArea->ulAsic_ctrl_access_key;  /* @suppress("Assignment to itself") */
-			ptMmioCtrlArea->aulMmio_cfg[uiMmioPin] = MMIO_CFG_DISABLE;
+			ptMmioCtrlArea->aulMmio_cfg[uiMmioPin] = HOSTMMIO(DISABLE);
 		}
 	} while( pucCnt<pucEnd );
 }

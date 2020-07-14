@@ -21,7 +21,7 @@
 
 
 #if ASIC_TYP==ASIC_TYP_NETX50 || ASIC_TYP==ASIC_TYP_NETX10 || ASIC_TYP==ASIC_TYP_NETX56
-static const MMIO_CFG_T aatMmioValues[2][3][6] =
+static const HOSTMMIODEF aatMmioValues[2][3][6] =
 {
 	/* SPI0 */
 	{
@@ -59,30 +59,30 @@ static const MMIO_CFG_T aatMmioValues[2][3][6] =
 	{
 		/* SPI1 CS0 */
 		{
-			MMIO_CFG_spi1_cs0n,             /* chip select */
-			MMIO_CFG_spi1_clk,              /* clock */
-			MMIO_CFG_spi1_miso,             /* MISO */
-			MMIO_CFG_spi1_mosi,             /* MOSI */
+			HOSTMMIO(spi1_cs0n),            /* chip select */
+			HOSTMMIO(spi1_clk),             /* clock */
+			HOSTMMIO(spi1_miso),            /* MISO */
+			HOSTMMIO(spi1_mosi),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		},
 
 		/* SPI1 CS1 */
 		{
-			MMIO_CFG_spi1_cs1n,             /* chip select */
-			MMIO_CFG_spi1_clk,              /* clock */
-			MMIO_CFG_spi1_miso,             /* MISO */
-			MMIO_CFG_spi1_mosi,             /* MOSI */
+			HOSTMMIO(spi1_cs1n),            /* chip select */
+			HOSTMMIO(spi1_clk),             /* clock */
+			HOSTMMIO(spi1_miso),            /* MISO */
+			HOSTMMIO(spi1_mosi),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		},
 
 		/* SPI1 CS2 */
 		{
-			MMIO_CFG_spi1_cs2n,             /* chip select */
-			MMIO_CFG_spi1_clk,              /* clock */
-			MMIO_CFG_spi1_miso,             /* MISO */
-			MMIO_CFG_spi1_mosi,             /* MOSI */
+			HOSTMMIO(spi1_cs2n),            /* chip select */
+			HOSTMMIO(spi1_clk),             /* clock */
+			HOSTMMIO(spi1_miso),            /* MISO */
+			HOSTMMIO(spi1_mosi),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		}
@@ -90,36 +90,36 @@ static const MMIO_CFG_T aatMmioValues[2][3][6] =
 };
 #elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
 
-static const MMIO_CFG_T aatMmioValues[2][3][6] =
+static const HOSTMMIODEF aatMmioValues[2][3][6] =
 {
 	/* SPI0 */
 	{
 		/* SPI0 CS0 */
 		{
-			MMIO_CFG_SPI0_CS0N,             /* chip select */
-			MMIO_CFG_SPI0_CLK,              /* clock */
-			MMIO_CFG_SPI0_MISO,             /* MISO */
-			MMIO_CFG_SPI0_MOSI,             /* MOSI */
+			HOSTMMIO(SPI0_CS0N),            /* chip select */
+			HOSTMMIO(SPI0_CLK),             /* clock */
+			HOSTMMIO(SPI0_MISO),            /* MISO */
+			HOSTMMIO(SPI0_MOSI),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		},
 
 		/* SPI0 CS1 */
 		{
-			MMIO_CFG_SPI0_CS1N,             /* chip select */
-			MMIO_CFG_SPI0_CLK,              /* clock */
-			MMIO_CFG_SPI0_MISO,             /* MISO */
-			MMIO_CFG_SPI0_MOSI,             /* MOSI */
+			HOSTMMIO(SPI0_CS1N),            /* chip select */
+			HOSTMMIO(SPI0_CLK),             /* clock */
+			HOSTMMIO(SPI0_MISO),            /* MISO */
+			HOSTMMIO(SPI0_MOSI),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		},
 
 		/* SPI0 CS2 */
 		{
-			MMIO_CFG_SPI0_CS2N,             /* chip select */
-			MMIO_CFG_SPI0_CLK,              /* clock */
-			MMIO_CFG_SPI0_MISO,             /* MISO */
-			MMIO_CFG_SPI0_MOSI,             /* MOSI */
+			HOSTMMIO(SPI0_CS2N),            /* chip select */
+			HOSTMMIO(SPI0_CLK),             /* clock */
+			HOSTMMIO(SPI0_MISO),            /* MISO */
+			HOSTMMIO(SPI0_MOSI),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		},
@@ -129,30 +129,30 @@ static const MMIO_CFG_T aatMmioValues[2][3][6] =
 	{
 		/* SPI1 CS0 */
 		{
-			MMIO_CFG_SPI1_CS0N,             /* chip select */
-			MMIO_CFG_SPI1_CLK,              /* clock */
-			MMIO_CFG_SPI1_MISO,             /* MISO */
-			MMIO_CFG_SPI1_MOSI,             /* MOSI */
+			HOSTMMIO(SPI1_CS0N),            /* chip select */
+			HOSTMMIO(SPI1_CLK),             /* clock */
+			HOSTMMIO(SPI1_MISO),            /* MISO */
+			HOSTMMIO(SPI1_MOSI),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		},
 
 		/* SPI1 CS1 */
 		{
-			MMIO_CFG_SPI1_CS1N,             /* chip select */
-			MMIO_CFG_SPI1_CLK,              /* clock */
-			MMIO_CFG_SPI1_MISO,             /* MISO */
-			MMIO_CFG_SPI1_MOSI,             /* MOSI */
+			HOSTMMIO(SPI1_CS1N),            /* chip select */
+			HOSTMMIO(SPI1_CLK),             /* clock */
+			HOSTMMIO(SPI1_MISO),            /* MISO */
+			HOSTMMIO(SPI1_MOSI),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		},
 
 		/* SPI1 CS2 */
 		{
-			MMIO_CFG_SPI1_CS2N,             /* chip select */
-			MMIO_CFG_SPI1_CLK,              /* clock */
-			MMIO_CFG_SPI1_MISO,             /* MISO */
-			MMIO_CFG_SPI1_MOSI,             /* MOSI */
+			HOSTMMIO(SPI1_CS2N),            /* chip select */
+			HOSTMMIO(SPI1_CLK),             /* clock */
+			HOSTMMIO(SPI1_MISO),            /* MISO */
+			HOSTMMIO(SPI1_MOSI),            /* MOSI */
 			0xffU,                          /* SIO2 */
 			0xffU                           /* SIO3 */
 		}
