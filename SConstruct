@@ -179,7 +179,7 @@ atBootImages = {}
 atLua = {}
 
 # Build all variants.
-for strBuildName, atBuildAttributes in atBuildConfigurations.iteritems():
+for strBuildName, atBuildAttributes in atBuildConfigurations.items():
     # Get a clean environment.
     tEnv = atBuildAttributes['ENV'].Clone()
     # Set the include paths.
@@ -205,7 +205,7 @@ for strBuildName, atBuildAttributes in atBuildConfigurations.iteritems():
     atLua[strBuildName] = tLua
 
     # Filter additional files.
-    for strDst, strSrc in atBuildAttributes['FILTER'].iteritems():
+    for strDst, strSrc in atBuildAttributes['FILTER'].items():
         tEnv.GccSymbolTemplate(os.path.join('targets', strBuildName, strDst), tElf, GCCSYMBOLTEMPLATE_TEMPLATE=strSrc)
 
 #----------------------------------------------------------------------------
@@ -267,5 +267,5 @@ atCopyFiles = {
     # NOTE: All files should be the same, just take the netX50 build.
     'targets/testbench/lua/spi_macro_test.lua':                     atLua['netX50']
 }
-for tDst, tSrc in atCopyFiles.iteritems():
+for tDst, tSrc in atCopyFiles.items():
     Command(tDst, tSrc, Copy("$TARGET", "$SOURCE"))
