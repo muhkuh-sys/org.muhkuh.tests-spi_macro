@@ -78,53 +78,43 @@ function SpiFlashMacroTest:_init(tLog)
   self.UNIT_netX4000_SQI1 = 1
   self.UNIT_netX4000_SPI = 2
 
-  -- Get the LUA version number in the form major * 100 + minor .
-  local strMaj, strMin = string.match(_VERSION, '^Lua (%d+)%.(%d+)$')
-  if strMaj~=nil then
-    self.LUA_VER_NUM = tonumber(strMaj) * 100 + tonumber(strMin)
-  end
+  -- The vstruct module packs and depacks data.
+  self.vstruct = require 'vstruct'
+  self.tLog.debug('Using vstruct V%s', self.vstruct._VERSION)
 
-  if self.LUA_VER_NUM==501 then
-    -- The vstruct module packs and depacks data.
-    self.vstruct = require 'vstruct'
-    self.tLog.debug('Using vstruct V%s', self.vstruct._VERSION)
-
-    -- The format for the parameters.
-    self.strFormat = string.format([[
-      tSpiConfiguration: {
-        ulSpeedFifoKhz:u4
-        ulSpeedSqiRomKhz:u4
-        ausPortControl: {
-          usCS0:u2
-          usCLK:u2
-          usMISO:u2
-          usMOSI:u2
-          usSIO2:u2
-          usSIO3:u2
-        }
-        aucMmio: {
-          ucCS:u1
-          ucCLK:u1
-          ucMISO:u1
-          ucMOSI:u1
-          ucSIO2:u1
-          ucSIO3:u1
-        }
-        ucDummyByte:u1
-        ucMode:u1
-        ucIdleConfiguration:u1
+  -- The format for the parameters.
+  self.strFormat = string.format([[
+    tSpiConfiguration: {
+      ulSpeedFifoKhz:u4
+      ulSpeedSqiRomKhz:u4
+      ausPortControl: {
+        usCS0:u2
+        usCLK:u2
+        usMISO:u2
+        usMOSI:u2
+        usSIO2:u2
+        usSIO3:u2
       }
-      a4
+      aucMmio: {
+        ucCS:u1
+        ucCLK:u1
+        ucMISO:u1
+        ucMOSI:u1
+        ucSIO2:u1
+        ucSIO3:u1
+      }
+      ucDummyByte:u1
+      ucMode:u1
+      ucIdleConfiguration:u1
+    }
+    a4
 
-      uiUnit:u4
-      uiChipSelect:u4
+    uiUnit:u4
+    uiChipSelect:u4
 
-      sizSpiMacro:u4
-      aucSpiMacro:z%d,1
-    ]], self.SPI_MACRO_MAX_SIZE)
-  else
-    self.strFormat = string.format('<!4 I4I4 I2I2I2I2I2I2 I1I1I1I1I1I1 I1I1I1 XI4 I4I4 I4 c%d', self.SPI_MACRO_MAX_SIZE)
-  end
+    sizSpiMacro:u4
+    aucSpiMacro:z%d,1
+  ]], self.SPI_MACRO_MAX_SIZE)
 end
 
 
@@ -521,35 +511,7 @@ function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, str
       aucSpiMacro = atGeneralParameters.strSpiMacro
     }
     -- Convert the parameters to a byte string.
-    if self.LUA_VER_NUM==501 then
-      tResult = self.vstruct.write(self.strFormat, tParameter)
-    else
-      tResult = string.pack(
-        self.strFormat,
-
-        tParameter.tSpiConfiguration.ulSpeedFifoKhz,
-        tParameter.tSpiConfiguration.ulSpeedSqiRomKhz,
-        tParameter.tSpiConfiguration.ausPortControl.usCLK,
-        tParameter.tSpiConfiguration.ausPortControl.usMOSI,
-        tParameter.tSpiConfiguration.ausPortControl.usMISO,
-        tParameter.tSpiConfiguration.ausPortControl.usSIO2,
-        tParameter.tSpiConfiguration.ausPortControl.usSIO3,
-        tParameter.tSpiConfiguration.ausPortControl.usCS0,
-        tParameter.tSpiConfiguration.aucMmio.ucCS,
-        tParameter.tSpiConfiguration.aucMmio.ucCLK,
-        tParameter.tSpiConfiguration.aucMmio.ucMISO,
-        tParameter.tSpiConfiguration.aucMmio.ucMOSI,
-        tParameter.tSpiConfiguration.aucMmio.ucSIO2,
-        tParameter.tSpiConfiguration.aucMmio.ucSIO3,
-        tParameter.tSpiConfiguration.ucDummyByte,
-        tParameter.tSpiConfiguration.ucMode,
-        tParameter.tSpiConfiguration.ucIdleConfiguration,
-        tParameter.uiUnit,
-        tParameter.uiChipSelect,
-        tParameter.sizSpiMacro,
-        tParameter.aucSpiMacro
-      )
-    end
+    tResult = self.vstruct.write(self.strFormat, tParameter)
   else
     error("Failed to set the unit.")
   end
