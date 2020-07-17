@@ -94,6 +94,7 @@ end
 function TestClassSpiMacro:run()
   local atParameter = self.atParameter
   local tLog = self.tLog
+  local tester = _G.tester
 
   ----------------------------------------------------------------------
   --
@@ -170,7 +171,7 @@ function TestClassSpiMacro:run()
 
   local tTest = f:compile(tSpiCfg, uiUnit, uiChipSelect, aucMacro)
 
-  tPlugin = tester:getCommonPlugin(strPluginPattern)
+  local tPlugin = tester:getCommonPlugin(strPluginPattern)
   if not tPlugin then
     error('No plugin selected, nothing to do!')
   end
