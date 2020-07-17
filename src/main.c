@@ -137,16 +137,23 @@ TEST_RESULT_T test_main(const TEST_PARAMETER_T *ptParameter)
 		{
 			uprintf("Driver initialized.\n");
 
-			spi_macro_initialize(&tSpiMacro, &tSpiCfg, ptParameter->aucSpiMacro, ptParameter->sizSpiMacro);
-			iResult = spi_macro_player_run(&tSpiMacro);
+			iResult = spi_macro_initialize(&tSpiMacro, &tSpiCfg, ptParameter->aucSpiMacro, ptParameter->sizSpiMacro);
 			if( iResult!=0 )
 			{
-				uprintf("Failed to run the SPI macro.\n");
+				uprintf("Failed to initialize the SPI macro.\n");
 			}
 			else
 			{
-				uprintf("SPI macro OK!\n");
-				tResult = TEST_RESULT_OK;
+				iResult = spi_macro_player_run(&tSpiMacro);
+				if( iResult!=0 )
+				{
+					uprintf("Failed to run the SPI macro.\n");
+				}
+				else
+				{
+					uprintf("SPI macro OK!\n");
+					tResult = TEST_RESULT_OK;
+				}
 			}
 		}
 	}

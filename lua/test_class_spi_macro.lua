@@ -85,7 +85,11 @@ function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLeve
       constraint('0,IO1_OE,IO1_OUT,IO2_OE,IO2_OUT,IO3_OE,IO3_OUT'),
 
     P:P('macro', 'The file name of the macro to execute.'):
-      required(true)
+      required(true),
+
+    P:U32('timeout', 'A timeout in milliseconds for the complete script. A value of 0 disables the timeout.'):
+      default(0):
+      required(false)
   }
 end
 
@@ -101,6 +105,8 @@ function TestClassSpiMacro:run()
   -- Parse the parameters and collect all options.
   --
   local strPluginPattern = atParameter['plugin']:get()
+
+  local uiTimeoutMs = atParameter['timeout']:get()
 
   local cSpiMacroTest = require 'spi_macro_test'
   local f = cSpiMacroTest(tLog)
@@ -164,7 +170,7 @@ function TestClassSpiMacro:run()
   }
   local tSpiCfg = f:compile_spi_configuration(atSpiConfiguration)
 
-  local aucMacro = f:compile_macro(strMacro)
+  local aucMacro = f:compile_macro(strMacro, uiTimeoutMs)
   if aucMacro==nil then
     error('Failed to compile the macro!')
   end

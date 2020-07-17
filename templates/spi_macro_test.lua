@@ -343,7 +343,8 @@ end
 
 
 
-function SpiFlashMacroTest:compile_macro(strMacro)
+function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
+  uiMacroTimeoutMs = uiMacroTimeoutMs or 0
   local tResult = true
   local aucOpcodes = {}
   local atLabels = {}
@@ -385,7 +386,7 @@ function SpiFlashMacroTest:compile_macro(strMacro)
               atLabels[strLabelName] = ulCurrentAddress
               self.tLog.debug('[SPI Macro] Label "%s" created at address 0x%02x', strLabelName, ulCurrentAddress)
             end
-  
+
           else
             -- Is this a known token?
             local tToken = self.atMacroTokens[strStrippedToken]
@@ -430,12 +431,23 @@ function SpiFlashMacroTest:compile_macro(strMacro)
   end
 
   if tResult==true then
-    -- Combine all data to a string.
-    local aucMacro = {}
-    for _, ucData in ipairs(aucOpcodes) do
-      table.insert(aucMacro, string.char(ucData))
+    -- Build the header.
+    local strHeaderFormat = [[
+uiTimeoutMs:u4
+]]
+    local tParameter = {
+      uiTimeoutMs = uiMacroTimeoutMs
+    }
+    tResult = self.vstruct.write(strHeaderFormat, tParameter)
+    if tResult~=nil then
+      -- Combine all data to a string.
+      local aucMacro = {}
+      table.insert(aucMacro, tResult)
+      for _, ucData in ipairs(aucOpcodes) do
+        table.insert(aucMacro, string.char(ucData))
+      end
+      tResult = table.concat(aucMacro)
     end
-    tResult = table.concat(aucMacro)
   end
 
   return tResult

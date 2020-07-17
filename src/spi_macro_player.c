@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include "spi_macro_player.h"
+#include "systime.h"
 #include "uprintf.h"
 
 
@@ -780,14 +781,39 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 /*-------------------------------------------------------------------------*/
 
 
-void spi_macro_initialize(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_CFG_T *ptCfg, const unsigned char *pucMacro, unsigned int sizMacro)
+int spi_macro_initialize(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_CFG_T *ptCfg, const unsigned char *pucMacro, unsigned int sizMacro)
 {
-	/* Initialize the SPI macro handle. */
-	ptSpiMacro->ptCfg = ptCfg;
-	ptSpiMacro->pucMacroStart = pucMacro;
-	ptSpiMacro->pucMacroCnt = pucMacro;
-	ptSpiMacro->pucMacroEnd = pucMacro + sizMacro;
-	ptSpiMacro->ulFlags = 0;
+	int iResult;
+	unsigned long ulTimeout;
+
+
+	/* The macro must have at least 4 bytes for the timeout. */
+	if( sizMacro<4 )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		ulTimeout  =  (unsigned long)pucMacro[0];
+		ulTimeout |= ((unsigned long)pucMacro[1]) <<  8U;
+		ulTimeout |= ((unsigned long)pucMacro[2]) << 16U;
+		ulTimeout |= ((unsigned long)pucMacro[3]) << 24U;
+
+		pucMacro += 4U;
+		sizMacro -= 4U;
+
+		/* Initialize the SPI macro handle. */
+		ptSpiMacro->ptCfg = ptCfg;
+		ptSpiMacro->pucMacroStart = pucMacro;
+		ptSpiMacro->pucMacroCnt = pucMacro;
+		ptSpiMacro->pucMacroEnd = pucMacro + sizMacro;
+		ptSpiMacro->ulFlags = 0;
+		ptSpiMacro->ulTotalTimeoutMs = ulTimeout;
+
+		iResult = 0;
+	}
+
+	return iResult;
 }
 
 
@@ -797,10 +823,18 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	int iResult;
 	unsigned char ucCmd;
 	SPI_MACRO_COMMAND_T tCmd;
+	unsigned long ulTotalTimeoutMs;
+	unsigned long ulTimerStart;
+	int iIsElapsed;
 
 
 	/* Be optimistic. */
 	iResult = 0;
+
+	/* Get the timeout for the macro. */
+	ulTotalTimeoutMs = ptSpiMacro->ulTotalTimeoutMs;
+	/* Get the timer value at the start of the macro. */
+	ulTimerStart = systime_get_ms();
 
 	/* Run over the complete macro sequence. */
 	while( ptSpiMacro->pucMacroCnt<ptSpiMacro->pucMacroEnd )
@@ -887,6 +921,19 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 			{
 				uprintf("Failed to execute the command.\n");
 				break;
+			}
+
+			/* Is the timeout enabled? (!=0) */
+			if( ulTotalTimeoutMs!=0 )
+			{
+				/* Did the timer run out? */
+				iIsElapsed = systime_elapsed(ulTimerStart, ulTotalTimeoutMs);
+				if( iIsElapsed!=0 )
+				{
+					uprintf("The timeout of %dms for the complete macro ran out. Stopping the macro.\n", ulTotalTimeoutMs);
+					iResult = -1;
+					break;
+				}
 			}
 		}
 	}
