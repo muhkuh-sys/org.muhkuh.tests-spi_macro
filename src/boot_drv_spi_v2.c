@@ -15,7 +15,7 @@
 #include "netx_io_areas.h"
 #include "tools.h"
 #include "uprintf.h"
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 #       include "portcontrol.h"
 #endif
 
@@ -88,7 +88,7 @@ static const HOSTMMIODEF aatMmioValues[2][3][6] =
 		}
 	}
 };
-#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 
 static const HOSTMMIODEF aatMmioValues[2][3][6] =
 {
@@ -699,7 +699,7 @@ static int spi_set_new_speed(const SPI_CFG_T *ptCfg, unsigned long ulDeviceSpeci
 
 static void spi_reconfigure_ios(const SPI_CFG_T *ptCfg)
 {
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	/* Set up the port control unit. */
 	portcontrol_apply_mmio(ptCfg->aucMmio, ptCfg->ausPortControl, sizeof(ptCfg->aucMmio));
 
@@ -785,7 +785,7 @@ static void spi_deactivate(const SPI_CFG_T *ptCfg)
 	ptSpi->aulSpi_cr[0] = 0;
 	ptSpi->aulSpi_cr[1] = 0;
 
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	/* Restore the default settings for the port control unit. */
 	portcontrol_restore_mmio(ptCfg->aucMmio, sizeof(ptCfg->aucMmio));
 
@@ -805,7 +805,7 @@ int boot_drv_spi_init_v2(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpi
 #if ASIC_TYP==ASIC_TYP_NETX50
 	HOSTDEF(ptSpi0Area);
 	HOSTDEF(ptSpi1Area);
-#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	HOSTDEF(ptSpiArea);
 	HOSTDEF(ptSpiXpic3Area);
 #endif
@@ -823,7 +823,7 @@ int boot_drv_spi_init_v2(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpi
 	{
 		ptSpi = ptSpi1Area;
 	}
-#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	if( uiSpiUnit==0 )
 	{
 		ptSpi = ptSpiArea;
@@ -870,7 +870,7 @@ int boot_drv_spi_init_v2(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpi
 
 		/* Copy the MMIO pins. */
 		memcpy(ptCfg->aucMmio, ptSpiCfg->aucMmio, sizeof(ptSpiCfg->aucMmio));
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 		/* Set up the port control unit. */
 		portcontrol_apply_mmio(ptSpiCfg->aucMmio, ptSpiCfg->ausPortControl, sizeof(ptSpiCfg->aucMmio));
 #endif

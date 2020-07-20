@@ -4,7 +4,7 @@
 #include "netx_io_areas.h"
 
 
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 static const unsigned short ausPortControlDefault[] =
 {
 	/* P00 */

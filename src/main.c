@@ -63,7 +63,7 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 #elif ASIC_TYP==ASIC_TYP_NETX6
 #       error "netX6 is not yet supported"
 
-#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	/* netX4000 has 2 hardware units. The first one can do 1, 2 and 4 bit
 	 * SPI. It is mapped to unit 0 and 1. The second one can do 1 bit SPI. It
 	 * is mapped to unit 2.

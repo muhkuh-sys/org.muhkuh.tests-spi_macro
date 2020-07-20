@@ -39,7 +39,7 @@ env_arm9.CreateCompilerEnv('NETX10', ['arch=armv5te'])
 
 # Create a build environment for the Cortex-R7 and Cortex-A9 based netX chips.
 env_cortexR7 = atEnv.DEFAULT.CreateEnvironment(['gcc-arm-none-eabi-4.9', 'asciidoc'])
-env_cortexR7.CreateCompilerEnv('NETX4000_RELAXED', ['arch=armv7', 'thumb'], ['arch=armv7-r', 'thumb'])
+env_cortexR7.CreateCompilerEnv('NETX4000', ['arch=armv7', 'thumb'], ['arch=armv7-r', 'thumb'])
 
 # Create a build environment for the Cortex-M4 based netX chips.
 env_cortexM4 = atEnv.DEFAULT.CreateEnvironment(['gcc-arm-none-eabi-4.9', 'asciidoc'])
@@ -109,8 +109,8 @@ astrIncludePaths = ['src', '#platform/src', '#platform/src/lib', '/tmp/targets/v
 
 
 atBuildConfigurations = {
-    'netX4000_RELAXED': {
-        'ENV': atEnv.NETX4000_RELAXED,
+    'netX4000': {
+        'ENV': atEnv.NETX4000,
         'LD': 'src/netx4000/netx4000_intram.ld',
         'SRC': sources_common + sources_netx4000,
         'DEFINES': [],
@@ -231,7 +231,7 @@ tArcList0.AddFiles('netx/',
     atBin['netX90'],
     atBin['netX90B'],
     atBin['netX500'],
-    atBin['netX4000_RELAXED'])
+    atBin['netX4000'])
 tArcList0.AddFiles('lua/',
     atLua['netX50'],
     'lua/test_class_spi_macro.lua')
@@ -261,7 +261,7 @@ atCopyFiles = {
     'targets/testbench/netx/spi_macro_test_netx90_mpw.bin':         atBin['netX90_MPW'],
     'targets/testbench/netx/spi_macro_test_netx90.bin':             atBin['netX90'],
     'targets/testbench/netx/spi_macro_test_netx90b.bin':            atBin['netX90B'],
-    'targets/testbench/netx/spi_macro_test_netx4000.bin':           atBin['netX4000_RELAXED'],
+    'targets/testbench/netx/spi_macro_test_netx4000.bin':           atBin['netX4000'],
 
     # Copy the LUA module.
     # NOTE: All files should be the same, just take the netX50 build.

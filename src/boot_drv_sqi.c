@@ -13,7 +13,7 @@
 #include "boot_drv_sqi.h"
 
 #include "netx_io_areas.h"
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 #       include "portcontrol.h"
 #endif
 #include "tools.h"
@@ -24,7 +24,7 @@
 #define MAXIMUM_TRANSACTION_SIZE_BYTES 0x80000
 
 
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 /* This tables shows the port control indices for the SQI0 pins.
  * There is only CS0. All other chip selects are not routed to the outside.
  */
@@ -756,7 +756,7 @@ static int qsi_set_new_speed(const SPI_CFG_T *ptCfg, unsigned long ulDeviceSpeci
 
 
 
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 static void qsi_reconfigure_ios(const SPI_CFG_T *ptCfg)
 {
 	unsigned int uiSqiUnit;
@@ -848,7 +848,7 @@ static int qsi_set_bus_width(SPI_CFG_T *ptCfg, SPI_BUS_WIDTH_T tBusWidth)
 
 
 
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 #       define SQIROMCFG_DUMMY_CYCLES_MAXIMUM 15
 #       define SQIROMCFG_ADDRESS_NIBBLES_MINIMUM 5
 #       define SQIROMCFG_ADDRESS_NIBBLES_MAXIMUM 8
@@ -910,7 +910,7 @@ static unsigned long qsi_get_device_specific_sqirom_cfg(SPI_CFG_T *ptCfg, unsign
 			ulFreqKHz = SQIROMCFG_FREQUENCY_MAXIMUM_KHZ;
 		}
 
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 		/* In the regdef the following formula is specified:
 		 *
 		 *   t_sck = (clk_div_val+1)*1.0ns
@@ -1026,7 +1026,7 @@ static void qsi_deactivate(const SPI_CFG_T *ptCfg)
 	HOSTDEF(ptAsicCtrlArea);
 #endif
 	unsigned long ulValue;
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	unsigned int uiSqiUnit;
 	const unsigned short *pusPortControlIndex;
 #endif
@@ -1061,7 +1061,7 @@ static void qsi_deactivate(const SPI_CFG_T *ptCfg)
 	ptSqi->aulSqi_cr[0] = 0;
 	ptSqi->aulSqi_cr[1] = 0;
 
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	/* Restore the default settings for the port control unit. */
 	uiSqiUnit = ptCfg->uiUnit;
 	pusPortControlIndex = NULL;
@@ -1109,7 +1109,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 #elif ASIC_TYP==ASIC_TYP_NETX6
 #       error "netX6 is not yet supported"
 
-#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	HOSTDEF(ptSQI0Area);
 	HOSTDEF(ptSQI1Area);
 	HOSTADEF(SQI) * ptSqi;
@@ -1153,7 +1153,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 #elif ASIC_TYP==ASIC_TYP_NETX6
 #       error "netX6 is not yet supported"
 
-#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#elif ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 	if( uiSqiUnit==0 )
 	{
 		ptSqi = ptSQI0Area;
@@ -1216,7 +1216,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 		ptCfg->pfnDeactivateSqiRom = qsi_deactivate_sqi_rom;
 		ptCfg->pfnDeactivate = qsi_deactivate;
 
-#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED
+#if ASIC_TYP==ASIC_TYP_NETX4000_RELAXED || ASIC_TYP==ASIC_TYP_NETX4000
 		/* Set up the port control unit. */
 		portcontrol_apply(pusPortControlIndex, ptSpiCfg->ausPortControl, sizeof(ptSpiCfg->ausPortControl)/sizeof(ptSpiCfg->ausPortControl[0]));
 #endif
