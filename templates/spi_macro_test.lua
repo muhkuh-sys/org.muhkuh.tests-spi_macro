@@ -345,6 +345,7 @@ end
 
 function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
   uiMacroTimeoutMs = uiMacroTimeoutMs or 0
+  local tLog = self.tLog
   local tResult = true
   local aucOpcodes = {}
   local atLabels = {}
@@ -369,7 +370,7 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
         local ucNumber = tonumber(strStrippedToken)
         if ucNumber~=nil then
           table.insert(aucOpcodes, ucNumber)
-          self.tLog.debug('[SPI Macro] %02x: 0x%02x', ulCurrentAddress, ucNumber)
+          tLog.debug('[SPI Macro] %02x: 0x%02x', ulCurrentAddress, ucNumber)
           ulCurrentAddress = ulCurrentAddress + 1
         else
           -- If the token ends with a colon, it is a label definition.
@@ -378,13 +379,13 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
             local strLabelName = string.sub(strStrippedToken, 1, -2)
             -- Does the label already exist?
             if atLabels[strLabelName]~=nil then
-              self.tLog.error('[SPI Macro] Label "%s" redefined in line %d.', strLabelName, uiLineNumber)
+              tLog.error('[SPI Macro] Label "%s" redefined in line %d.', strLabelName, uiLineNumber)
               tResult = nil
               break
             else
               -- Create the new label.
               atLabels[strLabelName] = ulCurrentAddress
-              self.tLog.debug('[SPI Macro] Label "%s" created at address 0x%02x', strLabelName, ulCurrentAddress)
+              tLog.debug('[SPI Macro] Label "%s" created at address 0x%02x', strLabelName, ulCurrentAddress)
             end
 
           else
@@ -392,7 +393,7 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
             local tToken = self.atMacroTokens[strStrippedToken]
             if tToken~=nil then
               table.insert(aucOpcodes, tToken)
-              self.tLog.debug('[SPI Macro] %02x: 0x%02x (%s)', ulCurrentAddress, tToken, strStrippedToken)
+              tLog.debug('[SPI Macro] %02x: 0x%02x (%s)', ulCurrentAddress, tToken, strStrippedToken)
               ulCurrentAddress = ulCurrentAddress + 1
             else
               -- This must be a label reference.
@@ -405,7 +406,7 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
                 atLabelReferences[strLabelName] = tRef
               end
               table.insert(tRef, ulCurrentAddress)
-              self.tLog.debug('[SPI Macro] Added reference to label "%s" at address 0x%02x.', strLabelName, ulCurrentAddress)
+              tLog.debug('[SPI Macro] Added reference to label "%s" at address 0x%02x.', strLabelName, ulCurrentAddress)
               ulCurrentAddress = ulCurrentAddress + 1
             end
           end
@@ -419,11 +420,11 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
     for strLabelName, atRefs in pairs(atLabelReferences) do
       local ulAddress = atLabels[strLabelName]
       if ulAddress==nil then
-        self.tLog.error('[SPI Macro] Referenced unknown label "%s" at addresses %s.', strLabelName, table.concat(atRefs, ', '))
+        tLog.error('[SPI Macro] Referenced unknown label "%s" at addresses %s.', strLabelName, table.concat(atRefs, ', '))
         tResult = nil
       else
         for _, uiPosition in ipairs(atRefs) do
-          self.tLog.debug('[SPI Macro] Resolve label "%s" at position 0x%02x to address 0x%02x.', strLabelName, uiPosition, ulAddress)
+          tLog.debug('[SPI Macro] Resolve label "%s" at position 0x%02x to address 0x%02x.', strLabelName, uiPosition, ulAddress)
           aucOpcodes[uiPosition + 1] = ulAddress
         end
       end
@@ -446,7 +447,12 @@ uiTimeoutMs:u4
       for _, ucData in ipairs(aucOpcodes) do
         table.insert(aucMacro, string.char(ucData))
       end
-      tResult = table.concat(aucMacro)
+      local strMacro = table.concat(aucMacro)
+      local sizMacro = string.len(strMacro)
+      if sizMacro>self.SPI_MACRO_MAX_SIZE then
+        tLog.error('The macro has a size of %d bytes. This exceeds the available size of %d bytes.', sizMacro, self.SPI_MACRO_MAX_SIZE)
+        error('The macro is too large.')
+      end
     end
   end
 
