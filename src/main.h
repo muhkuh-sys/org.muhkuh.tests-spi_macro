@@ -6,7 +6,7 @@
 #include "boot_spi.h"
 
 
-#define SPI_MACRO_MAX_SIZE 0x80
+#define SPI_MACRO_MAX_SIZE 0x0200
 
 
 typedef struct TEST_PARAMETER_STRUCT
