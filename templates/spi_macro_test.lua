@@ -451,7 +451,9 @@ uiTimeoutMs:u4
       local sizMacro = string.len(strMacro)
       if sizMacro>self.SPI_MACRO_MAX_SIZE then
         tLog.error('The macro has a size of %d bytes. This exceeds the available size of %d bytes.', sizMacro, self.SPI_MACRO_MAX_SIZE)
-        error('The macro is too large.')
+        tResult = nil
+      else
+        tResult = strMacro
       end
     end
   end
