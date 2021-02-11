@@ -6,9 +6,14 @@ local TestClassSpiMacro = class(TestClass)
 function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLevel)
   self:super(strTestName, uiTestCase, tLogWriter, strLogLevel)
 
+  self.json = require 'dkjson'
+
   local P = self.P
   self:__parameter {
     P:P('plugin', 'A pattern for the plugin to use.'):
+      required(false),
+
+    P:P('plugin_options', 'Plugin options as a JSON object.'):
       required(false),
 
     P:SC('unit', 'This is the unit providing the SPI bus.'):
@@ -97,6 +102,7 @@ end
 
 function TestClassSpiMacro:run()
   local atParameter = self.atParameter
+  local json = self.json
   local tLog = self.tLog
   local tester = _G.tester
 
@@ -105,6 +111,7 @@ function TestClassSpiMacro:run()
   -- Parse the parameters and collect all options.
   --
   local strPluginPattern = atParameter['plugin']:get()
+  local strPluginOptions = atParameter['plugin_options']:get()
 
   local uiTimeoutMs = atParameter['timeout']:get()
 
@@ -177,7 +184,16 @@ function TestClassSpiMacro:run()
 
   local tTest = f:compile(tSpiCfg, uiUnit, uiChipSelect, aucMacro)
 
-  local tPlugin = tester:getCommonPlugin(strPluginPattern)
+  local atPluginOptions = {}
+  if strPluginOptions~=nil then
+    local tJson, uiPos, strJsonErr = json.decode(strPluginOptions)
+    if tJson==nil then
+      tLog.warning('Ignoring invalid plugin options. Error parsing the JSON: %d %s', uiPos, strJsonErr)
+    else
+      atPluginOptions = tJson
+    end
+  end
+  local tPlugin = tester:getCommonPlugin(strPluginPattern, atPluginOptions)
   if not tPlugin then
     error('No plugin selected, nothing to do!')
   end
