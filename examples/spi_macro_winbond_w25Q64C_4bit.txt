@@ -1,0 +1,56 @@
+    # Send 2 dummy bytes.
+    SMC_DUMMY, SMCS_NNN, 2
+
+    # Send the command 0x9f.
+    SMC_SEND, SMCS_SNN, 1, 0x9f
+    # Receive 3 bytes.
+    SMC_RECEIVE, SMCS_SDD, 3
+    # Compare the JEDEC ID.
+    SMC_CMP, 3, 0xef, 0x40, 0x17
+    # Fail if it does not match.
+    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
+
+    # Read status register 2.
+    SMC_SEND, SMCS_SNN, 1, 0x35
+    SMC_RECEIVE, SMCS_SDD, 1
+    # Get the QE bit.
+    SMC_MASK, 1, 0x02
+    # QE must be 1 to be able to use 4 bit transfer.
+    SMC_JUMP, SPI_MACRO_CONDITION_NotZero, QeOk
+    # Write enable.
+    SMC_SEND, SMCS_SDD, 1, 0x06
+    # Write the status register 1 and 2.
+    SMC_SEND, SMCS_SDD, 3, 0x01, 0x02, 0x02
+
+    # Poll for write finished.
+Poll:
+    SMC_SEND, SMCS_SNN, 1, 0x05
+    SMC_RECEIVE, SMCS_SDD, 1
+    # Get the BUSY bit.
+    SMC_MASK, 1, 0x01
+    SMC_JUMP, SPI_MACRO_CONDITION_NotZero, Poll
+
+QeOk:
+    # Read the SFDP magic.
+    SMC_SEND, SMCS_SNN, 5, 0x5a, 0x00, 0x00, 0x00, 0x00
+    SMC_RECEIVE, SMCS_SDD, 4
+    SMC_CMP, 4, 0x53, 0x46, 0x44, 0x50
+    # Fail if it does not match.
+    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
+
+    # Read the manufacturer and device ID in 4 bit mode.
+    SMC_SEND, SMCS_SNN, 1, 0x94
+    # Switch to 4 bit mode.
+    SMC_MODE, SPI_BUS_WIDTH_4BIT
+    # Send the address and the mode byte.
+    SMC_SEND, SMCS_SNN, 4, 0x00, 0x00, 0x00, 0x00
+    # Send 4 idle cycles.
+    SMC_IDLE, SMCS_SNN, 4
+    # Receive the data.
+    SMC_RECEIVE, SMCS_SDD, 2
+    # Switch to 1 bit mode.
+    SMC_MODE, SPI_BUS_WIDTH_1BIT
+    # Compare the values.
+    SMC_CMP, 2, 0xef, 0x16
+    # Fail if it does not match.
+    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
