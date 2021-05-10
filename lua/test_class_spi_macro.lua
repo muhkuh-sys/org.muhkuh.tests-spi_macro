@@ -6,6 +6,7 @@ local TestClassSpiMacro = class(TestClass)
 function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLevel)
   self:super(strTestName, uiTestCase, tLogWriter, strLogLevel)
 
+  self.lpeg = require "lpeglabel"
   self.json = require 'dkjson'
 
   local P = self.P
@@ -102,6 +103,8 @@ end
 
 function TestClassSpiMacro:run()
   local atParameter = self.atParameter
+  local lpeg = self.lpeg
+  local pl = self.pl
   local json = self.json
   local tLog = self.tLog
   local tester = _G.tester
@@ -198,9 +201,46 @@ function TestClassSpiMacro:run()
     error('No plugin selected, nothing to do!')
   end
 
-  local ulResult = tester:mbin_simple_run(tPlugin, 'netx/spi_macro_test_netx${ASIC_TYPE}.bin', tTest)
-  if ulResult~=0 then
-    error('The SPI macro failed.')
+  -- Local callback function to collect all messages of the NetX
+  local tLog_NetX = pl.List()
+  local fnCallback = function(a, b)
+    tLog.debug("[NetX] %s", a)
+    tLog_NetX:append(a)
+    return true
+  end
+
+  local ulResult = tester:mbin_simple_run(tPlugin, "netx/spi_macro_test_netx${ASIC_TYPE}.bin", tTest, fnCallback)
+
+  -- In the case an error occurs when processing by the NetX
+  if ulResult ~= 0 then
+    local error_msg
+
+    if #tLog_NetX ~= 0 then
+      -- Search pattern of error message
+      local Error = lpeg.P("[ERROR]")
+      local Grammar_err = {
+        [1] = Error + 1 * lpeg.V(1) -- rule #1
+      }
+      -- Filted messages of NetX - only the [ERROR] messages should be displayed
+      tLog_NetX =
+        tLog_NetX:filter(
+        function(x)
+          return (lpeg.match(Grammar_err, x) ~= nil)
+        end,
+        Grammar_err,
+        lpeg.match
+      )
+
+      -- Concat all error message, each for one line
+      error_msg = table.concat(tLog_NetX)
+      error_msg = string.gsub(error_msg, "%c", "")
+      error_msg = pl.stringx.replace(error_msg, "[ERROR]", "\n[ERROR]")
+    else
+      -- Default error message
+      error_msg = "The SPI macro failed."
+    end
+
+    error(error_msg)
   end
 
   print("")

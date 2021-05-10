@@ -57,7 +57,7 @@ static int get_cs_mode(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CHIP_SELECT_MOD
 	}
 	if( iResult!=0 )
 	{
-		uprintf("Invalid CS mode: %d\n", ucMode);
+		uprintf("[ERROR] Invalid CS mode: %d\n", ucMode);
 	}
 	else
 	{
@@ -113,7 +113,7 @@ static int get_condition(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CONDITION_T *
 	}
 	if( iResult!=0 )
 	{
-		uprintf("[SpiMacro] Invalid condition: %d\n", uiCondition);
+		uprintf("[ERROR] Invalid condition: %d\n", uiCondition);
 	}
 	else
 	{
@@ -234,7 +234,7 @@ static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 		if( (ptSpiMacro->pucMacroCnt + sizBytes)>(ptSpiMacro->pucMacroEnd) )
 		{
-			uprintf("[SpiMacro] Invalid length.\n");
+			uprintf("[ERROR] SEND command: invalid length.\n");
 			iResult = -1;
 		}
 		else
@@ -253,7 +253,7 @@ static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 			iResult = ptSpiMacro->ptCfg->pfnSendData(ptSpiMacro->ptCfg, ptSpiMacro->pucMacroCnt, sizBytes);
 			if( iResult!=0 )
 			{
-				uprintf("[SpiMacro] Transfer error\n");
+				uprintf("[ERROR] SEND command: transfer error\n");
 			}
 			else
 			{
@@ -299,7 +299,7 @@ static int SMC_Handler_Receive(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		sizBuffer = sizeof(ptSpiMacro->uRxBuffer);
 		if( sizBytes>sizBuffer )
 		{
-			uprintf("[SpiMacro] The read request with %d bytes exceeds the buffer with %d bytes.\n", sizBytes, sizBuffer);
+			uprintf("[ERROR] The read request with %d bytes exceeds the buffer with %d bytes.\n", sizBytes, sizBuffer);
 			iResult = -1;
 		}
 		else
@@ -314,7 +314,7 @@ static int SMC_Handler_Receive(SPI_MACRO_HANDLE_T *ptSpiMacro)
 			iResult = ptSpiMacro->ptCfg->pfnReceiveData(ptSpiMacro->ptCfg, ptSpiMacro->uRxBuffer.auc, sizBytes);
 			if( iResult!=0 )
 			{
-				uprintf("[SpiMacro] Transfer Error\n");
+				uprintf("[ERROR] RECEIVE command: transfer error\n");
 			}
 			else
 			{
@@ -368,7 +368,7 @@ static int SMC_Handler_Idle(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		iResult = ptSpiMacro->ptCfg->pfnSendIdleCycles(ptSpiMacro->ptCfg, sizCycles);
 		if( iResult!=0 )
 		{
-			uprintf("[SpiMacro] Transfer Error\n");
+			uprintf("[ERROR] IDLE command: transfer error\n");
 		}
 		else
 		{
@@ -418,7 +418,7 @@ static int SMC_Handler_Dummy(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		iResult = ptSpiMacro->ptCfg->pfnSendDummy(ptSpiMacro->ptCfg, sizBytes);
 		if( iResult!=0 )
 		{
-			uprintf("[SpiMacro] Transfer Error\n");
+			uprintf("[ERROR] DUMMY command: transfer error\n");
 		}
 		else
 		{
@@ -476,7 +476,7 @@ static int SMC_Handler_Mode(SPI_MACRO_HANDLE_T *ptMacroCfg)
 
 	if( iResult!=0 )
 	{
-		uprintf("[SpiMacro] Invalid mode: %d\n", ulValue);
+		uprintf("[ERROR] MODE command: Invalid mode: %d\n", ulValue);
 	}
 	else
 	{
@@ -485,7 +485,7 @@ static int SMC_Handler_Mode(SPI_MACRO_HANDLE_T *ptMacroCfg)
 		iResult = ptMacroCfg->ptCfg->pfnSetBusWidth(ptMacroCfg->ptCfg, tMode);
 		if( iResult!=0 )
 		{
-			uprintf("[SpiMacro] Failed to set new mode.\n");
+			uprintf("[ERROR] Failed to set new mode.\n");
 		}
 	}
 
@@ -519,7 +519,7 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		pucAddress = ptSpiMacro->pucMacroStart + ucAddress;
 		if( pucAddress>ptSpiMacro->pucMacroEnd )
 		{
-			uprintf("[SpiMacro] The address points outside the macro!\n");
+			uprintf("[ERROR] JUMP command: the address point exceeds the size of the macro!\n");
 			iResult = -1;
 		}
 		else
@@ -630,12 +630,12 @@ static int SMC_Handler_Cmp(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	sizBuffer = sizeof(ptSpiMacro->uRxBuffer);
 	if( ulLength>sizBuffer )
 	{
-		uprintf("[SpiMacro] The 'CMP' command with %d bytes exceeds the buffer with %d bytes.\n", ulLength, sizBuffer);
+		uprintf("[ERROR] The CMP command with %d bytes exceeds the buffer with %d bytes.\n", ulLength, sizBuffer);
 		iResult = -1;
 	}
 	else if( (ptSpiMacro->pucMacroCnt + ulLength)>ptSpiMacro->pucMacroEnd )
 	{
-		uprintf("[SpiMacro] Invalid size\n");
+		uprintf("[ERROR] CMP command: invalid size\n");
 	}
 	else
 	{
@@ -693,12 +693,12 @@ static int SMC_Handler_Mask(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	sizBuffer = sizeof(ptSpiMacro->uRxBuffer);
 	if( ulLength>sizBuffer )
 	{
-		uprintf("[SpiMacro] The 'MASK' command with %d bytes exceeds the buffer with %d bytes.\n", ulLength, sizBuffer);
+		uprintf("[ERROR] The MASK command with %d bytes exceeds the buffer with %d bytes.\n", ulLength, sizBuffer);
 		iResult = -1;
 	}
 	else if( (ptSpiMacro->pucMacroCnt + ulLength)>ptSpiMacro->pucMacroEnd )
 	{
-		uprintf("[SpiMacro] Invalid size\n");
+		uprintf("[ERROR] MASK command: invalid size\n");
 	}
 	else
 	{
@@ -771,7 +771,7 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		else
 		{
 			iResult = -1;
-			uprintf("[SpiMacro] The condition is true. Failed!\n");
+			uprintf("[ERROR] The condition is true. Failed!\n");
 		}
 	}
 
@@ -826,10 +826,26 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned long ulTotalTimeoutMs;
 	unsigned long ulTimerStart;
 	int iIsElapsed;
-
+	unsigned int uiCntCmd;
+	const char *pcCmdNames[11] = {
+	"RECEIVE",
+	"SEND",
+	"IDLE",
+	"DUMMY",
+	"JUMP",
+	"CHTR",
+	"CMP",
+	"MASK",
+	"MODE",
+	"ADR",
+	"FAIL"  
+	};
 
 	/* Be optimistic. */
 	iResult = 0;
+
+	/* Starting value of command count. */
+	uiCntCmd = 1;
 
 	/* Get the timeout for the macro. */
 	ulTotalTimeoutMs = ptSpiMacro->ulTotalTimeoutMs;
@@ -842,6 +858,9 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		/* Get the next command. */
 		ucCmd = *((ptSpiMacro->pucMacroCnt)++);
 		tCmd = (SPI_MACRO_COMMAND_T)ucCmd;
+
+
+		uprintf("[DEBUG] command: %s (macro id: 0x%02x) - (Command number: %d)\n",pcCmdNames[ucCmd], ucCmd,uiCntCmd);
 
 		/* Expect an unknown command. */
 		iResult = -1;
@@ -865,7 +884,7 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 		if( iResult!=0 )
 		{
-			uprintf("[SpiMacro] Invalid command: 0x%02x\n", ucCmd);
+			uprintf("[ERROR] Unknown command with the id: 0x%02x\n", ucCmd);
 			break;
 		}
 		else
@@ -919,7 +938,7 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 			if( iResult!=0 )
 			{
-				uprintf("Failed to execute the command.\n");
+				uprintf("[ERROR] Failed to execute the command: %s - (command number: %d).\n", pcCmdNames[ucCmd],uiCntCmd);
 				break;
 			}
 
@@ -930,15 +949,15 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 				iIsElapsed = systime_elapsed(ulTimerStart, ulTotalTimeoutMs);
 				if( iIsElapsed!=0 )
 				{
-					uprintf("The timeout of %dms for the complete macro ran out. Stopping the macro.\n", ulTotalTimeoutMs);
+					uprintf("[ERROR] The timeout of %dms for the complete macro ran out. Stopping the macro.\n", ulTotalTimeoutMs);
 					iResult = -1;
 					break;
 				}
 			}
 		}
+
+		uiCntCmd++;
 	}
 
 	return iResult;
 }
-
-

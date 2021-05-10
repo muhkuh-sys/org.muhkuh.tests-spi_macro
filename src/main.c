@@ -124,14 +124,14 @@ TEST_RESULT_T test_main(const TEST_PARAMETER_T *ptParameter)
 
 	if( ptParameter==NULL )
 	{
-		uprintf("No parameters provided!\n");
+		uprintf("[ERROR] No parameters provided!\n");
 	}
 	else
 	{
 		iResult = open_driver(ptParameter->uiUnit, ptParameter->uiChipSelect, &(ptParameter->tSpiConfiguration), &tSpiCfg);
 		if( iResult!=0 )
 		{
-			uprintf("Failed to initialize the SPI driver.\n");
+			uprintf("[ERROR] Failed to initialize the SPI driver.\n");
 		}
 		else
 		{
@@ -140,14 +140,14 @@ TEST_RESULT_T test_main(const TEST_PARAMETER_T *ptParameter)
 			iResult = spi_macro_initialize(&tSpiMacro, &tSpiCfg, ptParameter->aucSpiMacro, ptParameter->sizSpiMacro);
 			if( iResult!=0 )
 			{
-				uprintf("Failed to initialize the SPI macro.\n");
+				uprintf("[ERROR] Failed to initialize the SPI macro.\n");
 			}
 			else
 			{
 				iResult = spi_macro_player_run(&tSpiMacro);
 				if( iResult!=0 )
 				{
-					uprintf("Failed to run the SPI macro.\n");
+					uprintf("[ERROR] Failed to run the SPI macro.\n");
 				}
 				else
 				{
