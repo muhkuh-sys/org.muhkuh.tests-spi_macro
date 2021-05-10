@@ -1,58 +1,95 @@
     # Send 2 dummy bytes.
-    SMC_DUMMY, SMCS_NNN, 2
+    DUMMY(2)
 
     # Read the JEDEC ID.
     # Fail if it does not match the expected values for the IS25LP128F.
-    SMC_SEND, SMCS_SNN, 1, 0x9f
-    SMC_RECEIVE, SMCS_SDD, 3
-    SMC_CMP, 3, 0x9d, 0x60, 0x18
-    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
+    CS(true)
+    SEND(0x9f)
+    CS(true)
+    RECEIVE(3)
+    CS(false)
+    DUMMY(1)    
+    CMP(0x9d, 0x60, 0x18)
+    FAIL(NotEqual,'Fail to match JEDEC ID!')
 
     # Read the SFDP magic in 1 bit.
-    SMC_SEND, SMCS_SNN, 5, 0x5a, 0x00, 0x00, 0x00, 0x00
-    SMC_RECEIVE, SMCS_SDD, 4
-    SMC_CMP, 4, 0x53, 0x46, 0x44, 0x50
-    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
+    CS(true)
+    SEND(0x5a, 0x00, 0x00, 0x00, 0x00)
+    CS(true)
+    RECEIVE(4)
+    CS(false)
+    DUMMY(1)
+    CMP(0x53, 0x46, 0x44, 0x50)
+    FAIL(NotEqual,'Fail to match SFDP magic in 1 bit!')
 
     # Set the QE bit in the status register.
-    SMC_SEND, SMCS_SNN, 1, 0x05
-    SMC_RECEIVE, SMCS_SDD, 1
-    SMC_MASK, 1, 0x40
-    SMC_JUMP, SPI_MACRO_CONDITION_NotZero, QeBitSet
-    SMC_SEND, SMCS_SDD, 1, 0x06
-    SMC_SEND, SMCS_SDD, 2, 0x01, 0x40
+    CS(true)
+    SEND(0x05)
+    CS(true)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)
+    MASK(0x40)
+    JUMP(NotZero, 'QeBitSet')
+    CS(true)
+    SEND(0x06)
+    CS(false)
+    DUMMY(1)
+    CS(true)
+    SEND(0x01, 0x40)
+    CS(false)
+    DUMMY(1)
 
     # Poll for write finished.
 Poll:
-    SMC_SEND, SMCS_SNN, 1, 0x05
-    SMC_RECEIVE, SMCS_SDD, 1
+    CS(true)
+    SEND(0x05)
+    CS(true)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)
     # Get the BUSY bit.
-    SMC_MASK, 1, 0x01
-    SMC_JUMP, SPI_MACRO_CONDITION_NotZero, Poll
+    MASK(0x01)
+    JUMP(NotZero, 'Poll')
 
 QeBitSet:
 
     # Activate QPI mode to get 4 bit commands.
-    SMC_SEND, SMCS_SDD, 1, 0x35
+    CS(true)
+    SEND(0x35)
+    CS(false)
+    DUMMY(1)
 
     # Switch to 4 bit mode.
-    SMC_MODE, SPI_BUS_WIDTH_4BIT
+    MODE(4BIT)
     # Read the JEDEC ID in 4 bit.
     # Fail if it does not match the expected values for the IS25LP128F.
-    SMC_SEND, SMCS_SNN, 1, 0xaf
-    SMC_RECEIVE, SMCS_SDD, 3
-    SMC_CMP, 3, 0x9d, 0x60, 0x18
-    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
+    CS(true)
+    SEND(0xaf)
+    CS(true)
+    RECEIVE(3)
+    CS(false)
+    DUMMY(1)
+    CMP(0x9d, 0x60, 0x18)
+    FAIL(NotEqual,'Fail to match JEDEC ID in 4 bit!')
 
     # Read the SFDP magic.
-    SMC_SEND, SMCS_SNN, 5, 0x5a, 0x00, 0x00, 0x00, 0x00
-    SMC_IDLE, SMCS_SNN, 4
-    SMC_RECEIVE, SMCS_SDD, 4
-    SMC_CMP, 4, 0x53, 0x46, 0x44, 0x50
-    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
+    CS(true)
+    SEND(0x5a, 0x00, 0x00, 0x00, 0x00)
+    CS(true)
+    IDLE(4)
+    CS(true)
+    RECEIVE(4)
+    CS(false)
+    DUMMY(1)
+    CMP(0x53, 0x46, 0x44, 0x50)
+    FAIL(NotEqual,'Fail to match SFDP magic in 4 bit!')
 
     # Deactivate QPI mode.
-    SMC_SEND, SMCS_SDD, 1, 0xf5
+    CS(true)
+    SEND(0xf5)
+    CS(false)
+    DUMMY(1)
 
     # Switch to 1 bit mode.
-    SMC_MODE, SPI_BUS_WIDTH_1BIT
+    MODE(1BIT)

@@ -1,24 +1,32 @@
     # Send 2 dummy bytes.
-    SMC_DUMMY, SMCS_NNN, 2
+    DUMMY(2)
 
     # Send the command 0x9f.
-    SMC_SEND, SMCS_SNN, 1, 0x9f
+    CS(true)
+    SEND(0x9f)
     # Receive 5 bytes.
-    SMC_RECEIVE, SMCS_SDD, 5
+    CS(true)
+    RECEIVE(5)
+    CS(false)
+    DUMMY(1)
     # Compare the JEDEC ID.
-    SMC_CMP, 5, 0x1f, 0x27, 0x01, 0x01, 0x00
+    CMP(0x1f, 0x27, 0x01, 0x01, 0x00)
     # Fail if it does not match.
-    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
+    FAIL(NotEqual,'Fail to match JEDEC ID!')
 
     # Read status register.
-    SMC_SEND, SMCS_SNN, 1, 0xd7
-    SMC_RECEIVE, SMCS_SDD, 1
+    CS(true)
+    SEND(0xd7)
+    CS(true)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)    
     # Extract the interesting bits:
     #   5:2 Density, must be 1101
     #     1 Protect, must be 0 (not protected)
     #     0 Page size, must be 0 (528 byte pages)
-    SMC_MASK, 1, 0x3f
+    MASK(0x3f)
     # The expected value is 00110100 or 0x34.
-    SMC_CMP, 1, 0x34
+    CMP(0x34)
     # Fail if it does not match.
-    SMC_FAIL, SPI_MACRO_CONDITION_NotEqual
+    FAIL(NotEqual,'Fail to match status register')
