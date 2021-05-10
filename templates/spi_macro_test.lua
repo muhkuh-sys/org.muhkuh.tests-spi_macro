@@ -10,6 +10,7 @@ function SpiFlashMacroTest:_init(tLog)
 
   -- The "penlight" module is always useful.
   self.pl = require'pl.import_into'()
+  self.lpeg = require "lpeglabel"
 
   self.atMacroTokens = {
     SMC_RECEIVE  = ${SMC_RECEIVE},
@@ -23,11 +24,10 @@ function SpiFlashMacroTest:_init(tLog)
     SMC_MODE     = ${SMC_MODE},
     SMC_ADR      = ${SMC_ADR},
     SMC_FAIL     = ${SMC_FAIL},
+	SMC_CS     = ${SMC_CS_MODE},
 
-    SMCS_NNN     = ${SMCS_NNN},
-    SMCS_SNN     = ${SMCS_SNN},
-    SMCS_SDN     = ${SMCS_SDN},
-    SMCS_SDD     = ${SMCS_SDD},
+    SMCS_FALSE     = ${SMCS_FALSE},
+    SMCS_TRUE     = ${SMCS_TRUE},
 
     SPI_MODE0    = ${SPI_MODE0},
     SPI_MODE1    = ${SPI_MODE1},
@@ -343,122 +343,479 @@ end
 
 
 
+--- Check the macro for syntax errors and converts each character into its equivalent macro token.
+-- @param strMacro macro
+-- @param uiMacroTimeoutMs time out [ms]
+-- @return tResult: true/false
+-- @return aucMacro: string with all occurring macro tokens
+-- @return tMsg: string with all occurring error messages
 function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
-  uiMacroTimeoutMs = uiMacroTimeoutMs or 0
-  local tLog = self.tLog
-  local tResult = true
-  local aucOpcodes = {}
-  local atLabels = {}
-  local atLabelReferences = {}
+	uiMacroTimeoutMs = uiMacroTimeoutMs or 0
 
-  -- Loop over each line in the string.
-  local uiLineNumber = 0
-  local ulCurrentAddress = 0
-  for strLine in self.pl.stringx.lines(strMacro) do
-    -- Count the line numbers for error messages.
-    uiLineNumber = uiLineNumber + 1
+	local lpeg = self.lpeg
+	local pl = self.pl
+	local tLog = self.tLog
 
-    -- Strip whitespace from the line.
-    local strStrippedLine = self.pl.stringx.strip(strLine)
-    -- Ignore lines starting with '#'.
-    if string.sub(strStrippedLine, 1, 1)~='#' then
-      -- Split the line by commata into tokens.
-      local astrTokens = {self.pl.stringx.splitv(strStrippedLine, ',')}
-      for _, strToken in pairs(astrTokens) do
-        local strStrippedToken = self.pl.stringx.strip(strToken)
-        -- Is this a plain number?
-        local ucNumber = tonumber(strStrippedToken)
-        if ucNumber~=nil then
-          table.insert(aucOpcodes, ucNumber)
-          tLog.debug('[SPI Macro] %02x: 0x%02x', ulCurrentAddress, ucNumber)
-          ulCurrentAddress = ulCurrentAddress + 1
-        else
-          -- If the token ends with a colon, it is a label definition.
-          if string.sub(strStrippedToken, -1)==':' then
-            -- Get the label name without the colon.
-            local strLabelName = string.sub(strStrippedToken, 1, -2)
-            -- Does the label already exist?
-            if atLabels[strLabelName]~=nil then
-              tLog.error('[SPI Macro] Label "%s" redefined in line %d.', strLabelName, uiLineNumber)
-              tResult = nil
-              break
-            else
-              -- Create the new label.
-              atLabels[strLabelName] = ulCurrentAddress
-              tLog.debug('[SPI Macro] Label "%s" created at address 0x%02x', strLabelName, ulCurrentAddress)
-            end
+	-- Be optimistic
+	local tResult = true
 
-          else
-            -- Is this a known token?
-            local tToken = self.atMacroTokens[strStrippedToken]
-            if tToken~=nil then
-              table.insert(aucOpcodes, tToken)
-              tLog.debug('[SPI Macro] %02x: 0x%02x (%s)', ulCurrentAddress, tToken, strStrippedToken)
-              ulCurrentAddress = ulCurrentAddress + 1
-            else
-              -- This must be a label reference.
-              local strLabelName = strStrippedToken
-              -- Insert a dummy value.
-              table.insert(aucOpcodes, 0x00)
-              local tRef = atLabelReferences[strLabelName]
-              if tRef==nil then
-                tRef = {}
-                atLabelReferences[strLabelName] = tRef
-              end
-              table.insert(tRef, ulCurrentAddress)
-              tLog.debug('[SPI Macro] Added reference to label "%s" at address 0x%02x.', strLabelName, ulCurrentAddress)
-              ulCurrentAddress = ulCurrentAddress + 1
-            end
-          end
-        end
-      end
-    end
-  end
+	-- Combination of all data as string.
+	local aucMacro = pl.List()
 
-  if tResult==true then
-    -- Resolve all labels.
-    for strLabelName, atRefs in pairs(atLabelReferences) do
-      local ulAddress = atLabels[strLabelName]
-      if ulAddress==nil then
-        tLog.error('[SPI Macro] Referenced unknown label "%s" at addresses %s.', strLabelName, table.concat(atRefs, ', '))
-        tResult = nil
-      else
-        for _, uiPosition in ipairs(atRefs) do
-          tLog.debug('[SPI Macro] Resolve label "%s" at position 0x%02x to address 0x%02x.', strLabelName, uiPosition, ulAddress)
-          aucOpcodes[uiPosition + 1] = ulAddress
-        end
-      end
-    end
-  end
+	-- Error messages
+	local tMsg = pl.List("\n")
 
-  if tResult==true then
-    -- Build the header.
-    local strHeaderFormat = [[
-uiTimeoutMs:u4
-]]
-    local tParameter = {
-      uiTimeoutMs = uiMacroTimeoutMs
-    }
-    tResult = self.vstruct.write(strHeaderFormat, tParameter)
-    if tResult~=nil then
-      -- Combine all data to a string.
-      local aucMacro = {}
-      table.insert(aucMacro, tResult)
-      for _, ucData in ipairs(aucOpcodes) do
-        table.insert(aucMacro, string.char(ucData))
-      end
-      local strMacro = table.concat(aucMacro)
-      local sizMacro = string.len(strMacro)
-      if sizMacro>self.SPI_MACRO_MAX_SIZE then
-        tLog.error('The macro has a size of %d bytes. This exceeds the available size of %d bytes.', sizMacro, self.SPI_MACRO_MAX_SIZE)
-        tResult = nil
-      else
-        tResult = strMacro
-      end
-    end
-  end
+	local aucOpcodes = pl.List()
+	local atLabels = {}
+	local atLabelReferences = {}
 
-  return tResult
+	-- Save typing function names with "lpeg" in front of them:
+	local P, V, Cg, Ct, Cc, S, R, C, Cf, Cb, Cs =
+		lpeg.P,
+		lpeg.V,
+		lpeg.Cg,
+		lpeg.Ct,
+		lpeg.Cc,
+		lpeg.S,
+		lpeg.R,
+		lpeg.C,
+		lpeg.Cf,
+		lpeg.Cb,
+		lpeg.Cs
+
+	-- Additional shortcut of lpeglabel
+	local T = lpeg.T
+
+	-- Match optional whitespace.
+	local OptionalSpace = S(" \t") ^ 0
+
+	local OpeningBracket = P("(")
+	local ClosingBracket = P(")")
+
+	local Comma = P(",")
+
+	-- Auxiliary function: add optinal spaces around pattern
+	local function OptSpace(pattern)
+		return OptionalSpace * pattern * OptionalSpace
+	end
+
+	-- Auxiliary function: add brackets around pattern
+	local function Brackets(pattern)
+		return OpeningBracket * pattern * ClosingBracket
+	end
+
+	-- Auxiliary function: add number of bytes to table at first position
+	local function AddNumbBytes(tdata)
+		return pl.List(tdata):insert(1, #tdata)
+	end
+
+	-- Auxiliary function: match everything up to the pattern (return a caption)
+	local function UpTo(pattern)
+		return C((P(1) - pattern) ^ 0) * pattern
+	end
+
+	-- Auxiliary function: return a grammar which tries to match the given pattern in a string
+	local function Anywhere(pattern)
+		return P {pattern + 1 * lpeg.V(1)}
+	end
+
+	-- Auxiliary function: detect pattern in given table - func is optional
+	local function Detect(pattern, tdata, func)
+		func = func or function(dummy)
+				return dummy
+			end
+
+		local grammar_search = Anywhere(pattern)
+
+		local str
+		local tmatch
+		if type(tdata) == "table" then
+			for _, value in ipairs(tdata) do
+				str = tostring(value)
+				tmatch = lpeg.match(grammar_search, func(str))
+				if tmatch ~= nil then
+					return str
+				end
+			end
+		end
+		return nil
+	end
+
+	-- Auxiliary function: list-pattern with separator
+	local function List(pattern, sep)
+		return pattern * (sep * pattern) ^ 0
+	end
+
+	-- Match an integer. This can be decimal, hexadecimal or binary.
+	local DecimalInteger = R("09") ^ 1
+	local HexInteger = P("0x") * (R("09", "af", "AF")) ^ 1
+	local BinInteger = P("0b") * R("01") ^ 1
+	local Integer = HexInteger + DecimalInteger + BinInteger
+
+	-- Pattern of macro condition, bus width and cs mode
+	local Condition = P("Always") + P("Equal") + P("NotEqual") + P("Zero") + P("NotZero")
+
+	local Bus_Width = P("1BIT") + P("2BIT") + P("4BIT")
+
+	local CS_Mode = P("true") + P("false")
+
+	-- String pattern, either with single or double quotes
+	local String =
+		P {
+		"start",
+		start = V "single_quoted" + V "double_quoted",
+		single_quoted = P("'") * UpTo(P("'")),
+		double_quoted = P('"') * UpTo(P('"'))
+	}
+
+	-- Caption which match each char of a string
+	local Chars = C(P(1)) ^ 0
+
+	-- Add comment and "empty line", match to neglect it
+	local EmptyLine = S(" \t\n\r") ^ 0 * -1
+	local Comment = OptSpace(P("#")) * P(1) ^ 0
+
+	-- Caption of label (label without ":" !)
+	local Label = OptSpace(Cg((P(1) - S(":")) ^ 1, "cmd_label") * P(":")) -- (P(1) - S(":")) ^ 1
+
+	-- Pattern of parameters: either with one or two parameters
+	local ParamNumb_1 = (P(1) - V "closingBracket") ^ 0
+	local ParamNumb_2 = (P(1) - V "comma") ^ 0 * V "comma" * (P(1) - V "closingBracket") ^ 0
+
+	-- Auxiliary function: creates group captions of a command which consists of the pattern of the command and the pattern of parameters
+	function Cmd(pattern_Cmd, pattern_param)
+		return OptSpace(Cg(P(pattern_Cmd), "cmd")) * Cg(V "openingBracket" * pattern_param * V "closingBracket", "param")
+	end
+
+	-- Pattern of commands
+	local Cmds =
+		Cmd(P("RECEIVE"), ParamNumb_1) + Cmd(P("RECEIVE"), ParamNumb_1) + Cmd(P("SEND"), ParamNumb_1) +
+		Cmd(P("IDLE"), ParamNumb_1) +
+		Cmd(P("DUMMY"), ParamNumb_1) +
+		Cmd(P("CHTR"), ParamNumb_1) +
+		Cmd(P("CMP"), ParamNumb_1) +
+		Cmd(P("MASK"), ParamNumb_1) +
+		Cmd(P("MODE"), ParamNumb_1) +
+		Cmd(P("ADR"), ParamNumb_1) +
+		Cmd(P("CS"), ParamNumb_1) +
+		Cmd(P("JUMP"), ParamNumb_2) +
+		Cmd(P("FAIL"), ParamNumb_2)
+
+	-- A line of the macro includes: a command consisting of name and paramter brackets (...) or label definition or comment or empty line
+	local tGrammar_Cmds =
+		Ct(
+		P {
+			"start", --> this tells LPEG which rule to process first
+			start = Comment + EmptyLine + Label + Cmds + T "errCmd",
+			openingBracket = OpeningBracket + T "errOpeningBrackets",
+			closingBracket = ClosingBracket + T "errClosingBrackets",
+			comma = Comma + T "errComma"
+		}
+	)
+
+	-- Table of errror messages
+	local tError = {
+		errCmd = "Fail command - expected: <Command Name>(<Parameter(s)>) | <Label Name>: | #Comment",
+		errOpeningBrackets = "Fail brackets - miss opening bracket (...)",
+		errClosingBrackets = "Fail brackets - miss closing bracket (...)",
+		errComma = "Fail separator - miss comma between parameters",
+		errCS_Mode = "Fail parameter - expected CS mode: true or false",
+		errCondition = "Fail parameter - expected condition: Always, Equal, NotEqual, Zero or NotZero",
+		errBus_Width = "Fail parameter - expected bus width: 1BIT, 2BIT or 4BIT",
+		errIntegerReceive = "Fail parameter - expected number: <number of received bytes>",
+		errIntegerIdle = "Fail parameter - expected number: <number of idle cycles>",
+		errIntegerDummy = "Fail parameter - expected number: <number of dummy bytes>",
+		errListSend = "Fail parameter - expected list of numbers: <data to be transferred>,...",
+		errListCMP = "Fail parameter - expected list of numbers: <data to be compared>,...",
+		errListMask = "Fail parameter - expected list of numbers: <data to be masked>,...",
+		errStringLabel = "Fail parameter - expected string: <name of label>",
+		errStringErrMsg = "Fail parameter - expected string: <error message>",
+		errLabel = "Fail label - label is redefined",
+		errMacroToken = "Fail macro token - macro token does not exist in table",
+		fail = "Fail - undefined error"
+	}
+
+	-- Auxiliary function to record error messages with the corresponding error label
+	local function recordError(strLineMacro, uiLineNumber, errLab)
+		tMsg:append(
+			string.format(
+				'[SPI Macro] [ERROR] line: %d - Fail: "%s" - %s\n',
+				uiLineNumber,
+				pl.stringx.strip(strLineMacro),
+				tError[errLab]
+			)
+		)
+	end
+
+	-- Table with specified pattern of the paramters (...) of the commands
+	local tGrammar_CmdParamters =
+		pl.Map {
+		RECEIVE = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1")),
+			param_1 = OptSpace(Integer / tonumber) * #ClosingBracket + T "errIntegerReceive"
+		},
+		SEND = P {
+			"paramters",
+			paramters = Brackets(V "param_1"),
+			param_1 = Ct(List(OptSpace(Integer / tonumber), P(","))) / AddNumbBytes * #ClosingBracket + T "errListSend"
+		},
+		IDLE = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1")),
+			param_1 = OptSpace(Integer / tonumber) * #ClosingBracket + T "errIntegerIdle"
+		},
+		DUMMY = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1")),
+			param_1 = OptSpace(Integer / tonumber) * #ClosingBracket + T "errIntegerDummy"
+		},
+		JUMP = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1" * Comma * V "param_2")),
+			param_1 = OptSpace(C(Condition)) * #Comma + T "errCondition",
+			param_2 = OptSpace(Ct(Cg(String, "label"))) * #ClosingBracket + T "errStringLabel"
+		},
+		CHTR = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1")),
+			param_1 = C(P(1) ^ 0)
+		},
+		CMP = P {
+			"paramters",
+			paramters = Brackets(V "param_1"),
+			param_1 = Ct(List(OptSpace(Integer / tonumber), P(","))) / AddNumbBytes * #ClosingBracket + T "errListCMP"
+		},
+		MASK = P {
+			"paramters",
+			paramters = Brackets(V "param_1"),
+			param_1 = Ct(List(OptSpace(Integer / tonumber), P(","))) / AddNumbBytes * #ClosingBracket + T "errListMask"
+		},
+		MODE = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1")),
+			param_1 = OptSpace(C(Bus_Width)) * #ClosingBracket + T "errBus_Width"
+		},
+		ADR = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1")),
+			param_1 = C(P(1) ^ 0)
+		},
+		FAIL = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1" * Comma * V "param_2")),
+			param_1 = OptSpace(C(Condition)) * #Comma + T "errCondition",
+			param_2 = OptSpace(Ct(Cg(String, "string"))) * #ClosingBracket + T "errStringErrMsg"
+		},
+		CS = P {
+			"paramters",
+			paramters = Brackets(Ct(V "param_1")),
+			param_1 = OptSpace(C(CS_Mode)) * #ClosingBracket + T "errCS_Mode"
+		}
+	}
+
+	local uiLineNumber = 0
+	local ulCurrentAddress = 0
+
+	-- Key table of 'atMacroTokens'
+	local MacroTokens_keys = pl.tablex.keys(self.atMacroTokens)
+
+	-- Every single line of the macro is checked for errors and the corresponding command is extracted
+	for strLine in pl.stringx.lines(strMacro) do
+		-- Count the line numbers for error messages.
+		uiLineNumber = uiLineNumber + 1
+		tLog.debug("[SPI Macro] [line: %d] %s", uiLineNumber, strLine)
+
+		-- Match the line with the Cmds grammar pattern
+		local tmatchCmd, errLab = lpeg.match(tGrammar_Cmds, strLine)
+		-- Append an error if the command is unkown
+		if not tmatchCmd then
+			-- No command match, add an error message
+			tResult = false
+			recordError(strLine, uiLineNumber, errLab)
+		elseif tmatchCmd.cmd_label ~= nil then
+			-- If the token ends with a colon, it is a label definition.
+			-- Get the label name.
+			local strLabelName = tmatchCmd.cmd_label
+			tLog.debug("[SPI Macro] [LABEL] %s - address: %d", strLabelName, ulCurrentAddress)
+			-- Does the label already exist?
+			if atLabels[strLabelName] ~= nil then
+				-- Label already exist, add an error message
+				recordError(strLine, uiLineNumber, "errLabel")
+				tResult = false
+			else
+				-- Create the new label.
+				atLabels[strLabelName] = ulCurrentAddress
+				tLog.debug('[SPI Macro] [LABEL] label "%s" created at address %d', strLabelName, ulCurrentAddress)
+			end
+		else
+			-- The 'Cmds' pattern contains named group captures of the command and the parameters
+			if tmatchCmd.cmd ~= nil and tmatchCmd.param ~= nil then
+				local strCmd = tmatchCmd.cmd
+				local strParam = tmatchCmd.param
+				tLog.debug("[SPI Macro] [COMMAND] %s - address: %d", strCmd, ulCurrentAddress)
+
+				-- Detect command key in table 'atMacroTokens'
+				local strMacroToken = Detect(P("_") * P(string.upper(strCmd)) * -1, MacroTokens_keys, string.upper)
+				if strMacroToken ~= nil then
+					local tToken = self.atMacroTokens[strMacroToken]
+					tLog.debug("[SPI Macro] [COMMAND] detected: %s - %d", strMacroToken, tToken)
+					aucOpcodes:append(tToken)
+					ulCurrentAddress = ulCurrentAddress + 1
+				else
+					-- No macro token match, add an error message
+					tResult = false
+					recordError(strLine, uiLineNumber, "errMacroToken")
+				end
+
+				-- Get the corresponding parameter pattern of the matched command
+				local tGrammar_Param = tGrammar_CmdParamters:get(strCmd)
+				-- Match the parameter(s) of the corresponding command (tmatchParam must be a TABLE!)
+				local tmatchParam, errLab = lpeg.match(tGrammar_Param, strParam)
+				if not tmatchParam then
+					-- No paramter match, add an error message
+					tResult = false
+					recordError(strLine, uiLineNumber, errLab)
+				else
+					tLog.debug("[SPI Macro] [PARAMETER] [TABLE] paramters: %s - size: %d", strParam, #tmatchParam)
+					-- Consider every parameter matched within the bracket
+					for _, param in ipairs(tmatchParam) do
+						-- Is this a known token?
+						if type(param) == "string" then
+							-- Parameters of type string within the table 'tmatchParam' are considered as macro tokens of table 'atMacroTokens'
+							tLog.debug("[SPI Macro] [PARAMETER] [STRING] matched parameter: %s - address: %d", param, ulCurrentAddress)
+
+							-- Detect parameter key in table 'atMacroTokens'
+							local strMacroToken = Detect(P("_") * P(string.upper(param)) * -1, MacroTokens_keys, string.upper)
+							if strMacroToken ~= nil then
+								local tToken = self.atMacroTokens[strMacroToken]
+								tLog.debug("[SPI Macro] [PARAMETER] [STRING] detected: %s - %d", strMacroToken, tToken)
+								aucOpcodes:append(tToken)
+								ulCurrentAddress = ulCurrentAddress + 1
+							else
+								-- No macro token match, add an error message
+								tResult = false
+								recordError(strLine, uiLineNumber, "errMacroToken")
+							end
+						elseif type(param) == "number" then
+							-- Parameters of type number within the table 'tmatchParam'
+							local ucNumber = param
+							tLog.debug("[SPI Macro] [PARAMETER] [NUMBER] matched parameter: %d - address: %d", ucNumber, ulCurrentAddress)
+							aucOpcodes:append(ucNumber)
+							ulCurrentAddress = ulCurrentAddress + 1
+						elseif type(param) == "table" then
+							--  Parameters of type table within the table 'tmatchParam' are considered as label (with group capture "label") or as string (with group capture "string")
+							if param.label ~= nil then
+								-- This must be a label reference.
+								local strLabelName = param.label
+
+								-- Insert a dummy value.
+								aucOpcodes:append(0x00)
+								local tRef = atLabelReferences[strLabelName]
+								if tRef == nil then
+									tRef = {}
+									atLabelReferences[strLabelName] = tRef
+								end
+								tLog.debug(
+									"[SPI Macro] [PARAMETER] [TABLE] [LABEL] added reference to label: %s - address: %d",
+									strLabelName,
+									ulCurrentAddress
+								)
+								table.insert(tRef, ulCurrentAddress)
+								ulCurrentAddress = ulCurrentAddress + 1
+							elseif param.string ~= nil then
+								-- This must be a matched string in a table
+								-- Add null character to the end of the string
+								local strMsg = param.string .. "\0"
+								local uiMsg = #strMsg
+								tLog.debug(
+									"[SPI Macro] [PARAMETER] [TABLE] [STRING] string: %s - length: %d - address: %d",
+									strMsg,
+									uiMsg,
+									ulCurrentAddress
+								)
+
+								-- Add the the length of the string
+								aucOpcodes:append(uiMsg)
+								ulCurrentAddress = ulCurrentAddress + 1
+
+								-- Add each char of the string separately to the table 'aucOpcodes' due to the pointer reference
+								local tChars = lpeg.match(Ct(Chars), strMsg)
+								for _, char in ipairs(tChars) do
+									aucOpcodes:append(char)
+									ulCurrentAddress = ulCurrentAddress + 1
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if tResult == true then
+		-- Resolve all labels.
+		for strLabelName, atRefs in pairs(atLabelReferences) do
+			local ulAddress = atLabels[strLabelName]
+			if ulAddress == nil then
+				tResult = false
+				tMsg:append(
+					string.format(
+						'[SPI Macro] [ERROR] referenced unknown label "%s" at addresses %s.',
+						strLabelName,
+						table.concat(atRefs, ", ")
+					)
+				)
+			else
+				for _, uiPosition in ipairs(atRefs) do
+					tLog.debug('[SPI Macro] Resolve label "%s" at position %d to address %d.', strLabelName, uiPosition, ulAddress)
+					aucOpcodes[uiPosition + 1] = ulAddress
+				end
+			end
+		end
+	end
+
+	if tResult == true then
+		-- Build the header.
+		local strHeaderFormat = [[
+  uiTimeoutMs:u4
+  ]]
+		local tParameter = {
+			uiTimeoutMs = uiMacroTimeoutMs
+		}
+		local tResult_Vstruct = self.vstruct.write(strHeaderFormat, tParameter)
+
+		if tResult_Vstruct == nil then
+			tResult = false
+			tMsg:append(string.format("[SPI Macro] [ERROR] Failed to build the header."))
+		else
+			-- Combine all data to a string.
+			aucMacro:append(tResult_Vstruct)
+
+			for key, ucData in ipairs(aucOpcodes) do
+				tLog.debug("[SPI Macro] [aucOpcodes] - address: %d - data: %s - type: %s", key, ucData, type(ucData))
+				if type(ucData) == "number" then
+					aucMacro:append(string.char(ucData))
+				elseif type(ucData) == "string" then
+					aucMacro:append(ucData)
+				end
+			end
+
+			local sizMacro = #aucMacro:join()
+			if sizMacro > self.SPI_MACRO_MAX_SIZE then
+				tResult = false
+				tMsg:append(
+					string.format(
+						"The macro has a size of %d bytes. This exceeds the available size of %d bytes.",
+						sizMacro,
+						self.SPI_MACRO_MAX_SIZE
+					)
+				)
+			end
+		end
+	end
+
+	return tResult, aucMacro:join(), tMsg:join() -- table.concat(strMsg)
 end
 
 

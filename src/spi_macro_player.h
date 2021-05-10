@@ -29,7 +29,8 @@ typedef enum SPI_MACRO_COMMAND_ENUM
 	SMC_MASK     = 7,
 	SMC_MODE     = 8,
 	SMC_ADR      = 9,
-	SMC_FAIL     = 10
+	SMC_FAIL     = 10,
+	SMC_CS_MODE  = 11
 } SPI_MACRO_COMMAND_T;
 
 /*-------------------------------------------------------------------------*/
@@ -37,10 +38,8 @@ typedef enum SPI_MACRO_COMMAND_ENUM
 
 typedef enum SPI_MACRO_CHIP_SELECT_MODE_ENUM
 {
-	SMCS_NNN     = 0,
-	SMCS_SNN     = 1,
-	SMCS_SDN     = 2,
-	SMCS_SDD     = 3
+	SMCS_FALSE     = 0,
+	SMCS_TRUE      = 1
 } SPI_MACRO_CHIP_SELECT_MODE_T;
 
 
@@ -74,6 +73,8 @@ typedef struct SPI_MACRO_HANDLE_STRUCT
 	const unsigned char *pucMacroStart;
 	const unsigned char *pucMacroCnt;
 	const unsigned char *pucMacroEnd;
+
+	SPI_MACRO_CHIP_SELECT_MODE_T tCS_Mode;
 
 	unsigned long ulTotalTimeoutMs;
 

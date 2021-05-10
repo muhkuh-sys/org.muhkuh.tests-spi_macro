@@ -180,9 +180,10 @@ function TestClassSpiMacro:run()
   }
   local tSpiCfg = f:compile_spi_configuration(atSpiConfiguration)
 
-  local aucMacro = f:compile_macro(strMacro, uiTimeoutMs)
-  if aucMacro==nil then
-    error('Failed to compile the macro!')
+  local tResult, aucMacro, strMsg = f:compile_macro(strMacro, uiTimeoutMs)
+
+  if tResult ~= true then
+    error(strMsg)
   end
 
   local tTest = f:compile(tSpiCfg, uiUnit, uiChipSelect, aucMacro)

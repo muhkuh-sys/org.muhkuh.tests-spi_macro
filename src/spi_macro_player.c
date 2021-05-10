@@ -31,33 +31,23 @@ static int get_cs_mode(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CHIP_SELECT_MOD
 	iResult = -1;
 	pcName = NULL;
 
-	ucMode = *((ptSpiMacro->pucMacroCnt)++);
-	tMode = (SPI_MACRO_CHIP_SELECT_MODE_T)ucMode;
+	tMode = ptSpiMacro->tCS_Mode;
+
 	switch(tMode)
 	{
-	case SMCS_NNN:
+	case SMCS_TRUE:
 		iResult = 0;
-		pcName = "NNN";
+		pcName = "true";
 		break;
 
-	case SMCS_SNN:
+	case SMCS_FALSE:
 		iResult = 0;
-		pcName = "SNN";
-		break;
-
-	case SMCS_SDN:
-		iResult = 0;
-		pcName = "SDN";
-		break;
-
-	case SMCS_SDD:
-		iResult = 0;
-		pcName = "SDD";
+		pcName = "false";
 		break;
 	}
 	if( iResult!=0 )
 	{
-		uprintf("[ERROR] Invalid CS mode: %d\n", ucMode);
+		uprintf("[ERROR] Invalid CS mode: %d\n", tMode);
 	}
 	else
 	{
@@ -214,6 +204,49 @@ static void show_flags(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 /*-------------------------------------------------------------------------*/
 
+static int SMC_Handler_CS_Mode(SPI_MACRO_HANDLE_T *ptSpiMacro)
+{
+	int iResult;
+    unsigned char ucMode;
+	SPI_MACRO_CHIP_SELECT_MODE_T tMode;
+
+	/* Be pessimistic. */
+	iResult = -1;
+
+	/* Get the next command. */
+	ucMode = *((ptSpiMacro->pucMacroCnt)++);
+	tMode = (SPI_MACRO_CHIP_SELECT_MODE_T)ucMode;
+
+
+	switch(tMode)
+	{
+	case SMCS_FALSE:
+		iResult = 0;
+		/*  Deselect the slave. */
+		ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 0);
+		uprintf("[SpiMacro] CMD: CS, CS mode: deactivate\n");
+		break;
+
+	case SMCS_TRUE:
+		iResult = 0;
+		/* Select the slave. */
+		ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 1);
+		uprintf("[SpiMacro] CMD: CS, CS mode: activate\n");
+		break;
+	}
+	if( iResult!=0 )
+	{
+		uprintf("[ERROR] Invalid CS mode: %d\n", tMode);
+	}
+	else
+	{
+		ptSpiMacro->tCS_Mode = tMode;		
+	}
+
+
+	return iResult;
+}
+
 
 static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 {
@@ -243,12 +276,6 @@ static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 			uprintf("[SpiMacro] Send data:\n");
 			hexdump(ptSpiMacro->pucMacroCnt, sizBytes);
 
-			if( tCsMode!=SMCS_NNN )
-			{
-				/* Select the slave. */
-				ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 1);
-			}
-
 			/* Send the command. */
 			iResult = ptSpiMacro->ptCfg->pfnSendData(ptSpiMacro->ptCfg, ptSpiMacro->pucMacroCnt, sizBytes);
 			if( iResult!=0 )
@@ -259,17 +286,6 @@ static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 			{
 				ptSpiMacro->pucMacroCnt += sizBytes;
 
-				if( tCsMode==SMCS_SDN || tCsMode==SMCS_SDD )
-				{
-					/*  Deselect the slave. */
-					ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 0);
-
-					if( tCsMode==SMCS_SDD )
-					{
-						/* Send 1 dummy byte. */
-						ptSpiMacro->ptCfg->pfnSendDummy(ptSpiMacro->ptCfg, 1);
-					}
-				}
 			}
 		}
 	}
@@ -304,11 +320,6 @@ static int SMC_Handler_Receive(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		}
 		else
 		{
-			if( tCsMode!=SMCS_NNN )
-			{
-				/* Select the slave. */
-				ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 1);
-			}
 
 			/* Receive the data. */
 			iResult = ptSpiMacro->ptCfg->pfnReceiveData(ptSpiMacro->ptCfg, ptSpiMacro->uRxBuffer.auc, sizBytes);
@@ -320,18 +331,6 @@ static int SMC_Handler_Receive(SPI_MACRO_HANDLE_T *ptSpiMacro)
 			{
 				uprintf("[SpiMacro] Data\n");
 				hexdump(ptSpiMacro->uRxBuffer.auc, sizBytes);
-
-				if( tCsMode==SMCS_SDN || tCsMode==SMCS_SDD )
-				{
-					/*  De-select the slave. */
-					ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 0);
-
-					if( tCsMode==SMCS_SDD )
-					{
-						/* Send 1 dummy byte. */
-						ptSpiMacro->ptCfg->pfnSendDummy(ptSpiMacro->ptCfg, 1);
-					}
-				}
 			}
 		}
 	}
@@ -358,31 +357,12 @@ static int SMC_Handler_Idle(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 		uprintf("[SpiMacro] CMD: Idle, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizCycles);
 
-		if( tCsMode!=SMCS_NNN )
-		{
-			/* Select the slave. */
-			ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 1);
-		}
 
 		/* Send the idle cycles. */
 		iResult = ptSpiMacro->ptCfg->pfnSendIdleCycles(ptSpiMacro->ptCfg, sizCycles);
 		if( iResult!=0 )
 		{
 			uprintf("[ERROR] IDLE command: transfer error\n");
-		}
-		else
-		{
-			if( tCsMode==SMCS_SDN || tCsMode==SMCS_SDD )
-			{
-				/*  Deselect the slave. */
-				ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 0);
-
-				if( tCsMode==SMCS_SDD )
-				{
-					/* Send 1 dummy byte. */
-					ptSpiMacro->ptCfg->pfnSendDummy(ptSpiMacro->ptCfg, 1);
-				}
-			}
 		}
 	}
 
@@ -408,31 +388,11 @@ static int SMC_Handler_Dummy(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 		uprintf("[SpiMacro] CMD: Dummy, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
 
-		if( tCsMode!=SMCS_NNN )
-		{
-			/* Select the slave. */
-			ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 1);
-		}
-
 		/* Send the dummy bytes. */
 		iResult = ptSpiMacro->ptCfg->pfnSendDummy(ptSpiMacro->ptCfg, sizBytes);
 		if( iResult!=0 )
 		{
 			uprintf("[ERROR] DUMMY command: transfer error\n");
-		}
-		else
-		{
-			if( tCsMode==SMCS_SDN || tCsMode==SMCS_SDD )
-			{
-				/*  Deselect the slave. */
-				ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 0);
-
-				if( tCsMode==SMCS_SDD )
-				{
-					/* Send 1 dummy byte. */
-					ptSpiMacro->ptCfg->pfnSendDummy(ptSpiMacro->ptCfg, 1);
-				}
-			}
 		}
 	}
 
@@ -754,10 +714,23 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	SPI_MACRO_CONDITION_T tCondition;
 	int iConditionIsTrue;
 	const char *pcName;
+	unsigned int uiErrMsg;
+	const unsigned char *pcErrMsg;
 
 
 	/* Get the condition. */
 	iResult = get_condition(ptSpiMacro, &tCondition, &pcName);
+	
+	/* Extract the length of error message. */
+	uiErrMsg = (unsigned int) (*((ptSpiMacro->pucMacroCnt)++));
+
+	/* Extract the string of error message. */
+	pcErrMsg = (const unsigned char *) (ptSpiMacro->pucMacroCnt);
+
+	ptSpiMacro->pucMacroCnt += uiErrMsg;
+
+	// uprintf("Error Message (length: %d): %s\n",uiErrMsg,pcErrMsg);
+
 	if( iResult==0 )
 	{
 		uprintf("[SpiMacro] CMD: Fail, Condition: %s\n", pcName);
@@ -771,7 +744,7 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		else
 		{
 			iResult = -1;
-			uprintf("[ERROR] The condition is true. Failed!\n");
+			uprintf("[ERROR] The FAIL command failed! %s\n",pcErrMsg);
 		}
 	}
 
@@ -809,6 +782,8 @@ int spi_macro_initialize(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_CFG_T *ptCfg, const
 		ptSpiMacro->pucMacroEnd = pucMacro + sizMacro;
 		ptSpiMacro->ulFlags = 0;
 		ptSpiMacro->ulTotalTimeoutMs = ulTimeout;
+		ptSpiMacro->tCS_Mode = (SPI_MACRO_CHIP_SELECT_MODE_T)0;
+
 
 		iResult = 0;
 	}
@@ -827,7 +802,7 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned long ulTimerStart;
 	int iIsElapsed;
 	unsigned int uiCntCmd;
-	const char *pcCmdNames[11] = {
+	const char *pcCmdNames[12] = {
 	"RECEIVE",
 	"SEND",
 	"IDLE",
@@ -838,7 +813,8 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	"MASK",
 	"MODE",
 	"ADR",
-	"FAIL"  
+	"FAIL",
+	"CS"  
 	};
 
 	/* Be optimistic. */
@@ -878,6 +854,7 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		case SMC_MODE:
 		case SMC_ADR:
 		case SMC_FAIL:
+		case SMC_CS_MODE:
 			iResult = 0;
 			break;
 		}
@@ -933,6 +910,10 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 			case SMC_FAIL:
 				iResult = SMC_Handler_Fail(ptSpiMacro);
+				break;
+
+			case SMC_CS_MODE:
+				iResult = SMC_Handler_CS_Mode(ptSpiMacro);
 				break;
 			}
 
