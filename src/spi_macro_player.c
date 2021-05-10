@@ -22,7 +22,6 @@
 static int get_cs_mode(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_MACRO_CHIP_SELECT_MODE_T *ptMode, const char **ppcName)
 {
 	int iResult;
-	unsigned char ucMode;
 	SPI_MACRO_CHIP_SELECT_MODE_T tMode;
 	const char *pcName;
 
