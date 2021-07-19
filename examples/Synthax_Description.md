@@ -146,26 +146,26 @@ FAIL(<condition name>,<Error Message>)
 
 ### **Examples:**
 
-**equivalent of SMC_SEND, SMCS_SNN, 1, 0x9f:**
-
+- **equivalent of SMC_SEND, SMCS_SNN, 1, 0x9f:**
+```
 CS(true)
 SEND(0x9f)
-
-**equivalent of SMC_RECEIVE, SMCS_SDD, 5:**
-
+```
+- **equivalent of SMC_RECEIVE, SMCS_SDD, 5:**
+```
 CS(true)
 RECEIVE(5)
 CS(false)
 DUMMY(1)
-
-**equivalent of SMC_SEND, SMCS_SDN, 1, 0x9f :**
-
+```
+- **equivalent of SMC_SEND, SMCS_SDN, 1, 0x9f :**
+```
 CS(true)
 SEND(0x9f)
 CS(false)
-
-**equivalent of SMC_DUMMY, SMCS_NNN, 2:**
-
+```
+- **equivalent of SMC_DUMMY, SMCS_NNN, 2:**
+```
 DUMMY(2)
-
+```
 ---
