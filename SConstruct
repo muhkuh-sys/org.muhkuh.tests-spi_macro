@@ -182,6 +182,8 @@ atLua = {}
 for strBuildName, atBuildAttributes in atBuildConfigurations.items():
     # Get a clean environment.
     tEnv = atBuildAttributes['ENV'].Clone()
+    # Create a compile database.
+    tEnv.CompileDb(os.path.join('targets', strBuildName, 'compile_commands.json'))
     # Set the include paths.
     tEnv.Append(CPPPATH = astrIncludePaths)
     # Set the linker description file.
