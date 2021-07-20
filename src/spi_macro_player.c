@@ -472,7 +472,7 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	{
 		/* Get the address. */
 		usAddress = *((ptSpiMacro->pucMacroCnt)++);
-		usAddress = (unsigned short)(usAddress | *((ptSpiMacro->pucMacroCnt)++));
+		usAddress = (unsigned short)(usAddress | (*((ptSpiMacro->pucMacroCnt)++)) << 8U);
 
 		uprintf("[SpiMacro] CMD: Jump, Condition: %s, Address: 0x%04x\n", pcName, usAddress);
 
