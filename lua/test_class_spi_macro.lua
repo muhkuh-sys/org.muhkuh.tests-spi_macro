@@ -210,7 +210,11 @@ function TestClassSpiMacro:run()
     return true
   end
 
-  local ulResult = tester:mbin_simple_run(tPlugin, "netx/spi_macro_test_netx${ASIC_TYPE}.bin", tTest, fnCallback)
+  local aAttr = tester:mbin_open("netx/spi_macro_test_netx${ASIC_TYPE}.bin", tPlugin)
+  tester:mbin_debug(aAttr)
+  tester:mbin_write(tPlugin, aAttr)
+  tester:mbin_set_parameter(tPlugin, aAttr, tTest)
+  local ulResult = tester:mbin_execute(tPlugin, aAttr, tTest, fnCallback)
 
   -- In the case an error occurs when processing by the NetX
   if ulResult ~= 0 then
