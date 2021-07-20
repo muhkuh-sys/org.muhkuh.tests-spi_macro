@@ -212,8 +212,8 @@ for strBuildName, atBuildAttributes in atBuildConfigurations.items():
 #
 # Build the artifacts.
 #
-strGroup = 'org.muhkuh.tests'
-strModule = 'spi_macro'
+strGroup = PROJECT_GROUP
+strModule = PROJECT_MODULE
 
 # Split the group by dots.
 aGroup = strGroup.split('.')
