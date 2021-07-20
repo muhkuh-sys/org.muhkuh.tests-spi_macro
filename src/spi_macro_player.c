@@ -457,7 +457,7 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 {
 	int iResult;
 	SPI_MACRO_CONDITION_T tCondition;
-	unsigned char ucAddress;
+	unsigned short usAddress;
 	const unsigned char *pucAddress;
 	int iConditionIsTrue;
 	const char *pcName;
@@ -471,11 +471,12 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	if( iResult==0 )
 	{
 		/* Get the address. */
-		ucAddress = *((ptSpiMacro->pucMacroCnt)++);
+		usAddress = *((ptSpiMacro->pucMacroCnt)++);
+		usAddress = (unsigned short)(usAddress | *((ptSpiMacro->pucMacroCnt)++));
 
-		uprintf("[SpiMacro] CMD: Jump, Condition: %s, Address: 0x%02x\n", pcName, ucAddress);
+		uprintf("[SpiMacro] CMD: Jump, Condition: %s, Address: 0x%04x\n", pcName, usAddress);
 
-		pucAddress = ptSpiMacro->pucMacroStart + ucAddress;
+		pucAddress = ptSpiMacro->pucMacroStart + usAddress;
 		if( pucAddress>ptSpiMacro->pucMacroEnd )
 		{
 			uprintf("[ERROR] JUMP command: the address point exceeds the size of the macro!\n");
@@ -493,7 +494,7 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 			else
 			{
 				ptSpiMacro->pucMacroCnt = pucAddress;
-				uprintf("[SpiMacro] The condition is true. Jump to 0x%02x\n", ucAddress);
+				uprintf("[SpiMacro] The condition is true. Jump to 0x%04x\n", usAddress);
 			}
 		}
 	}

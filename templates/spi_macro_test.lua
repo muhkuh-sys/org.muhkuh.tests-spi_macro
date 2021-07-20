@@ -709,7 +709,8 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 								-- This must be a label reference.
 								local strLabelName = param.label
 
-								-- Insert a dummy value.
+								-- Insert 2 dummy values.
+								aucOpcodes:append(0x00)
 								aucOpcodes:append(0x00)
 								local tRef = atLabelReferences[strLabelName]
 								if tRef == nil then
@@ -722,7 +723,7 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 									ulCurrentAddress
 								)
 								table.insert(tRef, ulCurrentAddress)
-								ulCurrentAddress = ulCurrentAddress + 1
+								ulCurrentAddress = ulCurrentAddress + 2
 							elseif param.string ~= nil then
 								-- This must be a matched string in a table
 								-- Add null character to the end of the string
@@ -769,7 +770,10 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 			else
 				for _, uiPosition in ipairs(atRefs) do
 					tLog.debug('[SPI Macro] Resolve label "%s" at position %d to address %d.', strLabelName, uiPosition, ulAddress)
-					aucOpcodes[uiPosition + 1] = ulAddress
+					local ucAdrHi = math.floor(ulAddress/256)
+					local ucAdrLo = ulAddress - 256* ucAdrHi
+					aucOpcodes[uiPosition + 1] = ucAdrLo
+					aucOpcodes[uiPosition + 2] = ucAdrHi
 				end
 			end
 		end
