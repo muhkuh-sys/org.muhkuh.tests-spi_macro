@@ -1,0 +1,141 @@
+    # Send 2 dummy bytes.
+    DUMMY(2)
+
+    # Read the JEDEC ID.
+    # Fail if it does not match the expected values for the GD25Q32.
+    CS(true)
+    SEND(0x9f)
+    RECEIVE(3)
+    CS(false)
+    DUMMY(1)
+    CMP(0x00, 0x00, 0x00)
+    FAIL(Equal, "The SPI flash did not respond. Check SPI connection and power supply.")
+    CMP(0xff, 0xff, 0xff)
+    FAIL(Equal, "The SPI flash did not respond. Check SPI connection and power supply.")
+    CMP(0xc8, 0x40, 0x16)
+    FAIL(NotEqual,'Fail to match JEDEC ID!')
+
+    # Read the SFDP magic in 1 bit.
+    CS(true)
+    SEND(0x5a, 0x00, 0x00, 0x00, 0x00)
+    RECEIVE(4)
+    CS(false)
+    DUMMY(1)
+    CMP(0x53, 0x46, 0x44, 0x50)
+    FAIL(NotEqual,'Fail to match SFDP magic in 1 bit!')
+
+    # Set the QE bit in status register 2.
+    CS(true)
+    SEND(0x35)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)
+    MASK(0x02)
+    JUMP(NotZero, 'QeBitSet')
+    CS(true)
+    SEND(0x06)
+    CS(false)
+    DUMMY(1)
+    CS(true)
+    SEND(0x31, 0x02)
+    CS(false)
+    DUMMY(1)
+
+    # Poll for write finished.
+Poll:
+    CS(true)
+    SEND(0x05)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)
+    # Get the BUSY bit.
+    MASK(0x01)
+    JUMP(NotZero, 'Poll')
+
+QeBitSet:
+    # Read 4 bytes in the last sector.
+    CS(true)
+    SEND(0x03, 0x3F, 0xFF, 0xFC)
+    RECEIVE(4)
+    CS(false)
+    DUMMY(1)
+    # Are the last 4 bytes already set to our magic?
+    CMP(0x4d, 0x4f, 0x4f, 0x48)
+    JUMP(Equal, 'IsProgrammed')
+    # Are the last 4 bytes erased?
+    CMP(0xFF, 0xFF, 0xFF, 0xFF)
+    JUMP(Equal, 'IsErased')
+
+    # Erase the last sector.
+    CS(true)
+    SEND(0x06)
+    CS(false)
+    DUMMY(1)
+    CS(true)
+    SEND(0x20, 0x3F, 0xF0, 0x00)
+    CS(false)
+    DUMMY(1)
+
+    # Poll for erase finished.
+Poll1:
+    CS(true)
+    SEND(0x05)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)
+    # Get the BUSY bit.
+    MASK(0x01)
+    JUMP(NotZero, 'Poll1')
+
+    # Read 4 bytes in the last sector.
+    CS(true)
+    SEND(0x03, 0x3F, 0xFF, 0xFC)
+    RECEIVE(4)
+    CS(false)
+    DUMMY(1)
+    CMP(0xFF, 0xFF, 0xFF, 0xFF)
+    FAIL(NotEqual, 'Failed to erase the last sector of the SPI flash. The flash is broken.')
+
+IsErased:
+    # Write the magic to the last 4 bytes.
+    CS(true)
+    SEND(0x06)
+    CS(false)
+    DUMMY(1)
+    CS(true)
+    SEND(0x02, 0x3F, 0xFF, 0xFC, 0x4D, 0x4F, 0x4F, 0x48)
+    CS(false)
+    DUMMY(1)
+
+    # Poll for write finished.
+Poll2:
+    CS(true)
+    SEND(0x05)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)
+    # Get the BUSY bit.
+    MASK(0x01)
+    JUMP(NotZero, 'Poll2')
+
+    # Read 4 bytes in the last sector.
+    CS(true)
+    SEND(0x03, 0x3F, 0xFF, 0xFC)
+    RECEIVE(4)
+    CS(false)
+    DUMMY(1)
+    CMP(0x4D, 0x4F, 0x4F, 0x48)
+    FAIL(NotEqual, 'Failed to program the last 4 bytes of the SPI flash. The flash is broken.')
+
+IsProgrammed:
+    # Read the last 4 bytes in 4 Bit mode.
+    CS(true)
+    SEND(0xEB)
+    MODE(4BIT)
+    SEND(0x3F, 0xFF, 0xFC, 0x00)
+    IDLE(4)
+    RECEIVE(4)
+    CS(false)
+    MODE(1BIT)
+    CMP(0x4D, 0x4F, 0x4F, 0x48)
+    FAIL(NotEqual, 'Failed to receive the last 4 bytes in the SPI flash in 4 bit mode. Check SIO2 and SIO3.')
