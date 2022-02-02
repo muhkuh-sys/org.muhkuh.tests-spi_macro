@@ -197,9 +197,11 @@ function TestClassSpiMacro:run()
       atPluginOptions = tJson
     end
   end
-  local tPlugin = tester:getCommonPlugin(strPluginPattern, atPluginOptions)
-  if not tPlugin then
-    error('No plugin selected, nothing to do!')
+  local tPlugin = _G.tester:getCommonPlugin(strPluginPattern, atPluginOptions)
+  if tPlugin==nil then
+    local strPluginOptions = pl.pretty.write(atPluginOptions)
+    local strError = string.format('Failed to establish a connection to the netX with pattern "%s" and options "%s".', strPluginPattern, strPluginOptions)
+    error(strError)
   end
 
   -- Local callback function to collect all messages of the NetX
