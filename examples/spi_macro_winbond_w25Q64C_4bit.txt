@@ -1,6 +1,11 @@
     # Send 2 dummy bytes.
     DUMMY(2)
 
+    CS(true)
+    SEND(0xff, 0xff)
+    CS(false)
+    DUMMY(1)
+
     # Send the command 0x9f.
     CS(true)
     SEND(0x9f)
