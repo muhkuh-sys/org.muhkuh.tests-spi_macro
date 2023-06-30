@@ -19,7 +19,17 @@ function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLeve
 
     P:SC('unit', 'This is the unit providing the SPI bus.'):
       required(true):
-      constraint('netX50_SPI0,netX50_SPI1,netX56_SQI,netX56_SPI,netX90_SQI,netX500_SPI,netX4000_SQI0,netX4000_SQI1,netX4000_SPI'),
+      constraint(table.concat({
+        'netX50_SPI0',
+        'netX50_SPI1',
+        'netX56_SQI',
+        'netX56_SPI',
+        'netX90_SQI',
+        'netX500_SPI',
+        'netX4000_SQI0',
+        'netX4000_SQI1',
+        'netX4000_SPI'
+      }, ',')),
 
     P:U8('chip_select', 'The chip select number on the selected SPI bus.'):
       default(0):
@@ -199,14 +209,18 @@ function TestClassSpiMacro:run()
   end
   local tPlugin = _G.tester:getCommonPlugin(strPluginPattern, atPluginOptions)
   if tPlugin==nil then
-    local strPluginOptions = pl.pretty.write(atPluginOptions)
-    local strError = string.format('Failed to establish a connection to the netX with pattern "%s" and options "%s".', strPluginPattern, strPluginOptions)
+    local pretty = require 'pl.pretty'
+    local strError = string.format(
+      'Failed to establish a connection to the netX with pattern "%s" and options "%s".',
+      strPluginPattern,
+      pretty.write(atPluginOptions)
+    )
     error(strError)
   end
 
   -- Local callback function to collect all messages of the NetX
   local tLog_NetX = pl.List()
-  local fnCallback = function(a, b)
+  local fnCallback = function(a, _)
     tLog.debug("[NetX] %s", a)
     tLog_NetX:append(a)
     return true
