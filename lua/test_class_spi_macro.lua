@@ -101,7 +101,10 @@ function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLeve
       constraint('0,IO1_OE,IO1_OUT,IO2_OE,IO2_OUT,IO3_OE,IO3_OUT'),
 
     P:P('macro', 'The file name of the macro to execute.'):
-      required(true),
+      required(false),
+
+    P:P('macro_dp', 'The data provider item for the macro.'):
+      required(false),
 
     P:U32('timeout', 'A timeout in milliseconds for the complete script. A value of 0 disables the timeout.'):
       default(0):
@@ -156,14 +159,46 @@ function TestClassSpiMacro:run()
   -- Parse the chip select.
   local uiChipSelect = atParameter['chip_select']:get()
 
-  -- Read the macro file.
-  local strMacroFile = atParameter['macro']:get()
-  local strFileName = self.pl.path.exists(strMacroFile)
-  if strFileName~=strMacroFile then
-    tLog.error('The macro file "%s" does not exist.', strMacroFile)
-    error('Failed to load the macro.')
+  -- Read the macro parameter.
+  local strMacroFile
+  if atParameter['macro']:has_value() then
+    strMacroFile = atParameter['macro']:get()
+  elseif atParameter['macro_dp']:has_value() then
+    local strDataProviderItem = atParameter['macro_dp']:get()
+    local tItem = _G.tester:getDataItem(strDataProviderItem)
+    if tItem==nil then
+      local strMsg = string.format('No data provider item found with the name "%s".', strDataProviderItem)
+      tLog.error(strMsg)
+      error(strMsg)
+    end
+    strMacroFile = tItem.path
+    if strMacroFile==nil then
+      local strMsg = string.format(
+        'The data provider item "%s" has no "path" attribute. Is this really a suitable provider for an SPI macro?',
+        strDataProviderItem
+      )
+      tLog.error(strMsg)
+      error(strMsg)
+    end
+  else
+    local strMsg = 'No "macro" and no "macro_dp" parameter set.'
+    tLog.error(strMsg)
+    error(strMsg)
   end
-  local strMacro = self.pl.file.read(strFileName)
+
+  local path = require 'pl.path'
+  if path.exists(strMacroFile)~=strMacroFile then
+    local strMsg = string.format('Failed to load the macro: the file "%s" does not exist.', strMacroFile)
+    tLog.error(strMsg)
+    error(strMsg)
+  end
+  if path.isfile(strMacroFile)~=true then
+    local strMsg = string.format('Failed to load the macro: the path "%s" does not point to a file.', strMacroFile)
+    tLog.error(strMsg)
+    error(strMsg)
+  end
+  local file = require 'pl.file'
+  local strMacro = file.read(strMacroFile)
 
   local atSpiConfiguration = {
     ulSpeedFifoKhz = atParameter['speed']:get(),
