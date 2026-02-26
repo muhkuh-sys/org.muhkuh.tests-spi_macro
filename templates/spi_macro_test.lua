@@ -862,9 +862,6 @@ function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, str
       tSpiConfiguration = atSpiConfiguration,
       uiUnit = uiUnit,
       uiChipSelect = uiChipSelect,
-      ulTestAreaStart = ulTestAreaStart,
-      ulTestAreaEnd = ulTestAreaEnd,
-      ulReadTestTimeInMs = ulReadTimeInMiliseconds,
       strSpiMacro = strSpiMacro
     }
 
