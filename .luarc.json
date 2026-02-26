@@ -1,0 +1,8 @@
+{
+    "diagnostics.globals": [
+        "tester"
+    ],
+    "diagnostics.globalsRegex": [
+        "XX_.+_XX"
+    ]
+}
