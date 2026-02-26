@@ -854,7 +854,7 @@ function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, str
 
   if string.len(strSpiMacro)>self.SPI_MACRO_MAX_SIZE then
     tLog.error('The SPI macro is too long.')
-    fAllOK = false
+    tResult = false
   end
 
   if tResult==true then
