@@ -350,11 +350,11 @@ end
 
 
 --- Check the macro for syntax errors and converts each character into its equivalent macro token.
--- @param strMacro macro
--- @param uiMacroTimeoutMs time out [ms]
--- @return tResult: true/false
--- @return aucMacro: string with all occurring macro tokens
--- @return tMsg: string with all occurring error messages
+--- @param strMacro string The complete macro.
+--- @param uiMacroTimeoutMs number The time out for the macro execution in milliseconds.
+--- @return boolean tResult
+--- @return string aucMacro # string with all occurring macro tokens
+--- @return string tMsg # string with all occurring error messages
 function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 	uiMacroTimeoutMs = uiMacroTimeoutMs or 0
 
