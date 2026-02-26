@@ -160,11 +160,11 @@ function SpiFlashMacroTest:spi_configuration_set_speed_khz(atSpiConfiguration, u
 
   if ulSpeedFifoKhz<=0 then
     tLog.error('The speed for the FIFO mode must be larger than 0. Here it is %s.', tostring(ulSpeedFifoKhz))
-    tResult = nil
+    tResult = false
   end
   if ulSpeedSqiRomKhz<0 then
     tLog.error('The speed for the SQI ROM mode must be larger than or equal to 0. Here it is %s.', tostring(ulSpeedSqiRomKhz))
-    tResult = nil
+    tResult = false
   end
 
   if tResult==true then
@@ -182,27 +182,27 @@ function SpiFlashMacroTest:spi_configuration_set_port_control(atSpiConfiguration
   local tResult = true
   if usCLK<0 or usCLK>0xffff then
     tLog.error('The port control value for CLK must be an integer in the range [0, 65535]. Here it is %d.', tostring(usCLK))
-    tResult = nil
+    tResult = false
   end
   if usMOSI<0 or usMOSI>0xffff then
     tLog.error('The port control value for MOSI must be an integer in the range [0, 65535]. Here it is %d.', tostring(usMOSI))
-    tResult = nil
+    tResult = false
   end
   if usMISO<0 or usMISO>0xffff then
     tLog.error('The port control value for MISO must be an integer in the range [0, 65535]. Here it is %d.', tostring(usMISO))
-    tResult = nil
+    tResult = false
   end
   if usSIO2<0 or usSIO2>0xffff then
     tLog.error('The port control value for SIO2 must be an integer in the range [0, 65535]. Here it is %d.', tostring(usSIO2))
-    tResult = nil
+    tResult = false
   end
   if usSIO3<0 or usSIO3>0xffff then
     tLog.error('The port control value for SIO3 must be an integer in the range [0, 65535]. Here it is %d.', tostring(usSIO3))
-    tResult = nil
+    tResult = false
   end
   if usCS0<0 or usCS0>0xffff then
     tLog.error('The port control value for CS0 must be an integer in the range [0, 65535]. Here it is %d.', tostring(usCS0))
-    tResult = nil
+    tResult = false
   end
 
   if tResult==true then
@@ -224,27 +224,27 @@ function SpiFlashMacroTest:spi_configuration_set_mmio(atSpiConfiguration, ucCS, 
   local tResult = true
   if ucCS<0 or ucCS>0xff then
     tLog.error('The MMIO index for CS must be an integer in the range [0, 255]. Here it is %d.', tostring(ucCS))
-    tResult = nil
+    tResult = false
   end
   if ucCLK<0 or ucCLK>0xff then
     tLog.error('The MMIO index for CLK must be an integer in the range [0, 255]. Here it is %d.', tostring(ucCLK))
-    tResult = nil
+    tResult = false
   end
   if ucMISO<0 or ucMISO>0xff then
     tLog.error('The MMIO index for MISO must be an integer in the range [0, 255]. Here it is %d.', tostring(ucMISO))
-    tResult = nil
+    tResult = false
   end
   if ucMOSI<0 or ucMOSI>0xff then
     tLog.error('The MMIO index for MOSI must be an integer in the range [0, 255]. Here it is %d.', tostring(ucMOSI))
-    tResult = nil
+    tResult = false
   end
   if ucSIO2<0 or ucSIO2>0xff then
     tLog.error('The MMIO index for ucSIO2 must be an integer in the range [0, 255]. Here it is %d.', tostring(ucSIO2))
-    tResult = nil
+    tResult = false
   end
   if ucSIO3<0 or ucSIO3>0xff then
     tLog.error('The MMIO index for ucSIO3 must be an integer in the range [0, 255]. Here it is %d.', tostring(ucSIO3))
-    tResult = nil
+    tResult = false
   end
 
   if tResult==true then
@@ -266,7 +266,7 @@ function SpiFlashMacroTest:spi_configuration_set_dummy_byte(atSpiConfiguration, 
   local tResult = true
   if ucDummyByte<0 or ucDummyByte>0xff then
     tLog.error('The dummy byte must be an integer in the range [0, 255]. Here it is %d.', tostring(ucDummyByte))
-    tResult = nil
+    tResult = false
   end
 
   if tResult==true then
@@ -280,7 +280,7 @@ end
 
 function SpiFlashMacroTest:spi_configuration_set_mode(atSpiConfiguration, ucMode)
   local tLog = self.tLog
-  local tResult = nil
+  local tResult = false
   local atValid = {self.atMacroTokens.SPI_MODE0, self.atMacroTokens.SPI_MODE1, self.atMacroTokens.SPI_MODE2, self.atMacroTokens.SPI_MODE3}
   for _,tMode in pairs(atValid) do
     if tMode==ucMode then
@@ -305,7 +305,7 @@ function SpiFlashMacroTest:spi_configuration_set_idle(atSpiConfiguration, ucIdle
   local tResult = true
   if ucIdleConfiguration<0 or ucIdleConfiguration>0xff then
     tLog.error('The idle configuration must be an integer in the range [0, 255]. Here it is %d.', tostring(ucIdleConfiguration))
-    tResult = nil
+    tResult = false
   end
 
   if tResult==true then
@@ -837,19 +837,19 @@ function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, str
   local strType = type(uiUnit)
   if strType~='number' then
     tLog.error('The unit must be a number. Here it has the type %s.', strType)
-    tResult = nil
+    tResult = false
   elseif uiUnit<0 then
     tLog.error('The unit must be larger than or equal to 0. Here it is %d.', uiUnit)
-    tResult = nil
+    tResult = false
   end
 
   strType = type(uiChipSelect)
   if strType~='number' then
     tLog.error('The chip select must be a number. Here it has the type %s.', strType)
-    tResult = nil
+    tResult = false
   elseif uiChipSelect<0 then
     tLog.error('The chip select must be larger than or equal to 0.')
-    tResult = nil
+    tResult = false
   end
 
   if string.len(strSpiMacro)>self.SPI_MACRO_MAX_SIZE then
