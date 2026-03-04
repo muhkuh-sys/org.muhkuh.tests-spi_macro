@@ -1261,7 +1261,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 		portcontrol_apply(pusPortControlIndex, ptSpiCfg->ausPortControl, sizeof(ptSpiCfg->ausPortControl)/sizeof(ptSpiCfg->ausPortControl[0]));
 #endif
 
-		/* Do not use IRQs in boot loader. */
+		/* Do not use IRQs in the production test. */
 		ptSqi->ulSqi_irq_mask = 0;
 		/* Clear all pending IRQs. */
 		ulValue  = HOSTMSK(sqi_irq_clear_RORIC);
@@ -1311,7 +1311,7 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 
 
 		uiIdleCfg = ptCfg->uiIdleConfiguration;
-		
+
 		/* Set transfer control base. */
 		ulValue  = HOSTMSK(sqi_tcr_ms_bit_first);
 		if( (uiIdleCfg&MSK_SQI_CFG_IDLE_IO1_OE)!=0 )
