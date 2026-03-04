@@ -869,6 +869,13 @@ static int qsi_set_bus_width(SPI_CFG_T *ptCfg, SPI_BUS_WIDTH_T tBusWidth)
 #       define SQIROMCFG_ADDRESS_BITS_MINIMUM 20
 #       define SQIROMCFG_ADDRESS_BITS_MAXIMUM 24
 #       define SQIROMCFG_FREQUENCY_MAXIMUM_KHZ 133000U
+#elif ASIC_TYP==ASIC_TYP_NETX9X2_COM_MPW
+#       define SQIROMCFG_DUMMY_CYCLES_MAXIMUM 15
+#       define SQIROMCFG_ADDRESS_NIBBLES_MINIMUM 5
+#       define SQIROMCFG_ADDRESS_NIBBLES_MAXIMUM 8
+#       define SQIROMCFG_ADDRESS_BITS_MINIMUM 20
+#       define SQIROMCFG_ADDRESS_BITS_MAXIMUM 27
+#       define SQIROMCFG_FREQUENCY_MAXIMUM_KHZ 133000U
 #endif
 
 static unsigned long qsi_get_device_specific_sqirom_cfg(SPI_CFG_T *ptCfg, unsigned int uiDummyCycles, unsigned int uiAddressBits, unsigned int uiAddressNibbles)
@@ -955,6 +962,31 @@ static unsigned long qsi_get_device_specific_sqirom_cfg(SPI_CFG_T *ptCfg, unsign
 		ulClockDivider  = 400000U;
 		ulClockDivider /= ulFreqKHz;
 		ulClockDivider -= 3U;
+#elif ASIC_TYP==ASIC_TYP_NETX9X2_COM_MPW
+		/* In the regdef the following formula is specified:
+		 *
+		 *   t_sck = (clk_div_val+1)*0.5ns
+		 *
+		 * Converted to the frequency this results in
+		 *
+		 *   1 / t_sck = 1 / ((clk_div_val + 1) * 0.5ns)
+		 *       f_sck = 1 / 0.5ns * 1 / (clk_div_val + 1)
+		 *       f_sck = 2000000000Hz *  1 / (clk_div_val + 1)
+		 *       f_sck = 2000000kHz / (clk_div_val + 1)
+		 *
+		 * This results in the clock divider:
+		 *
+		 *   clk_div_val + 1 =  2000000kHz / freq
+		 *   clk_div_val     = (2000000kHz / freq) - 1
+		 */
+		ulClockDivider  = 2000000U;
+		ulClockDivider /= ulFreqKHz;
+		ulClockDivider -= 1U;
+		/* The value must not be smaller than 14. */
+		if( ulClockDivider<14U )
+		{
+			ulClockDivider = 14U;
+		}
 #endif
 
 		/* SFDP does not provide any speed information for read operation. Use 50MHz. */
@@ -1122,6 +1154,10 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW_APP
 #       error "netX90 MPW APP is not yet supported"
 
+#elif ASIC_TYP==ASIC_TYP_NETX9X2_COM_MPW
+	HOSTDEF(ptSqiArea);
+	HOSTADEF(SQI) * ptSqi;
+
 #else
 #       error "Invalid ASIC_TYP!"
 #endif
@@ -1177,6 +1213,12 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 #elif ASIC_TYP==ASIC_TYP_NETX90_MPW_APP
 #       error "netX90 MPW APP is not yet supported"
 
+#elif ASIC_TYP==ASIC_TYP_NETX9X2_COM_MPW
+	if( uiSqiUnit==0 )
+	{
+		ptSqi = ptSqiArea;
+		pvSqiRom = (unsigned long*)HOSTADDR(sqirom);
+	}
 #else
 #       error "Invalid ASIC_TYP!"
 #endif
@@ -1306,6 +1348,33 @@ int boot_drv_sqi_init(SPI_CFG_T *ptCfg, const BOOT_SPI_CONFIGURATION_T *ptSpiCfg
 			ulValue |= HOSTMSK(sqi_pio_oe_sio3);
 		}
 		ptSqi->ulSqi_pio_oe = ulValue;
+
+#if ASIC_TYP==ASIC_TYP_NETX9X2_COM_MPW
+		/* Execute a mini dummy transfer to properly initialize the transaction handler.
+		 * It is important that the FIFO is filled before the transfer is started or
+		 * random garbage appears on the line.
+		 */
+
+		/* Fill the FIFO. */
+		ulValue = (unsigned long)(ptCfg->ucDummyByte);
+		ptSqi->ulSqi_dr = ulValue;
+
+		/* Set the mode to "send". */
+		ulValue  = ptCfg->ulTrcBase;
+		ulValue |= 2U << HOSTSRT(sqi_tcr_duplex);
+		/* Set the transfer size. It is fixed to 1 byte here. */
+		ulValue |= (1U - 1U) << HOSTSRT(sqi_tcr_transfer_size);
+		/* Start the transfer. */
+		ulValue |= HOSTMSK(sqi_tcr_start_transfer);
+		ptSqi->ulSqi_tcr = ulValue;
+
+		/* Wait until the transfer is done. */
+		do
+		{
+			ulValue  = ptSqi->ulSqi_sr;
+			ulValue &= HOSTMSK(sqi_sr_busy);
+		} while( ulValue!=0 );
+#endif
 
 #if ASIC_TYP==ASIC_TYP_NETX56
 		/* This is netX56 specific: Enable the SQI ROM pins. */

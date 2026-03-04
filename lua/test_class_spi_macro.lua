@@ -28,7 +28,8 @@ function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLeve
         'netX500_SPI',
         'netX4000_SQI0',
         'netX4000_SQI1',
-        'netX4000_SPI'
+        'netX4000_SPI',
+        'netX9x2mpw_SQI'
       }, ',')),
 
     P:U8('chip_select', 'The chip select number on the selected SPI bus.'):
@@ -152,7 +153,9 @@ function TestClassSpiMacro:run()
 
     ['netX4000_SQI0'] = f.UNIT_netX4000_SQI0,
     ['netX4000_SQI1'] = f.UNIT_netX4000_SQI1,
-    ['netX4000_SPI'] = f.UNIT_netX4000_SPI
+    ['netX4000_SPI'] = f.UNIT_netX4000_SPI,
+
+    ['netX9x2mpw_SQI'] = f.UNIT_netX9x2mpw_SQI
   }
   local uiUnit = atUnits[atParameter['unit']:get()]
 

@@ -119,6 +119,9 @@ local astrSourcesnetx50 = {
   'src/boot_spi.c',
   'src/boot_drv_spi_v2.c'
 }
+local astrSourcesnetx9x2mpw = {
+  'src/boot_drv_sqi.c'
+}
 local astrIncludes = {
   'platform/src',
   'platform/src/lib',
@@ -198,30 +201,29 @@ if atEnv:hasEnv('NETX90') then
 end
 
 
---[[
 if atEnv:hasEnv('NETX9X2_COM_MPW') then
   local tEnv = atEnv:cloneEnv('NETX9X2_COM_MPW', { label='testcode netx9x2 mpw' })
---  tEnv:CompileCommands('targets/bootpins/netx9x2mpw/compile_commands.json')
-  tEnv:SetBuildPath('targets/bootpins/netx9x2mpw', 'bootpins/src')
+  tEnv:CompileCommands('targets/spimacro/netx9x2mpw/compile_commands.json')
+  tEnv:SetBuildPath('targets/spimacro/netx9x2mpw', 'src')
 
   tEnv:AddIncludes(astrIncludes)
   local tObj = tEnv:Compile(
     astrTestSources,
-    'bootpins/src/netx9x2/detect.c'
+    astrSourcesnetx9x2mpw
   )
   local tElf = tEnv:Link(
-    'targets/bootpins/bootpins_netx9x2mpw.elf',
-    'bootpins/src/netx9x2/netx9x2.ld',
+    'targets/spimacro/spi_macro_test_netx9x2mpw.elf',
+    'src/netx9x2mpw/netx9x2.ld',
     tObj,
     tEnv.mbs.PLATFORM_LIB
   )
   local tBin = tEnv:Elf2Bin(
-    'targets/bootpins/bootpins_netx9x2_mpw.bin',
+    'targets/spimacro/spi_macro_test_netx9x2mpw.bin',
     tElf
   )
   atEnv:mergeEnv(tEnv, { TESTCODE_ELF=tElf, TESTCODE_BIN=tBin })
 end
---]]
+
 
 if atEnv:hasEnv('NETX500') then
   local tEnv = atEnv:cloneEnv('NETX500', { label='testcode netx500' })

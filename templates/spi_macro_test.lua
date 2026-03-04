@@ -78,6 +78,8 @@ function SpiFlashMacroTest:_init(tLog)
   self.UNIT_netX4000_SQI1 = 1
   self.UNIT_netX4000_SPI = 2
 
+  self.UNIT_netX9x2mpw_SQI = 0
+
   -- The vstruct module packs and depacks data.
   self.vstruct = require 'vstruct'
   self.tLog.debug('Using vstruct V%s', self.vstruct._VERSION)

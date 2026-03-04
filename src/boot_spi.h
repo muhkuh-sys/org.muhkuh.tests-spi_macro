@@ -118,7 +118,7 @@ typedef struct STRUCT_SPI_CFG
 	unsigned char aucMmio[6];         /* MMIO pins */
 } SPI_CFG_T;
 
-#if ASIC_TYP!=ASIC_TYP_NETX500
+#if ASIC_TYP!=ASIC_TYP_NETX500 && ASIC_TYP!=ASIC_TYP_NETX9X2_COM_MPW
 void boot_spi_activate_mmio(const SPI_CFG_T *ptCfg, const HOSTMMIODEF *ptMmioValues);
 void boot_spi_deactivate_mmio(const SPI_CFG_T *ptCfg, const HOSTMMIODEF *ptMmioValues);
 #endif

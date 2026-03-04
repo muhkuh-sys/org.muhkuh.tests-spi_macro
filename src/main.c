@@ -94,6 +94,15 @@ static int open_driver(unsigned int uiUnit, unsigned int uiChipSelect, const BOO
 	}
 #endif
 
+#elif ASIC_TYP==ASIC_TYP_NETX9X2_COM_MPW
+	/* netX9x2 has X hardware units.
+	 * The first one is SQI. It is the main boot source and supports up to 4 data bits in parallel.
+	 * There are many other units, but they are not supported yet.
+	 */
+	 if( uiUnit==0 )
+	 {
+		iResult = boot_drv_sqi_init(ptSpiCfg, ptSpiConfiguration, 0, uiChipSelect);
+	 }
 #else
 #       error "Invalid ASIC_TYP!"
 #endif
