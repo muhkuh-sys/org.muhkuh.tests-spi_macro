@@ -1,0 +1,77 @@
+    # Send 2 dummy bytes.
+    DUMMY(2)
+
+    # Leave the QPI mode.
+    MODE(4BIT)
+    CS(true)
+    SEND(0xf5)
+    CS(false)
+    MODE(1BIT)
+    DUMMY(1)
+
+    # Read the JEDEC ID.
+    # Fail if it does not match the expected values for the MX66U2G45G.
+    CS(true)
+    SEND(0x9f)
+    RECEIVE(3)
+    CS(false)
+    DUMMY(1)
+    CMP(0x00, 0x00, 0x00)
+    FAIL(Equal, "The SPI flash did not respond. Check SPI connection and power supply.")
+    CMP(0xff, 0xff, 0xff)
+    FAIL(Equal, "The SPI flash did not respond. Check SPI connection and power supply.")
+    CMP(0xc2, 0x25, 0x3c)
+    FAIL(NotEqual,'Fail to match JEDEC ID!')
+
+    # Set the QE bit in the status register.
+    CS(true)
+    SEND(0x05)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)
+    MASK(0x40)
+    JUMP(NotZero, 'QeBitSet')
+    CS(true)
+    SEND(0x06)
+    CS(false)
+    DUMMY(1)
+    CS(true)
+    SEND(0x01, 0x40)
+    CS(false)
+    DUMMY(1)
+
+    # Poll for write finished.
+Poll:
+    CS(true)
+    SEND(0x05)
+    RECEIVE(1)
+    CS(false)
+    DUMMY(1)
+    # Get the BUSY bit.
+    MASK(0x01)
+    JUMP(NotZero, 'Poll')
+QeBitSet:
+
+    # Enter QPI mode.
+    CS(true)
+    SEND(0x35)
+    CS(false)
+    MODE(4BIT)
+    DUMMY(1)
+
+    # Read the JEDEC ID in 4 bit.
+    CS(true)
+    SEND(0xAF)
+    RECEIVE(3)
+    CS(false)
+    DUMMY(1)
+    CMP(0xc2, 0x25, 0x3c)
+    FAIL(NotEqual,'Fail to match the JEDEC ID in QPI mode!')
+
+    # Leave the QPI mode.
+    MODE(4BIT)
+    CS(true)
+    SEND(0xf5)
+    CS(false)
+    MODE(1BIT)
+    DUMMY(1)
