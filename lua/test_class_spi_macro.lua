@@ -109,6 +109,10 @@ function TestClassSpiMacro:_init(strTestName, uiTestCase, tLogWriter, strLogLeve
 
     P:U32('timeout', 'A timeout in milliseconds for the complete script. A value of 0 disables the timeout.'):
       default(0):
+      required(false),
+
+    P:U32('verbose', 'Emit a lot of debug messages as the macro is processed. The default is to keep quiet.'):
+      default(0):
       required(false)
   }
 end
@@ -161,6 +165,9 @@ function TestClassSpiMacro:run()
 
   -- Parse the chip select.
   local uiChipSelect = atParameter['chip_select']:get()
+
+  local ulVerbose = atParameter['verbose']:get()
+  local fVerbose = (ulVerbose~=0)
 
   -- Read the macro parameter.
   local strMacroFile
@@ -228,13 +235,13 @@ function TestClassSpiMacro:run()
   }
   local tSpiCfg = f:compile_spi_configuration(atSpiConfiguration)
 
-  local tResult, aucMacro, strMsg = f:compile_macro(strMacro, uiTimeoutMs)
+  local tResult, aucMacro, strMsg = f:compile_macro(strMacro, uiTimeoutMs, fVerbose)
 
   if tResult ~= true then
     error(strMsg)
   end
 
-  local tTest = f:compile(tSpiCfg, uiUnit, uiChipSelect, aucMacro)
+  local tTest = f:compile(tSpiCfg, uiUnit, uiChipSelect, aucMacro, ulVerbose)
 
   local atPluginOptions = {}
   if strPluginOptions~=nil then

@@ -118,6 +118,7 @@ TEST_RESULT_T test_main(const TEST_PARAMETER_T *ptParameter)
 	int iResult;
 	SPI_CFG_T tSpiCfg;
 	SPI_MACRO_HANDLE_T tSpiMacro;
+	unsigned long ulVerbose;
 
 
 	/* Be pessimistic. */
@@ -137,6 +138,8 @@ TEST_RESULT_T test_main(const TEST_PARAMETER_T *ptParameter)
 	}
 	else
 	{
+		ulVerbose = ptParameter->ulVerbose;
+
 		iResult = open_driver(ptParameter->uiUnit, ptParameter->uiChipSelect, &(ptParameter->tSpiConfiguration), &tSpiCfg);
 		if( iResult!=0 )
 		{
@@ -144,9 +147,12 @@ TEST_RESULT_T test_main(const TEST_PARAMETER_T *ptParameter)
 		}
 		else
 		{
-			uprintf("Driver initialized.\n");
+			if( ulVerbose!=0 )
+			{
+				uprintf("Driver initialized.\n");
+			}
 
-			iResult = spi_macro_initialize(&tSpiMacro, &tSpiCfg, ptParameter->aucSpiMacro, ptParameter->sizSpiMacro);
+			iResult = spi_macro_initialize(&tSpiMacro, &tSpiCfg, ptParameter->aucSpiMacro, ptParameter->sizSpiMacro, ulVerbose);
 			if( iResult!=0 )
 			{
 				uprintf("[ERROR] Failed to initialize the SPI macro.\n");

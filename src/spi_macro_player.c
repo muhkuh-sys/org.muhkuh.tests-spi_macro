@@ -206,11 +206,14 @@ static void show_flags(SPI_MACRO_HANDLE_T *ptSpiMacro)
 static int SMC_Handler_CS_Mode(SPI_MACRO_HANDLE_T *ptSpiMacro)
 {
 	int iResult;
-    unsigned char ucMode;
+	unsigned char ucMode;
 	SPI_MACRO_CHIP_SELECT_MODE_T tMode;
+	unsigned long ulVerbose;
 
 	/* Be pessimistic. */
 	iResult = -1;
+
+	ulVerbose = ptSpiMacro->ulVerbose;
 
 	/* Get the next command. */
 	ucMode = *((ptSpiMacro->pucMacroCnt)++);
@@ -223,14 +226,20 @@ static int SMC_Handler_CS_Mode(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		iResult = 0;
 		/*  Deselect the slave. */
 		ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 0);
-		uprintf("[SpiMacro] CMD: CS, CS mode: deactivate\n");
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: CS, CS mode: deactivate\n");
+		}
 		break;
 
 	case SMCS_TRUE:
 		iResult = 0;
 		/* Select the slave. */
 		ptSpiMacro->ptCfg->pfnSelect(ptSpiMacro->ptCfg, 1);
-		uprintf("[SpiMacro] CMD: CS, CS mode: activate\n");
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: CS, CS mode: activate\n");
+		}
 		break;
 	}
 	if( iResult!=0 )
@@ -239,7 +248,7 @@ static int SMC_Handler_CS_Mode(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	}
 	else
 	{
-		ptSpiMacro->tCS_Mode = tMode;		
+		ptSpiMacro->tCS_Mode = tMode;
 	}
 
 
@@ -253,6 +262,7 @@ static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned int sizBytes;
 	SPI_MACRO_CHIP_SELECT_MODE_T tCsMode;
 	const char *pcCsModeName;
+	unsigned long ulVerbose;
 
 
 	/* Get the chip select mode. */
@@ -262,7 +272,11 @@ static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		/* Get the number of bytes to send. */
 		sizBytes = *((ptSpiMacro->pucMacroCnt)++);
 
-		uprintf("[SpiMacro] CMD: Send, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
+		ulVerbose = ptSpiMacro->ulVerbose;
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: Send, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
+		}
 
 		if( (ptSpiMacro->pucMacroCnt + sizBytes)>(ptSpiMacro->pucMacroEnd) )
 		{
@@ -272,8 +286,11 @@ static int SMC_Handler_Send(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		else
 		{
 			/* Write the data to the trace buffer. */
-			uprintf("[SpiMacro] Send data:\n");
-			hexdump(ptSpiMacro->pucMacroCnt, sizBytes);
+			if( ulVerbose!=0 )
+			{
+				uprintf("[SpiMacro] Send data:\n");
+				hexdump(ptSpiMacro->pucMacroCnt, sizBytes);
+			}
 
 			/* Send the command. */
 			iResult = ptSpiMacro->ptCfg->pfnSendData(ptSpiMacro->ptCfg, ptSpiMacro->pucMacroCnt, sizBytes);
@@ -301,15 +318,21 @@ static int SMC_Handler_Receive(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned int sizBuffer;
 	SPI_MACRO_CHIP_SELECT_MODE_T tCsMode;
 	const char *pcCsModeName;
+	unsigned long ulVerbose;
 
 
 	/* Get the chip select mode. */
 	iResult = get_cs_mode(ptSpiMacro, &tCsMode, &pcCsModeName);
 	if( iResult==0 )
 	{
+		ulVerbose = ptSpiMacro->ulVerbose;
+
 		/* Get the number of bytes to send. */
 		sizBytes = *((ptSpiMacro->pucMacroCnt)++);
-		uprintf("[SpiMacro] CMD: Receive, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: Receive, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
+		}
 
 		sizBuffer = sizeof(ptSpiMacro->uRxBuffer);
 		if( sizBytes>sizBuffer )
@@ -328,8 +351,11 @@ static int SMC_Handler_Receive(SPI_MACRO_HANDLE_T *ptSpiMacro)
 			}
 			else
 			{
-				uprintf("[SpiMacro] Data\n");
-				hexdump(ptSpiMacro->uRxBuffer.auc, sizBytes);
+				if( ulVerbose!=0 )
+				{
+					uprintf("[SpiMacro] Data\n");
+					hexdump(ptSpiMacro->uRxBuffer.auc, sizBytes);
+				}
 			}
 		}
 	}
@@ -345,6 +371,7 @@ static int SMC_Handler_Idle(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned int sizCycles;
 	SPI_MACRO_CHIP_SELECT_MODE_T tCsMode;
 	const char *pcCsModeName;
+	unsigned long ulVerbose;
 
 
 	/* Get the chip select mode. */
@@ -354,7 +381,11 @@ static int SMC_Handler_Idle(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		/* Get the number of bytes to send. */
 		sizCycles = *((ptSpiMacro->pucMacroCnt)++);
 
-		uprintf("[SpiMacro] CMD: Idle, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizCycles);
+		ulVerbose = ptSpiMacro->ulVerbose;
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: Idle, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizCycles);
+		}
 
 
 		/* Send the idle cycles. */
@@ -376,6 +407,7 @@ static int SMC_Handler_Dummy(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned int sizBytes;
 	SPI_MACRO_CHIP_SELECT_MODE_T tCsMode;
 	const char *pcCsModeName;
+	unsigned long ulVerbose;
 
 
 	/* Get the chip select mode. */
@@ -385,7 +417,11 @@ static int SMC_Handler_Dummy(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		/* Get the number of bytes to send. */
 		sizBytes = *((ptSpiMacro->pucMacroCnt)++);
 
-		uprintf("[SpiMacro] CMD: Dummy, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
+		ulVerbose = ptSpiMacro->ulVerbose;
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: Dummy, CS mode: %s, Length: %d bytes\n", pcCsModeName, sizBytes);
+		}
 
 		/* Send the dummy bytes. */
 		iResult = ptSpiMacro->ptCfg->pfnSendDummy(ptSpiMacro->ptCfg, sizBytes);
@@ -406,6 +442,7 @@ static int SMC_Handler_Mode(SPI_MACRO_HANDLE_T *ptMacroCfg)
 	unsigned long ulValue;
 	SPI_BUS_WIDTH_T tMode;
 	const char *pcModeName;
+	unsigned long ulVerbose;
 
 
 	/* Expect an invalid mode. */
@@ -439,7 +476,11 @@ static int SMC_Handler_Mode(SPI_MACRO_HANDLE_T *ptMacroCfg)
 	}
 	else
 	{
-		uprintf("[SpiMacro] CMD: Mode, Mode: %s\n", pcModeName);
+		ulVerbose = ptMacroCfg->ulVerbose;
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: Mode, Mode: %s\n", pcModeName);
+		}
 
 		iResult = ptMacroCfg->ptCfg->pfnSetBusWidth(ptMacroCfg->ptCfg, tMode);
 		if( iResult!=0 )
@@ -461,6 +502,7 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	const unsigned char *pucAddress;
 	int iConditionIsTrue;
 	const char *pcName;
+	unsigned long ulVerbose;
 
 
 	/* Be pessimistic. */
@@ -470,11 +512,16 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	iResult = get_condition(ptSpiMacro, &tCondition, &pcName);
 	if( iResult==0 )
 	{
+		ulVerbose = ptSpiMacro->ulVerbose;
+
 		/* Get the address. */
 		usAddress = *((ptSpiMacro->pucMacroCnt)++);
 		usAddress = (unsigned short)(usAddress | (*((ptSpiMacro->pucMacroCnt)++)) << 8U);
 
-		uprintf("[SpiMacro] CMD: Jump, Condition: %s, Address: 0x%04x\n", pcName, usAddress);
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: Jump, Condition: %s, Address: 0x%04x\n", pcName, usAddress);
+		}
 
 		pucAddress = ptSpiMacro->pucMacroStart + usAddress;
 		if( pucAddress>ptSpiMacro->pucMacroEnd )
@@ -484,17 +531,26 @@ static int SMC_Handler_Jump(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		}
 		else
 		{
-			show_flags(ptSpiMacro);
+			if( ulVerbose!=0 )
+			{
+				show_flags(ptSpiMacro);
+			}
 
 			iConditionIsTrue = is_condition_true(ptSpiMacro, tCondition);
 			if( iConditionIsTrue==0 )
 			{
-				uprintf("[SpiMacro] The condition is not true.\n");
+				if( ulVerbose!=0 )
+				{
+					uprintf("[SpiMacro] The condition is not true.\n");
+				}
 			}
 			else
 			{
 				ptSpiMacro->pucMacroCnt = pucAddress;
-				uprintf("[SpiMacro] The condition is true. Jump to 0x%04x\n", usAddress);
+				if( ulVerbose!=0 )
+				{
+					uprintf("[SpiMacro] The condition is true. Jump to 0x%04x\n", usAddress);
+				}
 			}
 		}
 	}
@@ -514,13 +570,18 @@ static int SMC_Handler_RequestChangeOfTransport(SPI_MACRO_HANDLE_T *ptMacroCfg)
 	unsigned int uiDummyCycles;
 	unsigned int uiAddrBits;
 	unsigned int uiAddressNibbles;
+	unsigned long ulVerbose;
 
 
 	/* Extract the new transport. */
 	ulValue = (unsigned long)(*((ptMacroCfg->pucMacroCnt)++));
 	tChangeTransport = (SPI_MACRO_CHANGE_TRANSPORT_T)ulValue;
 
-	uprintf("[SpiMacro] Request change of transport: %d\n", tChangeTransport);
+	ulVerbose = ptMacroCfg->ulVerbose;
+	if( ulVerbose!=0 )
+	{
+		uprintf("[SpiMacro] Request change of transport: %d\n", tChangeTransport);
+	}
 
 	/* Check if the value is a valid transport. */
 	iResult = -1;
@@ -535,7 +596,10 @@ static int SMC_Handler_RequestChangeOfTransport(SPI_MACRO_HANDLE_T *ptMacroCfg)
 	if( iResult==0 )
 	{
 		/* Yes, this is a valid transport. */
-		uprintf("[SpiMacro] Transport %d\n", tChangeTransport);
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] Transport %d\n", tChangeTransport);
+		}
 
 		ptSpiCfg = ptMacroCfg->ptCfg;
 		switch(tChangeTransport)
@@ -578,6 +642,7 @@ static int SMC_Handler_Cmp(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned char ucData0;
 	unsigned char ucData1;
 	unsigned long ulFlags;
+	unsigned long ulVerbose;
 
 
 	/* Be pessimistic. */
@@ -585,7 +650,11 @@ static int SMC_Handler_Cmp(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 	/* Get the length. */
 	ulLength = *((ptSpiMacro->pucMacroCnt)++);
-	uprintf("[SpiMacro] CMP %d\n", ulLength);
+	ulVerbose = ptSpiMacro->ulVerbose;
+	if( ulVerbose!=0 )
+	{
+		uprintf("[SpiMacro] CMP %d\n", ulLength);
+	}
 
 	sizBuffer = sizeof(ptSpiMacro->uRxBuffer);
 	if( ulLength>sizBuffer )
@@ -600,8 +669,11 @@ static int SMC_Handler_Cmp(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	else
 	{
 		/* Write the value to the trace buffer. */
-		uprintf("[SpiMacro] CMP data\n");
-		hexdump(ptSpiMacro->pucMacroCnt, ulLength);
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMP data\n");
+			hexdump(ptSpiMacro->pucMacroCnt, ulLength);
+		}
 
 		pucBuffer = ptSpiMacro->uRxBuffer.auc;
 		ulEqualFlag = (unsigned long)SPI_MACRO_FLAGS_Equal;
@@ -641,14 +713,20 @@ static int SMC_Handler_Mask(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned long ulZeroFlag;
 	unsigned char ucData;
 	unsigned long ulFlags;
+	unsigned long ulVerbose;
 
 
 	/* Be pessimistic. */
 	iResult = -1;
 
+	ulVerbose = ptSpiMacro->ulVerbose;
+
 	/* Extract the length. */
 	ulLength = *((ptSpiMacro->pucMacroCnt)++);
-	uprintf("[SpiMacro] CMD: Mask Length: %d bytes\n", ulLength);
+	if( ulVerbose!=0 )
+	{
+		uprintf("[SpiMacro] CMD: Mask Length: %d bytes\n", ulLength);
+	}
 
 	sizBuffer = sizeof(ptSpiMacro->uRxBuffer);
 	if( ulLength>sizBuffer )
@@ -663,8 +741,11 @@ static int SMC_Handler_Mask(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	else
 	{
 		/* Write the mask to the trace buffer. */
-		uprintf("[SpiMacro] Mask data:\n");
-		hexdump(ptSpiMacro->pucMacroCnt, ulLength);
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] Mask data:\n");
+			hexdump(ptSpiMacro->pucMacroCnt, ulLength);
+		}
 
 		pucBuffer = ptSpiMacro->uRxBuffer.auc;
 		ulZeroFlag = (unsigned long)SPI_MACRO_FLAGS_Zero;
@@ -690,9 +771,12 @@ static int SMC_Handler_Mask(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		iResult = 0;
 
 		/* Write the result to the trace buffer. */
-		uprintf("[SpiMacro] Mask result:\n");
-		hexdump(ptSpiMacro->uRxBuffer.auc, ulLength);
-		show_flags(ptSpiMacro);
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] Mask result:\n");
+			hexdump(ptSpiMacro->uRxBuffer.auc, ulLength);
+			show_flags(ptSpiMacro);
+		}
 	}
 
 	return iResult;
@@ -716,11 +800,12 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	const char *pcName;
 	unsigned int uiErrMsg;
 	const unsigned char *pcErrMsg;
+	unsigned long ulVerbose;
 
 
 	/* Get the condition. */
 	iResult = get_condition(ptSpiMacro, &tCondition, &pcName);
-	
+
 	/* Extract the length of error message. */
 	uiErrMsg = (unsigned int) (*((ptSpiMacro->pucMacroCnt)++));
 
@@ -733,13 +818,20 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 
 	if( iResult==0 )
 	{
-		uprintf("[SpiMacro] CMD: Fail, Condition: %s\n", pcName);
-		show_flags(ptSpiMacro);
+		ulVerbose = ptSpiMacro->ulVerbose;
+		if( ulVerbose!=0 )
+		{
+			uprintf("[SpiMacro] CMD: Fail, Condition: %s\n", pcName);
+			show_flags(ptSpiMacro);
+		}
 
 		iConditionIsTrue = is_condition_true(ptSpiMacro, tCondition);
 		if( iConditionIsTrue==0 )
 		{
-			uprintf("[SpiMacro] The condition is not true.\n");
+			if( ulVerbose!=0 )
+			{
+				uprintf("[SpiMacro] The condition is not true.\n");
+			}
 		}
 		else
 		{
@@ -754,7 +846,7 @@ static int SMC_Handler_Fail(SPI_MACRO_HANDLE_T *ptSpiMacro)
 /*-------------------------------------------------------------------------*/
 
 
-int spi_macro_initialize(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_CFG_T *ptCfg, const unsigned char *pucMacro, unsigned int sizMacro)
+int spi_macro_initialize(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_CFG_T *ptCfg, const unsigned char *pucMacro, unsigned int sizMacro, unsigned long ulVerbose)
 {
 	int iResult;
 	unsigned long ulTimeout;
@@ -781,6 +873,7 @@ int spi_macro_initialize(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_CFG_T *ptCfg, const
 		ptSpiMacro->pucMacroCnt = pucMacro;
 		ptSpiMacro->pucMacroEnd = pucMacro + sizMacro;
 		ptSpiMacro->ulFlags = 0;
+		ptSpiMacro->ulVerbose = ulVerbose;
 		ptSpiMacro->ulTotalTimeoutMs = ulTimeout;
 		ptSpiMacro->tCS_Mode = (SPI_MACRO_CHIP_SELECT_MODE_T)0;
 
@@ -802,6 +895,7 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	unsigned long ulTimerStart;
 	int iIsElapsed;
 	unsigned int uiCntCmd;
+	unsigned long ulVerbose;
 	const char *pcCmdNames[12] = {
 	"RECEIVE",
 	"SEND",
@@ -814,7 +908,7 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	"MODE",
 	"ADR",
 	"FAIL",
-	"CS"  
+	"CS"
 	};
 
 	/* Be optimistic. */
@@ -828,6 +922,8 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 	/* Get the timer value at the start of the macro. */
 	ulTimerStart = systime_get_ms();
 
+	ulVerbose = ptSpiMacro->ulVerbose;
+
 	/* Run over the complete macro sequence. */
 	while( ptSpiMacro->pucMacroCnt<ptSpiMacro->pucMacroEnd )
 	{
@@ -835,8 +931,15 @@ int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro)
 		ucCmd = *((ptSpiMacro->pucMacroCnt)++);
 		tCmd = (SPI_MACRO_COMMAND_T)ucCmd;
 
-
-		uprintf("[DEBUG] command: %s (macro id: 0x%02x) - (Command number: %d)\n",pcCmdNames[ucCmd], ucCmd,uiCntCmd);
+		if( ulVerbose!=0 )
+		{
+			uprintf(
+				"[DEBUG] command: %s (macro id: 0x%02x) - (Command number: %d)\n",
+				pcCmdNames[ucCmd],
+				ucCmd,
+				uiCntCmd
+			);
+		}
 
 		/* Expect an unknown command. */
 		iResult = -1;

@@ -15,6 +15,7 @@ typedef struct TEST_PARAMETER_STRUCT
 	unsigned int uiUnit;
 	unsigned int uiChipSelect;
 	unsigned int sizSpiMacro;
+	unsigned long ulVerbose;
 	unsigned char aucSpiMacro[SPI_MACRO_MAX_SIZE];
 } TEST_PARAMETER_T;
 

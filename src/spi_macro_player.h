@@ -79,6 +79,7 @@ typedef struct SPI_MACRO_HANDLE_STRUCT
 	unsigned long ulTotalTimeoutMs;
 
 	unsigned long ulFlags;
+	unsigned long ulVerbose;
 
 	union
 	{
@@ -89,7 +90,7 @@ typedef struct SPI_MACRO_HANDLE_STRUCT
 
 
 
-int spi_macro_initialize(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_CFG_T *ptCfg, const unsigned char *pucMacro, unsigned int sizMacro);
+int spi_macro_initialize(SPI_MACRO_HANDLE_T *ptSpiMacro, SPI_CFG_T *ptCfg, const unsigned char *pucMacro, unsigned int sizMacro, unsigned long ulVerbose);
 int spi_macro_player_run(SPI_MACRO_HANDLE_T *ptSpiMacro);
 
 

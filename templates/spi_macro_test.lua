@@ -115,6 +115,7 @@ function SpiFlashMacroTest:_init(tLog)
     uiChipSelect:u4
 
     sizSpiMacro:u4
+    ulVerbose:u4
     aucSpiMacro:z%d,1
   ]], self.SPI_MACRO_MAX_SIZE)
 end
@@ -354,10 +355,11 @@ end
 --- Check the macro for syntax errors and converts each character into its equivalent macro token.
 --- @param strMacro string The complete macro.
 --- @param uiMacroTimeoutMs number The time out for the macro execution in milliseconds.
+--- @param fVerbose boolean Emit debug messages or not.
 --- @return boolean tResult
 --- @return string aucMacro # string with all occurring macro tokens
 --- @return string tMsg # string with all occurring error messages
-function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
+function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs, fVerbose)
 	uiMacroTimeoutMs = uiMacroTimeoutMs or 0
 
 	local lpeg = self.lpeg
@@ -632,7 +634,9 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 	for strLine in pl.stringx.lines(strMacro) do
 		-- Count the line numbers for error messages.
 		uiLineNumber = uiLineNumber + 1
-		tLog.debug("[SPI Macro] [line: %d] %s", uiLineNumber, strLine)
+    if fVerbose then
+  		tLog.debug("[SPI Macro] [line: %d] %s", uiLineNumber, strLine)
+    end
 
 		-- Match the line with the Cmds grammar pattern
 		local tmatchCmd, errLab = lpeg.match(tGrammar_Cmds, strLine)
@@ -645,7 +649,9 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 			-- If the token ends with a colon, it is a label definition.
 			-- Get the label name.
 			local strLabelName = tmatchCmd.cmd_label
-			tLog.debug("[SPI Macro] [LABEL] %s - address: %d", strLabelName, ulCurrentAddress)
+      if fVerbose then
+  			tLog.debug("[SPI Macro] [LABEL] %s - address: %d", strLabelName, ulCurrentAddress)
+      end
 			-- Does the label already exist?
 			if atLabels[strLabelName] ~= nil then
 				-- Label already exist, add an error message
@@ -654,20 +660,26 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 			else
 				-- Create the new label.
 				atLabels[strLabelName] = ulCurrentAddress
-				tLog.debug('[SPI Macro] [LABEL] label "%s" created at address %d', strLabelName, ulCurrentAddress)
+        if fVerbose then
+  				tLog.debug('[SPI Macro] [LABEL] label "%s" created at address %d', strLabelName, ulCurrentAddress)
+        end
 			end
 		else
 			-- The 'Cmds' pattern contains named group captures of the command and the parameters
 			if tmatchCmd.cmd ~= nil and tmatchCmd.param ~= nil then
 				local strCmd = tmatchCmd.cmd
 				local strParam = tmatchCmd.param
-				tLog.debug("[SPI Macro] [COMMAND] %s - address: %d", strCmd, ulCurrentAddress)
+        if fVerbose then
+  				tLog.debug("[SPI Macro] [COMMAND] %s - address: %d", strCmd, ulCurrentAddress)
+        end
 
 				-- Detect command key in table 'atMacroTokens'
 				local strMacroToken = Detect(P("_") * P(string.upper(strCmd)) * -1, MacroTokens_keys, string.upper)
 				if strMacroToken ~= nil then
 					local tToken = self.atMacroTokens[strMacroToken]
-					tLog.debug("[SPI Macro] [COMMAND] detected: %s - %d", strMacroToken, tToken)
+          if fVerbose then
+  					tLog.debug("[SPI Macro] [COMMAND] detected: %s - %d", strMacroToken, tToken)
+          end
 					aucOpcodes:append(tToken)
 					ulCurrentAddress = ulCurrentAddress + 1
 				else
@@ -685,19 +697,25 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 					tResult = false
 					recordError(strLine, uiLineNumber, errLab)
 				else
-					tLog.debug("[SPI Macro] [PARAMETER] [TABLE] paramters: %s - size: %d", strParam, #tmatchParam)
+          if fVerbose then
+  					tLog.debug("[SPI Macro] [PARAMETER] [TABLE] paramters: %s - size: %d", strParam, #tmatchParam)
+          end
 					-- Consider every parameter matched within the bracket
 					for _, param in ipairs(tmatchParam) do
 						-- Is this a known token?
 						if type(param) == "string" then
 							-- Parameters of type string within the table 'tmatchParam' are considered as macro tokens of table 'atMacroTokens'
-							tLog.debug("[SPI Macro] [PARAMETER] [STRING] matched parameter: %s - address: %d", param, ulCurrentAddress)
+              if fVerbose then
+  							tLog.debug("[SPI Macro] [PARAMETER] [STRING] matched parameter: %s - address: %d", param, ulCurrentAddress)
+              end
 
 							-- Detect parameter key in table 'atMacroTokens'
 							local strMacroToken = Detect(P("_") * P(string.upper(param)) * -1, MacroTokens_keys, string.upper)
 							if strMacroToken ~= nil then
 								local tToken = self.atMacroTokens[strMacroToken]
-								tLog.debug("[SPI Macro] [PARAMETER] [STRING] detected: %s - %d", strMacroToken, tToken)
+                if fVerbose then
+  								tLog.debug("[SPI Macro] [PARAMETER] [STRING] detected: %s - %d", strMacroToken, tToken)
+                end
 								aucOpcodes:append(tToken)
 								ulCurrentAddress = ulCurrentAddress + 1
 							else
@@ -708,7 +726,9 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 						elseif type(param) == "number" then
 							-- Parameters of type number within the table 'tmatchParam'
 							local ucNumber = param
-							tLog.debug("[SPI Macro] [PARAMETER] [NUMBER] matched parameter: %d - address: %d", ucNumber, ulCurrentAddress)
+              if fVerbose then
+  							tLog.debug("[SPI Macro] [PARAMETER] [NUMBER] matched parameter: %d - address: %d", ucNumber, ulCurrentAddress)
+              end
 							aucOpcodes:append(ucNumber)
 							ulCurrentAddress = ulCurrentAddress + 1
 						elseif type(param) == "table" then
@@ -725,11 +745,13 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 									tRef = {}
 									atLabelReferences[strLabelName] = tRef
 								end
-								tLog.debug(
-									"[SPI Macro] [PARAMETER] [TABLE] [LABEL] added reference to label: %s - address: %d",
-									strLabelName,
-									ulCurrentAddress
-								)
+                if fVerbose then
+                  tLog.debug(
+                    "[SPI Macro] [PARAMETER] [TABLE] [LABEL] added reference to label: %s - address: %d",
+                    strLabelName,
+                    ulCurrentAddress
+                  )
+                end
 								table.insert(tRef, ulCurrentAddress)
 								ulCurrentAddress = ulCurrentAddress + 2
 							elseif param.string ~= nil then
@@ -737,12 +759,14 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 								-- Add null character to the end of the string
 								local strMsg = param.string .. "\0"
 								local uiMsg = #strMsg
-								tLog.debug(
-									"[SPI Macro] [PARAMETER] [TABLE] [STRING] string: %s - length: %d - address: %d",
-									strMsg,
-									uiMsg,
-									ulCurrentAddress
-								)
+                if fVerbose then
+                  tLog.debug(
+                    "[SPI Macro] [PARAMETER] [TABLE] [STRING] string: %s - length: %d - address: %d",
+                    strMsg,
+                    uiMsg,
+                    ulCurrentAddress
+                  )
+                end
 
 								-- Add the the length of the string
 								aucOpcodes:append(uiMsg)
@@ -777,7 +801,9 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 				)
 			else
 				for _, uiPosition in ipairs(atRefs) do
-					tLog.debug('[SPI Macro] Resolve label "%s" at position %d to address %d.', strLabelName, uiPosition, ulAddress)
+          if fVerbose then
+  					tLog.debug('[SPI Macro] Resolve label "%s" at position %d to address %d.', strLabelName, uiPosition, ulAddress)
+          end
 					local ucAdrHi = math.floor(ulAddress/256)
 					local ucAdrLo = ulAddress - 256* ucAdrHi
 					aucOpcodes[uiPosition + 1] = ucAdrLo
@@ -805,7 +831,9 @@ function SpiFlashMacroTest:compile_macro(strMacro, uiMacroTimeoutMs)
 			aucMacro:append(tResult_Vstruct)
 
 			for key, ucData in ipairs(aucOpcodes) do
-				tLog.debug("[SPI Macro] [aucOpcodes] - address: %d - data: %s - type: %s", key, ucData, type(ucData))
+        if fVerbose then
+  				tLog.debug("[SPI Macro] [aucOpcodes] - address: %d - data: %s - type: %s", key, ucData, type(ucData))
+        end
 				if type(ucData) == "number" then
 					aucMacro:append(string.char(ucData))
 				elseif type(ucData) == "string" then
@@ -832,9 +860,14 @@ end
 
 
 
-function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, strSpiMacro)
+function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, strSpiMacro, ulVerbose)
   local tLog = self.tLog
   local tResult = true
+
+  -- If the "verbose" parameter was not set, keep quiet.
+  if ulVerbose==nil then
+    ulVerbose = 0
+  end
 
   local strType = type(uiUnit)
   if strType~='number' then
@@ -895,6 +928,7 @@ function SpiFlashMacroTest:compile(atSpiConfiguration, uiUnit, uiChipSelect, str
       uiUnit = atGeneralParameters.uiUnit,
       uiChipSelect = atGeneralParameters.uiChipSelect,
       sizSpiMacro = string.len(atGeneralParameters.strSpiMacro),
+      ulVerbose = ulVerbose,
       aucSpiMacro = atGeneralParameters.strSpiMacro
     }
     -- Convert the parameters to a byte string.

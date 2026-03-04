@@ -825,8 +825,6 @@ static int qsi_set_bus_width(SPI_CFG_T *ptCfg, SPI_BUS_WIDTH_T tBusWidth)
 
 	if( iResult==0 )
 	{
-		uprintf("[BootDrvSqi] Set new bus width: %d\n", tBusWidth);
-
 		/* Set the new SIO configuration. */
 		ulValue  = ptSqi->aulSqi_cr[0];
 		ulValue &= ~HOSTMSK(sqi_cr0_sio_cfg);
