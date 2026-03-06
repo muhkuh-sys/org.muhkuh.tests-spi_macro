@@ -259,3 +259,65 @@ local tLua = tEnvLua:GCCSymbolTemplate(
     PATTERN = 'XX_([%a_][%w_]*)_XX'
   }
 )
+
+
+---------------------------------------------------------------------------------------------------------------------
+--
+-- Create an archive.
+--
+
+-- Only create an archive if all required builds were executed.
+local astrRequiredEnvs = {
+  'NETX50',
+  'NETX56',
+  'NETX90',
+  'NETX500',
+  'NETX9X2_COM_MPW'
+}
+local fHasAllRequiredEnvs, astrMissingEnvs = atEnv:hasAllEnvs(astrRequiredEnvs)
+if not fHasAllRequiredEnvs then
+  print(
+    'WARNING: not building an archive as not all required builds were executed. Missing builds: ' ..
+    table.concat(astrMissingEnvs, ',')
+  )
+else
+  -- Get a map with the environment ID to the netX binary.
+  local atNetxBinaries = atEnv:mapIDtoKey(astrRequiredEnvs, 'TESTCODE_BIN')
+
+  -- Construct the archive contents.
+  local dir,file = require 'mbs2.archive_helper':getHelper()
+  local tArchiveContents = {
+    dir('lua', {
+      file(tLua),
+      file('lua/test_class_spi_macro.lua')
+    }),
+    dir('netx', {
+      file(atNetxBinaries.NETX50),
+      file(atNetxBinaries.NETX56),
+      file(atNetxBinaries.NETX90),
+      file(atNetxBinaries.NETX500),
+      file(atNetxBinaries.NETX9X2_COM_MPW)
+    }),
+    dir('templates', {
+      file('templates/test.lua')
+    }),
+    file('installer/jonchki/install.lua'),
+    file('installer/jonchki/install_testcase.lua')
+  }
+
+  local astrGroup = { 'org', 'muhkuh', 'tests' }
+  local strModule = 'spi_macro'
+  local strArtifact = 'spi_macro'
+  local astrVersion = atEnv.astrProjectVersion
+  local strRepositoryBasePath = 'targets/jonchki/repository'
+
+  local tEnv = atEnv:cloneAnyEnv({ label='archive' })
+  tEnv:Artifact(
+    strRepositoryBasePath,
+    astrGroup,
+    strModule,
+    strArtifact,
+    astrVersion,
+    tArchiveContents
+  )
+end
