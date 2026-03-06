@@ -43,10 +43,10 @@
             "compileCommands": "${workspaceFolder}/targets/netX90/compile_commands.json"
         },
         {
-            "name": "NETIOL",
-            "cStandard": "c11",
+            "name": "NETX9X2MPW",
+            "cStandard": "c17",
             "cppStandard": "c++14",
-            "compileCommands": "${workspaceFolder}/targets/netiol_nodbg/compile_commands.json"
+            "compileCommands": "${workspaceFolder}/targets/spimacro/netx9x2mpw/compile_commands.json"
         }
     ],
     "version": 4
