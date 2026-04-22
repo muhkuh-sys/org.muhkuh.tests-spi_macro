@@ -49,7 +49,7 @@ SECTIONS
 	} >INTRAM
 
 
-	.parameter :
+	.parameter (NOLOAD):
 	{
 		parameter_start_address = . ;
 		KEEP(*(.parameter))
