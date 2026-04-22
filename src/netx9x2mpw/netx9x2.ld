@@ -33,13 +33,22 @@ SECTIONS
 	} >IOVECTORS
 
 
-	.text ORIGIN(COM_RAM) : {
+	.code ORIGIN(COM_RAM) : {
 		load_address = . ;
 
 		KEEP(*(.header))
-		*(.init_code)
-		*(.text* .rodata*)
-	} > COM_RAM
+		*(.init_code .text* .rodata*)
+
+		. = ALIGN(0x10);
+	} > COM_RAM = 0xff
+
+
+	.parameter (NOLOAD) :
+	{
+		parameter_start_address = . ;
+		KEEP(*(.parameter))
+		parameter_end_address = . ;
+	} >COM_RAM
 
 
 	.bss : ALIGN(4)
@@ -49,14 +58,6 @@ SECTIONS
 		. = ALIGN(4);
 		__bss_end__ = .;
 	} > COM_RAM
-
-
-	.parameter ALIGN(0x0100) (NOLOAD) :
-	{
-		parameter_start_address = . ;
-		KEEP(*(.parameter))
-		parameter_end_address = . ;
-	} >COM_RAM
 
 
 	.stack :

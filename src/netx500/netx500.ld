@@ -38,14 +38,9 @@ SECTIONS
 		KEEP(*(.header))
 		*(.init_code)
 		*(.text* .rodata*)
-	} >INTRAM
 
-
-	.bss :
-	{
-		PROVIDE ( __bss_start__ = . );
-		*(.bss COMMON)
-		PROVIDE ( __bss_end__ = . );
+		FILL(0xffffffff)
+		. = ALIGN(0x10);
 	} >INTRAM
 
 
@@ -54,6 +49,14 @@ SECTIONS
 		parameter_start_address = . ;
 		KEEP(*(.parameter))
 		parameter_end_address = . ;
+	} >INTRAM
+
+
+	.bss :
+	{
+		PROVIDE ( __bss_start__ = . );
+		*(.bss COMMON)
+		PROVIDE ( __bss_end__ = . );
 	} >INTRAM
 
 
