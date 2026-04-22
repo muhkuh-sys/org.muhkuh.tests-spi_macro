@@ -103,6 +103,14 @@ local astrTestSources = {
   'src/parameter_placeholder.c',
   'src/spi_macro_player.c'
 }
+local astrStandaloneSources = {
+  'src/header.c',
+  'src/init_standalone.S',
+  'src/main.c',
+  'src/main_standalone.c',
+  'src/parameter_placeholder.c',
+  'src/spi_macro_player.c'
+}
 local astrSourcesnetx500 = {
   'src/boot_drv_spi_v1.c'
 }
@@ -174,6 +182,26 @@ if atEnv:hasEnv('NETX56') then
     tElf
   )
   atEnv:mergeEnv(tEnv, { TESTCODE_ELF=tElf, TESTCODE_BIN=tBin })
+
+
+
+  local tEnvSt = atEnv:cloneEnv('NETX56', { label='standalone netx56' })
+  tEnvSt:SetBuildPath('targets/spimacro_standalone/netx56', 'src')
+  tEnvSt:AddIncludes(astrIncludes)
+  local tObjSt = tEnvSt:Compile(
+    astrStandaloneSources,
+    astrSourcesnetx56
+  )
+  local tElfSt = tEnvSt:Link(
+    'targets/spimacro/spi_macro_standalone_netx56.elf',
+    'src/netx56/netx56_intram.ld',
+    tObjSt,
+    tEnvSt.mbs.PLATFORM_LIB
+  )
+  local tBinSt = tEnvSt:Elf2Bin(
+    'targets/spimacro/spi_macro_standalone_netx56.bin',
+    tElfSt
+  )
 end
 
 

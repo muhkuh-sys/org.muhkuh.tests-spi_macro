@@ -70,6 +70,13 @@ SECTIONS
 	} >INTRAM
 
 
+	.messages ALIGN(0x0100) :
+	{
+		messages_start_address = . ;
+		. = . + 0x4000;
+		messages_end_address = . ;
+	} >INTRAM
+
 	.bss ALIGN(0x10) :
 	{
 		PROVIDE ( __bss_start__ = . );
