@@ -13,7 +13,7 @@
 		</description>
 	</info>
 	<dependencies>
-		<dependency group="org.muhkuh.tools" module="muhkuh_base_cli" artifact="lua5.4-muhkuh_base_cli" version="2"/>
+		<dependency group="org.muhkuh.tools" module="muhkuh_base_cli" artifact="lua5.4-muhkuh_base_cli" version="3"/>
 		<dependency group="com.github.toxicfrog" module="vstruct" artifact="vstruct" version="2"/>
 		<dependency group="de.dkolf" module="dkjson" artifact="dkjson" version="2"/>
 		<dependency group="com.github.sqmedeiros" module="lpeglabel" artifact="lua5.4-lpeglabel" version="1"/>
