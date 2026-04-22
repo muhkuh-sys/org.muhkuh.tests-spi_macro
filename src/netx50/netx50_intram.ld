@@ -3,7 +3,7 @@
 
            Hilscher GmbH, Copyright (c) 2009, All Rights Reserved
 
-           Redistribution or unauthorized use without expressed written 
+           Redistribution or unauthorized use without expressed written
            agreement from the Hilscher GmbH is forbidden
 ---------------------------------------------------------------------------*/
 
